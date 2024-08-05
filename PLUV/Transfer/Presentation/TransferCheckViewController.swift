@@ -19,6 +19,11 @@ class TransferCheckViewController: UIViewController {
     private let destinationTitleLabel = UILabel().then {
         $0.numberOfLines = 0
     }
+    
+    private lazy var selectSourcePlatformView = PlatformView(platform: sourcePlatform)
+    private let dotView = DotView()
+    private lazy var selectDestinationPlatformView = PlatformView(platform: destinationPlatform)
+    
     private var moveView = MoveView(view: UIViewController())
     private let disposeBag = DisposeBag()
     
@@ -53,6 +58,28 @@ class TransferCheckViewController: UIViewController {
             destinationTitleLabel.text = "\(destinationPlatform.name)로\n플레이리스트를 옮길까요?"
         } else {
             destinationTitleLabel.text = "\(destinationPlatform.name)으로\n플레이리스트를 옮길까요?"
+        }
+        
+        self.view.addSubview(selectSourcePlatformView)
+        selectSourcePlatformView.snp.makeConstraints { make in
+            make.top.equalTo(destinationTitleView.snp.bottom).offset(4)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(109)
+        }
+        
+        self.view.addSubview(dotView)
+        dotView.snp.makeConstraints { make in
+            make.top.equalTo(selectSourcePlatformView.snp.bottom).offset(23)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(42)
+            make.width.equalTo(6)
+        }
+        
+        self.view.addSubview(selectDestinationPlatformView)
+        selectDestinationPlatformView.snp.makeConstraints { make in
+            make.top.equalTo(dotView.snp.bottom).offset(23)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(109)
         }
         
         moveView = MoveView(view: self)

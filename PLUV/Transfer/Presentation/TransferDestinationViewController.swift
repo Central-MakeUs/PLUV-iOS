@@ -12,32 +12,22 @@ import RxCocoa
 
 class TransferDestinationViewController: UIViewController {
     
-    private let sourceTitleView = UIView()
-    private let sourceView = UIView()
-    private let sourceMusicImageView = UIImageView()
-    private let sourceMusicLabel = UILabel()
-    private let dotView = UIView()
-    
-    private let sourceTitleLabel = UILabel().then {
-        $0.numberOfLines = 0
-    }
-    private let sourceTableView = UITableView().then {
-        $0.separatorStyle = .none
-        $0.register(TransferTableViewCell.self, forCellReuseIdentifier: TransferTableViewCell.identifier)
-    }
-    
-    
-    
     var sourcePlatform: MusicPlatform = .AppleMusic
+    
     private var destinationList = Observable.just(MusicPlatform.allCases)
     private let destinationTitleView = UIView()
     private let destinationTitleLabel = UILabel().then {
         $0.numberOfLines = 0
     }
+    
+    private lazy var selectSourcePlatformView = PlatformView(platform: sourcePlatform)
+    private let dotView = DotView()
+    
     private let destinationTableView = UITableView().then {
         $0.separatorStyle = .none
         $0.register(TransferTableViewCell.self, forCellReuseIdentifier: TransferTableViewCell.identifier)
     }
+    
     private var moveView = MoveView(view: UIViewController())
     private let disposeBag = DisposeBag()
     
@@ -68,9 +58,24 @@ extension TransferDestinationViewController {
         }
         destinationTitleLabel.text = "어디로\n플레이리스트를 옮길까요?"
         
+        self.view.addSubview(selectSourcePlatformView)
+        selectSourcePlatformView.snp.makeConstraints { make in
+            make.top.equalTo(destinationTitleView.snp.bottom).offset(4)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(109)
+        }
+        
+        self.view.addSubview(dotView)
+        dotView.snp.makeConstraints { make in
+            make.top.equalTo(selectSourcePlatformView.snp.bottom).offset(23)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(42)
+            make.width.equalTo(6)
+        }
+        
         self.view.addSubview(destinationTableView)
         destinationTableView.snp.makeConstraints { make in
-            make.top.equalTo(destinationTitleView.snp.bottom)
+            make.top.equalTo(dotView.snp.bottom).offset(2)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
@@ -122,15 +127,6 @@ extension TransferDestinationViewController {
                 return cell
             }
             .disposed(by: self.disposeBag)
-    }
-    
-    private func tmpData() {
-        sourceMusicImageView.backgroundColor = .green
-        sourceMusicLabel.text = "스포티파이"
-    }
-    
-    private func setTmpData() {
-        sourceMusicImageView.isHidden = false
     }
 }
 
