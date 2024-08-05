@@ -93,10 +93,15 @@ class TransferCheckViewController: UIViewController {
     }
     
     @objc private func clickTransferButton() {
+        /*
         let loadingView = LoadingView(loadingState: .LoadPlaylist)
         self.view.addSubview(loadingView)
         loadingView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+         */
+        
+        let spotifyVC = ViewController()
+        self.navigationController?.pushViewController(spotifyVC, animated: true)
     }
 }
