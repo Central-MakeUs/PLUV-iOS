@@ -82,7 +82,9 @@ extension TransferSourceViewController {
         self.sourceTableView.rx.modelSelected(MusicPlatform.self)
                    .observe(on: MainScheduler.instance)
                    .subscribe(onNext: { [weak self] platform in
-                       
+                       let transferDestinationVC = TransferDestinationViewController()
+                       transferDestinationVC.sourcePlatform = platform
+                       self?.navigationController?.pushViewController(transferDestinationVC, animated: true)
                    })
                    .disposed(by: disposeBag)
         
