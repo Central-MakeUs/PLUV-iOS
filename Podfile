@@ -18,8 +18,12 @@ target 'PLUV' do
 
 pod 'Alamofire'
 pod 'SnapKit'
+pod 'Then'
 pod 'Kingfisher'
 pod 'SwiftyJSON'
+
+pod 'RxSwift'
+pod 'RxCocoa'
 
 pod 'Firebase/Analytics'
 pod 'Firebase/Crashlytics'
