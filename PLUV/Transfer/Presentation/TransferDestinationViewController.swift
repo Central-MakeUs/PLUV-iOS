@@ -108,7 +108,10 @@ extension TransferDestinationViewController {
         self.destinationTableView.rx.modelSelected(MusicPlatform.self)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] platform in
-                
+                let transferCheckVC = TransferCheckViewController()
+                transferCheckVC.sourcePlatform = self?.sourcePlatform ?? .AppleMusic
+                transferCheckVC.destinationPlatform = platform
+                self?.navigationController?.pushViewController(transferCheckVC, animated: true)
             })
             .disposed(by: disposeBag)
         
