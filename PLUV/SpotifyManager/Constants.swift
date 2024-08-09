@@ -9,8 +9,8 @@ import SpotifyiOS
 
 let accessTokenKey = "access-token-key"
 let redirectUri = URL(string:"pluv://")!
-let spotifyClientId = "45c2601a60de43bab2ce5471b1621a75"
-let spotifyClientSecretKey = "052830a0fd224472b0d4779fd7a77b4f"
+let spotifyClientId = "dd0b2848d9bf4d8bb70aaa9c8a0c14c6"
+let spotifyClientSecretKey = "945a78fbd4b64bf696729f42e4975f97"
 
 /*
 Scopes let you specify exactly what types of data your application wants to
