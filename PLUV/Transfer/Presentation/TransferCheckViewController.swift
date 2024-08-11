@@ -15,8 +15,8 @@ class TransferCheckViewController: UIViewController {
     var sourcePlatform: MusicPlatform = .AppleMusic
     var destinationPlatform: MusicPlatform = .Spotify
     
-    private let destinationTitleView = UIView()
-    private let destinationTitleLabel = UILabel().then {
+    private let checkTitleView = UIView()
+    private let checkTitleLabel = UILabel().then {
         $0.numberOfLines = 0
     }
     
@@ -42,27 +42,27 @@ class TransferCheckViewController: UIViewController {
         self.view.backgroundColor = .white
         self.navigationItem.setHidesBackButton(true, animated: false)
         
-        self.view.addSubview(destinationTitleView)
-        destinationTitleView.snp.makeConstraints { make in
+        self.view.addSubview(checkTitleView)
+        checkTitleView.snp.makeConstraints { make in
             make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(124)
         }
         
-        self.destinationTitleView.addSubview(destinationTitleLabel)
-        destinationTitleLabel.snp.makeConstraints { make in
+        self.checkTitleView.addSubview(checkTitleLabel)
+        checkTitleLabel.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(24)
             make.top.bottom.equalToSuperview().inset(28)
         }
         
         if destinationPlatform == .Spotify {
-            destinationTitleLabel.text = "\(destinationPlatform.name)로\n플레이리스트를 옮길까요?"
+            checkTitleLabel.text = "\(destinationPlatform.name)로\n플레이리스트를 옮길까요?"
         } else {
-            destinationTitleLabel.text = "\(destinationPlatform.name)으로\n플레이리스트를 옮길까요?"
+            checkTitleLabel.text = "\(destinationPlatform.name)으로\n플레이리스트를 옮길까요?"
         }
         
         self.view.addSubview(selectSourcePlatformView)
         selectSourcePlatformView.snp.makeConstraints { make in
-            make.top.equalTo(destinationTitleView.snp.bottom).offset(4)
+            make.top.equalTo(checkTitleView.snp.bottom).offset(4)
             make.centerX.equalToSuperview()
             make.height.equalTo(109)
         }
@@ -93,10 +93,15 @@ class TransferCheckViewController: UIViewController {
     }
     
     @objc private func clickTransferButton() {
+        /*
         let loadingView = LoadingView(loadingState: .LoadPlaylist)
         self.view.addSubview(loadingView)
         loadingView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+         */
+        
+        let spotifyVC = ViewController()
+        self.navigationController?.pushViewController(spotifyVC, animated: true)
     }
 }
