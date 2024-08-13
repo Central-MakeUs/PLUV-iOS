@@ -13,6 +13,13 @@
 		6859C9102C612ACE00E03179 /* DotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6859C90F2C612ACE00E03179 /* DotView.swift */; };
 		688EFDB52C42867B0067D053 /* TransferSourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */; };
 		688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */; };
+		68DC4C732C6B6DE5006D8E97 /* TransferPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C722C6B6DE5006D8E97 /* TransferPlaylistViewController.swift */; };
+		68DC4C772C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C762C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift */; };
+		68DC4C792C6B6F48006D8E97 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */; };
+		68DC4C802C6B70AE006D8E97 /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C7F2C6B70AE006D8E97 /* EndPoint.swift */; };
+		68DC4C822C6B70C2006D8E97 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C812C6B70C2006D8E97 /* APIService.swift */; };
+		68DC4C852C6B70F3006D8E97 /* SpotifyPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C842C6B70F3006D8E97 /* SpotifyPlaylist.swift */; };
+		68DC4C882C6B7146006D8E97 /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C872C6B7146006D8E97 /* AlertViewController.swift */; };
 		68DC8A972C3C535300A03042 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC8A962C3C535300A03042 /* AppDelegate.swift */; };
 		68DC8A992C3C535300A03042 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC8A982C3C535300A03042 /* SceneDelegate.swift */; };
 		68DC8A9B2C3C535300A03042 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC8A9A2C3C535300A03042 /* HomeViewController.swift */; };
@@ -78,6 +85,13 @@
 		6859C90F2C612ACE00E03179 /* DotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotView.swift; sourceTree = "<group>"; };
 		688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferSourceViewController.swift; sourceTree = "<group>"; };
 		688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTableViewCell.swift; sourceTree = "<group>"; };
+		68DC4C722C6B6DE5006D8E97 /* TransferPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPlaylistViewController.swift; sourceTree = "<group>"; };
+		68DC4C762C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPlaylistCollectionViewCell.swift; sourceTree = "<group>"; };
+		68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		68DC4C7F2C6B70AE006D8E97 /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
+		68DC4C812C6B70C2006D8E97 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		68DC4C842C6B70F3006D8E97 /* SpotifyPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyPlaylist.swift; sourceTree = "<group>"; };
+		68DC4C872C6B7146006D8E97 /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		68DC8A932C3C535300A03042 /* PLUV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PLUV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		68DC8A962C3C535300A03042 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		68DC8A982C3C535300A03042 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -152,38 +166,57 @@
 		688EFDB02C4281DC0067D053 /* Transfer */ = {
 			isa = PBXGroup;
 			children = (
-				688EFDB12C4283610067D053 /* Presentation */,
-				688EFDB22C42836B0067D053 /* Domain */,
-				688EFDB32C4283710067D053 /* Entity */,
+				688EFDB32C4283710067D053 /* State */,
+				68DC4C752C6B6E5B006D8E97 /* Cell */,
+				688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */,
+				68F6FAB32C4A9D8B001128FF /* TransferDestinationViewController.swift */,
+				68F6FAB52C4A9D9A001128FF /* TransferCheckViewController.swift */,
+				68DC4C722C6B6DE5006D8E97 /* TransferPlaylistViewController.swift */,
 			);
 			path = Transfer;
 			sourceTree = "<group>";
 		};
-		688EFDB12C4283610067D053 /* Presentation */ = {
-			isa = PBXGroup;
-			children = (
-				688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */,
-				688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */,
-				68F6FAB32C4A9D8B001128FF /* TransferDestinationViewController.swift */,
-				68F6FAB52C4A9D9A001128FF /* TransferCheckViewController.swift */,
-			);
-			path = Presentation;
-			sourceTree = "<group>";
-		};
-		688EFDB22C42836B0067D053 /* Domain */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Domain;
-			sourceTree = "<group>";
-		};
-		688EFDB32C4283710067D053 /* Entity */ = {
+		688EFDB32C4283710067D053 /* State */ = {
 			isa = PBXGroup;
 			children = (
 				68F6FCF92C5A4107001128FF /* MusicPlatform.swift */,
 				68F6FD002C5BAB3B001128FF /* LoadingState.swift */,
 			);
-			path = Entity;
+			path = State;
+			sourceTree = "<group>";
+		};
+		68DC4C752C6B6E5B006D8E97 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */,
+				68DC4C762C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		68DC4C7E2C6B6FA6006D8E97 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				68DC4C7F2C6B70AE006D8E97 /* EndPoint.swift */,
+				68DC4C812C6B70C2006D8E97 /* APIService.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		68DC4C832C6B70DB006D8E97 /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				68DC4C842C6B70F3006D8E97 /* SpotifyPlaylist.swift */,
+			);
+			path = DataModel;
+			sourceTree = "<group>";
+		};
+		68DC4C862C6B7129006D8E97 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				68DC4C872C6B7146006D8E97 /* AlertViewController.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		68DC8A8A2C3C535300A03042 = {
@@ -212,7 +245,10 @@
 			isa = PBXGroup;
 			children = (
 				68F6FD082C5D100B001128FF /* SpotifyManager */,
+				68DC4C7E2C6B6FA6006D8E97 /* Network */,
+				68DC4C832C6B70DB006D8E97 /* DataModel */,
 				68F6FAB92C50D27D001128FF /* Extension */,
+				68DC4C862C6B7129006D8E97 /* Shared */,
 				68F6FAAE2C4A8E4E001128FF /* Component */,
 				688EFDB02C4281DC0067D053 /* Transfer */,
 				68DC8A962C3C535300A03042 /* AppDelegate.swift */,
@@ -260,6 +296,7 @@
 			children = (
 				68F6FABA2C50D288001128FF /* UIColor+Extension.swift */,
 				68F6FCFB2C5A92F2001128FF /* UIButton+Extension.swift */,
+				68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -527,15 +564,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				68F6FAB42C4A9D8B001128FF /* TransferDestinationViewController.swift in Sources */,
+				68DC4C732C6B6DE5006D8E97 /* TransferPlaylistViewController.swift in Sources */,
 				68F6FAB82C4A9F27001128FF /* BlackButton.swift in Sources */,
 				68F6FCFC2C5A92F2001128FF /* UIButton+Extension.swift in Sources */,
 				688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */,
+				68DC4C772C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift in Sources */,
 				68F6FAB22C4A9CCA001128FF /* WhiteButton.swift in Sources */,
 				68F6FCFF2C5BA631001128FF /* LoadingView.swift in Sources */,
 				68F6FCFA2C5A4107001128FF /* MusicPlatform.swift in Sources */,
 				68F6FD0A2C5D101A001128FF /* Constants.swift in Sources */,
 				68F6FABB2C50D288001128FF /* UIColor+Extension.swift in Sources */,
+				68DC4C882C6B7146006D8E97 /* AlertViewController.swift in Sources */,
 				6859C90E2C6125C400E03179 /* PlatformView.swift in Sources */,
+				68DC4C792C6B6F48006D8E97 /* UIViewController+Extension.swift in Sources */,
 				68F6FD0C2C5D11D4001128FF /* ViewController.swift in Sources */,
 				68F6FAB62C4A9D9A001128FF /* TransferCheckViewController.swift in Sources */,
 				68DC8A9B2C3C535300A03042 /* HomeViewController.swift in Sources */,
@@ -543,7 +584,10 @@
 				68F6FAB02C4A8ECF001128FF /* MoveView.swift in Sources */,
 				68F6FD012C5BAB3B001128FF /* LoadingState.swift in Sources */,
 				6859C9102C612ACE00E03179 /* DotView.swift in Sources */,
+				68DC4C802C6B70AE006D8E97 /* EndPoint.swift in Sources */,
 				688EFDB52C42867B0067D053 /* TransferSourceViewController.swift in Sources */,
+				68DC4C852C6B70F3006D8E97 /* SpotifyPlaylist.swift in Sources */,
+				68DC4C822C6B70C2006D8E97 /* APIService.swift in Sources */,
 				68DC8A992C3C535300A03042 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

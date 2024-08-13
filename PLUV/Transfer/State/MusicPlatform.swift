@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MusicPlatform: Int, CaseIterable {
+enum MusicPlatform: Int, CaseIterable, Codable {
     case AppleMusic
     case Spotify
     case YoutubeMusic
