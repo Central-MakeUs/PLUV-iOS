@@ -22,7 +22,7 @@ final class TransferPlaylistCollectionViewCell: UICollectionViewCell {
     }
     private let playlistTitleLabel = UILabel().then {
         $0.textColor = .gray800
-        $0.font = .systemFont(ofSize: 16) /// g, y, p 같은 문자 이슈로 2point 줄임
+        $0.font = .systemFont(ofSize: 18, weight: .medium)
     }
     private let songCountLabel = UILabel().then {
         $0.textColor = .gray500
@@ -63,7 +63,7 @@ final class TransferPlaylistCollectionViewCell: UICollectionViewCell {
         playlistTitleLabel.snp.makeConstraints { make in
             make.top.equalTo(thumbnailImageView.snp.bottom).offset(10)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(18)
+            make.height.equalTo(20) /// g, y, p 같은 문자 이슈로 2point 늘림
         }
         
         self.contentView.addSubview(songCountLabel)

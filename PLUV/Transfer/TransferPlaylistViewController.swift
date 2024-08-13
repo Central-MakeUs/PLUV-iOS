@@ -22,7 +22,7 @@ class TransferPlaylistViewController: UIViewController {
     }
     private let playlistTitleLabel = UILabel().then {
         $0.text = "어떤 플레이리스트를 옮길까요?"
-        $0.font = .systemFont(ofSize: 24, weight: .regular)
+        $0.font = .systemFont(ofSize: 24, weight: .semibold)
         $0.textColor = .gray800
     }
     private let maximumCountLabel = UILabel().then {
@@ -142,6 +142,6 @@ extension TransferPlaylistViewController: UICollectionViewDelegateFlowLayout {
         }
         
         let value = (collectionView.frame.width - (flowLayout.sectionInset.left + flowLayout.sectionInset.right + flowLayout.minimumInteritemSpacing)) / 2
-        return CGSize(width: value, height: value / 140 * 188)
+        return CGSize(width: value, height: value / 140 * 190)
     }
 }
