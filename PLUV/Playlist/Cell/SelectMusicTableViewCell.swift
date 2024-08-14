@@ -15,19 +15,16 @@ class SelectMusicTableViewCell: UITableViewCell {
         $0.layer.cornerRadius = 2
         $0.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
         $0.layer.borderWidth = 0.5
-        
-        $0.backgroundColor = .systemMint
+        $0.clipsToBounds = true
     }
     private let labelView = UIView()
     private let songTitleLabel = UILabel().then {
         $0.textColor = .gray800
-        $0.font = .systemFont(ofSize: 16)
-        $0.text = "Heather"
+        $0.font = .systemFont(ofSize: 15) /// g, y, p 같은 문자 이슈로 1point 줄임
     }
     private let singerLabel = UILabel().then {
         $0.textColor = .gray500
-        $0.font = .systemFont(ofSize: 14)
-        $0.text = "Conan Gray"
+        $0.font = .systemFont(ofSize: 13) /// g, y, p 같은 문자 이슈로 1point 줄임
     }
     private let checkView = UIView()
     private let checkImageView = UIImageView().then {
@@ -93,5 +90,12 @@ class SelectMusicTableViewCell: UITableViewCell {
             make.leading.trailing.bottom.equalToSuperview()
             make.height.equalTo(14)
         }
+    }
+    
+    func prepare(music: SpotifyMusic) {
+        let thumbNailUrl = URL(string: music.imageURL)
+        self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
+        self.songTitleLabel.text = music.title
+        self.singerLabel.text = music.artistNames
     }
 }

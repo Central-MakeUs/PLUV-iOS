@@ -12,6 +12,8 @@ import RxCocoa
 
 class SelectMusicViewController: UIViewController {
     
+    let viewModel = SelectMusicViewModel()
+    
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
@@ -33,7 +35,7 @@ class SelectMusicViewController: UIViewController {
         $0.layer.cornerRadius = 8
         $0.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
         $0.layer.borderWidth = 0.5
-        
+        $0.clipsToBounds = true
         $0.backgroundColor = .systemPink
     }
     private let sourcePlatformLabel = UILabel().then {
@@ -82,7 +84,6 @@ class SelectMusicViewController: UIViewController {
         super.viewDidLoad()
         
         setUI()
-        setData()
         setMusicList()
     }
     
@@ -224,15 +225,22 @@ class SelectMusicViewController: UIViewController {
         self.selectMusicTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
         
-        self.selectMusicTableView.rx.setDataSource(self)
-            .disposed(by: disposeBag)
-        
         /// 아이템 선택 시 스타일 제거
         self.selectMusicTableView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
                 self?.selectMusicTableView.deselectRow(at: indexPath, animated: true)
             })
             .disposed(by: disposeBag)
+        
+        /// TableView에 들어갈 Cell에 정보 제공
+        self.viewModel.musicItem
+            .observe(on: MainScheduler.instance)
+            .bind(to: self.selectMusicTableView.rx.items) { tableView, row, item in
+                let cell = tableView.dequeueReusableCell(withIdentifier: SelectMusicTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as! SelectMusicTableViewCell
+                cell.prepare(music: item)
+                return cell
+            }
+            .disposed(by: self.disposeBag)
     }
     
     private func setMusicList() {
@@ -242,7 +250,9 @@ class SelectMusicViewController: UIViewController {
         APIService().post(of: APIResponse<[SpotifyMusic]>.self, url: url, parameters: params) { response in
             switch response.code {
             case 200:
+                self.viewModel.musicItem = Observable.just(response.data)
                 print(response.data, "song 확인")
+                self.setData()
             default:
                 AlertController(message: response.msg).show()
             }
@@ -250,17 +260,9 @@ class SelectMusicViewController: UIViewController {
     }
 }
 
-extension SelectMusicViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = selectMusicTableView.dequeueReusableCell(withIdentifier: SelectMusicTableViewCell.identifier, for: indexPath)
-        return cell
-    }
+extension SelectMusicViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 66
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
     }
 }
