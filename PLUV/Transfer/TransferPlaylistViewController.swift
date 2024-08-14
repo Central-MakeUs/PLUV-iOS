@@ -12,7 +12,7 @@ import RxCocoa
 
 class TransferPlaylistViewController: UIViewController {
     
-    var playlistItem: Observable<[SpotifyPlaylist]> = Observable.just([])
+    let viewModel = TransferPlaylistViewModel()
     
     private let playlistTitleView = UIView()
     private let sourceToDestinationLabel = UILabel().then {
@@ -54,6 +54,8 @@ class TransferPlaylistViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         setPlaylist()
+        setData()
+        setCellSelected()
     }
     
     private func setUI() {
@@ -93,6 +95,7 @@ class TransferPlaylistViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(24)
         }
         playlistCollectionView.showsVerticalScrollIndicator = false
+        playlistCollectionView.allowsMultipleSelection = false
         
         moveView = MoveView(view: self)
         self.view.addSubview(moveView)
@@ -103,12 +106,54 @@ class TransferPlaylistViewController: UIViewController {
         }
     }
     
+    private func setCellSelected() {
+        // 셀 선택 시
+        self.playlistCollectionView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
+                
+                // 현재 선택된 셀을 ViewModel에 업데이트
+                self.viewModel.selectedIndexPath.accept(indexPath)
+            })
+            .disposed(by: disposeBag)
+        
+        // 셀 선택 해제 시
+        self.playlistCollectionView.rx.itemDeselected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
+                
+                // 선택 해제된 셀의 인덱스를 ViewModel에 업데이트
+                self.viewModel.selectedIndexPath.accept(nil)
+            })
+            .disposed(by: disposeBag)
+        
+        // 선택된 셀이 변경될 때마다 컬렉션 뷰 업데이트
+        viewModel.selectedIndexPath
+            .subscribe(onNext: { [weak self] selectedIndexPath in
+                guard let self = self else { return }
+                
+                self.playlistCollectionView.visibleCells.forEach { cell in
+                    guard let indexPath = self.playlistCollectionView.indexPath(for: cell) else { return }
+                    let isSelected = (indexPath == selectedIndexPath)
+                    
+                    // 선택 상태에 따라 셀 업데이트
+                    if let customCell = cell as? TransferPlaylistCollectionViewCell {
+                        customCell.updateSelectionState(isSelected: isSelected)
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+    
     private func setData() {
+        playlistCollectionView.delegate = nil
+        playlistCollectionView.dataSource = nil
+        
         self.playlistCollectionView.rx.setDelegate(self)
             .disposed(by: disposeBag)
         
         /// CollectionView에 들어갈 Cell에 정보 제공
-        self.playlistItem
+        self.viewModel.playlistItem
             .observe(on: MainScheduler.instance)
             .bind(to: self.playlistCollectionView.rx.items(cellIdentifier: TransferPlaylistCollectionViewCell.identifier, cellType: TransferPlaylistCollectionViewCell.self)) { index, item, cell in
                 cell.prepare(playlist: item)
@@ -118,17 +163,35 @@ class TransferPlaylistViewController: UIViewController {
         /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
         self.playlistCollectionView.rx.modelSelected(SpotifyPlaylist.self)
             .subscribe(onNext: { [weak self] playlistItem in
-                //
+                playlistItem.id
             })
             .disposed(by: disposeBag)
+        
+        /*
+        self.playlistCollectionView.rx.itemSelected
+            .subscribe { [weak self] indexPath in
+                guard let cell  = self?.playlistCollectionView.cellForItem(at: indexPath) as? TransferPlaylistCollectionViewCell else { return }
+                self?.selectedPlaylistIndex = Observable.just(indexPath.row)
+                cell.selected(selectedIndex: indexPath.row)
+            }
+            .disposed(by: disposeBag)
+        
+        self.selectedPlaylistIndex
+            .subscribe(onNext: { index in
+                guard let cell  = self.playlistCollectionView.cellForItem(at: IndexPath(index: index)) as? TransferPlaylistCollectionViewCell else { return }
+                cell.selected(selectedIndex: index)
+            })
+            .disposed(by: disposeBag)
+        */
     }
     
     private func setPlaylist() {
         let url = EndPoint.playlistSpotifyRead.path
-        let params = ["accessToken" : "BQCgliukvY3HAdA05-bAnU4S94C4rANNRhsihm3UTtScADYZVDXDw9cAi47joVsxxnNmlsBAVJIh1TekEeNiQG_bPY1dTKKEZ_026VxPGuTvMuBHcY78egmq6zMJriJlzqGWQZEHmzUxI_pqzp5Cy9BERcndtUKgxdmua1VxbItcIZMxA2JKrqkcp5mE4kIRGOdi-vjbTKw9TA7zPSnFIUdO3ysxJ7M0rOanuy-3D5SwNSx1RPNsrkZ8I4Nb_nmH_JxXs-J_nf1lN4bhBx_jDK5Q74cGuEsgaKGG-xWtvwxqupfk8G0KmYrfRqi2iIhDm761bVT67yIFV4tvJ2sSmQ"]
+        let params = ["accessToken" : "BQAs8NqH9Oy2VjRp7QTJmdn4cNQmJ4qF4GjrMUDmBE6XQbqaWgWaEQ6HjudxF8GgYz5Bkv-ENFZwF-7sQxejYHT4DyeDEY4BM3wQFQGBgYtSjd4zfLbUodiYxtOY7tJjziWZBM8DSleBTaZM6DTszWb42vj20SLOlNNq6C7DX9uMkRUjqWw7brj-gT7db7_6WWHI3fdLrnPhQ0OkSEb52AJTjpWlk7axpy2SZrDfeVp5hnkPJLrRdAxVQfyV3bsZmpQLhbzQlhAveDgJZ_CKuBLyVUDmRS7-F9nSfN0ap32vEcnY4REa6kbP6oQGNCJGZeQ6R9_Ej2Rtd6R6GdY41w"]
         
         APIService().post(of: [SpotifyPlaylist].self, url: url, parameters: params) { response in
-            self.playlistItem = Observable.just(response)
+            self.viewModel.playlistItem = Observable.just(response)
+            print(response, "playlistItem 확인")
             self.setData()
         }
     }

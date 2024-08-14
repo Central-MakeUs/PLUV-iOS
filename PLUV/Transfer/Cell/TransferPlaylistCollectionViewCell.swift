@@ -13,6 +13,7 @@ import Kingfisher
 final class TransferPlaylistCollectionViewCell: UICollectionViewCell {
     
     static let identifier = String(describing: TransferPlaylistCollectionViewCell.self)
+    
     private let thumbnailImageView = UIImageView().then {
         $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
@@ -87,5 +88,14 @@ final class TransferPlaylistCollectionViewCell: UICollectionViewCell {
         self.playlistTitleLabel.text = playlist.name
         self.songCountLabel.text = "총 \(String(playlist.songCount))곡"
         self.dateLabel.text = "2024.04.20"
+        
+        let borderWidth: CGFloat = 2.4
+        thumbnailImageView.frame = CGRectInset(self.frame, -borderWidth, -borderWidth)
+        thumbnailImageView.layer.borderColor = UIColor.mainPurple.cgColor
+        thumbnailImageView.layer.borderWidth = 0
+    }
+    
+    func updateSelectionState(isSelected: Bool) {
+        thumbnailImageView.layer.borderWidth = isSelected ? 2.4 : 0
     }
 }
