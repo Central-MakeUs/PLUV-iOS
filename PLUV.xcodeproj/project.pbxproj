@@ -165,7 +165,25 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		688EFDB02C4281DC0067D053 /* Transfer */ = {
+		6889F5132C6CE496001F5FC2 /* Playlist */ = {
+			isa = PBXGroup;
+			children = (
+				6889F5142C6CE4B4001F5FC2 /* Cell */,
+				68DC4C722C6B6DE5006D8E97 /* TransferPlaylistViewController.swift */,
+				6889F5112C6CD194001F5FC2 /* TransferPlaylistViewModel.swift */,
+			);
+			path = Playlist;
+			sourceTree = "<group>";
+		};
+		6889F5142C6CE4B4001F5FC2 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				68DC4C762C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		688EFDB02C4281DC0067D053 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
 				688EFDB32C4283710067D053 /* State */,
@@ -173,10 +191,8 @@
 				688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */,
 				68F6FAB32C4A9D8B001128FF /* TransferDestinationViewController.swift */,
 				68F6FAB52C4A9D9A001128FF /* TransferCheckViewController.swift */,
-				68DC4C722C6B6DE5006D8E97 /* TransferPlaylistViewController.swift */,
-				6889F5112C6CD194001F5FC2 /* TransferPlaylistViewModel.swift */,
 			);
-			path = Transfer;
+			path = Platform;
 			sourceTree = "<group>";
 		};
 		688EFDB32C4283710067D053 /* State */ = {
@@ -192,7 +208,6 @@
 			isa = PBXGroup;
 			children = (
 				688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */,
-				68DC4C762C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -253,7 +268,8 @@
 				68F6FAB92C50D27D001128FF /* Extension */,
 				68DC4C862C6B7129006D8E97 /* Shared */,
 				68F6FAAE2C4A8E4E001128FF /* Component */,
-				688EFDB02C4281DC0067D053 /* Transfer */,
+				688EFDB02C4281DC0067D053 /* Platform */,
+				6889F5132C6CE496001F5FC2 /* Playlist */,
 				68DC8A962C3C535300A03042 /* AppDelegate.swift */,
 				68DC8A982C3C535300A03042 /* SceneDelegate.swift */,
 				68DC8A9A2C3C535300A03042 /* HomeViewController.swift */,
