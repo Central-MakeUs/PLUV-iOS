@@ -91,17 +91,19 @@ class SelectMusicViewController: UIViewController {
         
         self.view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
         
         self.scrollView.addSubview(contentView)
         contentView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
+        
+        contentView.backgroundColor = .green
         
         self.contentView.addSubview(selectMusicTitleView)
         selectMusicTitleView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.top.leading.trailing.equalToSuperview()
             make.height.equalTo(146)
         }
         
@@ -192,19 +194,14 @@ class SelectMusicViewController: UIViewController {
             make.height.equalTo(6)
         }
         
-        let testview = UIView()
-        
-        self.contentView.addSubview(testview)
-        testview.snp.makeConstraints { make in
+        self.contentView.addSubview(selectMusicTableView)
+        selectMusicTableView.snp.makeConstraints { make in
             make.top.equalTo(selectSongView.snp.bottom)
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalToSuperview().inset(101)
+            make.height.equalTo(660)
+            make.bottom.equalTo(view).inset(101)
         }
-        testview.backgroundColor = .yellow
-        
-        selectMusicTableView.isScrollEnabled = false
-        selectMusicTableView.backgroundColor = .yellow
-        selectMusicTableView.tintColor = .yellow
+        //selectMusicTableView.isScrollEnabled = false
         
         moveView = MoveView(view: self)
         self.view.addSubview(moveView)

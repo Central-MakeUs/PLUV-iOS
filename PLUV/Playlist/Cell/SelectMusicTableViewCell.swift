@@ -29,7 +29,10 @@ class SelectMusicTableViewCell: UITableViewCell {
         $0.font = .systemFont(ofSize: 14)
         $0.text = "Conan Gray"
     }
-    private let checkImageView = UIImageView()
+    private let checkView = UIView()
+    private let checkImageView = UIImageView().then {
+        $0.image = UIImage(named: "check_image")
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -58,11 +61,18 @@ class SelectMusicTableViewCell: UITableViewCell {
             make.width.equalTo(thumbnailImageView.snp.height)
         }
         
-        self.contentsView.addSubview(checkImageView)
-        checkImageView.snp.makeConstraints { make in
+        self.contentsView.addSubview(checkView)
+        checkView.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
             make.width.height.equalTo(16)
             make.centerY.equalToSuperview()
+        }
+        
+        self.checkView.addSubview(checkImageView)
+        checkImageView.snp.makeConstraints { make in
+            make.width.equalTo(10)
+            make.height.equalTo(6)
+            make.center.equalToSuperview()
         }
         
         self.contentsView.addSubview(labelView)
