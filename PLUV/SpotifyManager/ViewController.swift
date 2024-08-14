@@ -114,6 +114,9 @@ class ViewController: UIViewController {
     @objc func didTapConnect(_ button: UIButton) {
         guard let sessionManager = sessionManager else { return }
         sessionManager.initiateSession(with: scopes, options: .clientOnly, campaign: nil)
+        
+        let vc = TransferPlaylistViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 
     // MARK: - Private Helpers
@@ -290,6 +293,8 @@ extension ViewController {
             let responseObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
             print("Access Token Dictionary=", responseObject ?? "")
             completion(responseObject, nil)
+            
+            self.stringToken = responseObject!["access_token"] as! String
         }
         task.resume()
     }

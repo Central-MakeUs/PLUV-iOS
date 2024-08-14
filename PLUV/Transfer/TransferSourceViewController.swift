@@ -67,18 +67,22 @@ extension TransferSourceViewController {
         
         moveView.backButton.isEnabled = false
         moveView.trasferButton.isEnabled = false
+        
+        sourceTableView.isScrollEnabled = false
     }
     
     private func setData() {
         self.sourceTableView.rx.setDelegate(self)
             .disposed(by: self.disposeBag)
         
+        /// 아이템 선택 시 스타일 제거
         self.sourceTableView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
                 self?.sourceTableView.deselectRow(at: indexPath, animated: true)
             })
             .disposed(by: disposeBag)
         
+        /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
         self.sourceTableView.rx.modelSelected(MusicPlatform.self)
                    .observe(on: MainScheduler.instance)
                    .subscribe(onNext: { [weak self] platform in
@@ -88,6 +92,7 @@ extension TransferSourceViewController {
                    })
                    .disposed(by: disposeBag)
         
+        /// TableView에 들어갈 Cell에 정보 제공
         self.sourceList
             .observe(on: MainScheduler.instance)
             .bind(to: self.sourceTableView.rx.items) { tableView, row, item in
