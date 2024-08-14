@@ -104,6 +104,13 @@ class TransferPlaylistViewController: UIViewController {
             make.height.equalTo(101)
             make.top.equalTo(playlistCollectionView.snp.bottom)
         }
+        
+        moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
+    }
+    
+    @objc private func clickTransferButton() {
+        let selectMusicVC = SelectMusicViewController()
+        self.navigationController?.pushViewController(selectMusicVC, animated: true)
     }
     
     private func setCellSelected() {
