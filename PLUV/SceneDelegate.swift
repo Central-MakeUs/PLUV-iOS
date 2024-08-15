@@ -61,7 +61,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var HomeVC = UINavigationController(rootViewController: HomeViewController())
+    var LoginVC = UINavigationController(rootViewController: LoginViewController())
     lazy var SpotifyVC = ViewController()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -70,7 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window!.makeKeyAndVisible()
         window!.windowScene = windowScene
         window?.overrideUserInterfaceStyle = .light
-        window!.rootViewController = HomeVC
+        window!.rootViewController = LoginVC
     }
 
     // For spotify authorization and authentication flow
