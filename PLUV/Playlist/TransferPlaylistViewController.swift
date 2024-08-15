@@ -50,11 +50,7 @@ class TransferPlaylistViewController: UIViewController {
         super.viewDidLoad()
         
         setUI()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
         setPlaylist()
-        setData()
         setCellSelected()
     }
     
@@ -154,7 +150,6 @@ class TransferPlaylistViewController: UIViewController {
     
     private func setData() {
         playlistCollectionView.delegate = nil
-        playlistCollectionView.dataSource = nil
         
         self.playlistCollectionView.rx.setDelegate(self)
             .disposed(by: disposeBag)
