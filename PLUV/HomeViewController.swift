@@ -26,6 +26,7 @@ class HomeViewController: UIViewController {
         setTestAppleMusic()
         Task {
             await self.setApplePlaylist()
+            await self.setApplePlaylistMusic()
         }
     }
 }
@@ -75,6 +76,27 @@ extension HomeViewController {
             
             APIService().post(of: [SpotifyPlaylist].self, url: url, parameters: params) { response in
                 print(response, "apple music playlist 확인")
+            }
+        } catch {
+            print("error")
+        }
+    }
+    
+    private func setApplePlaylistMusic() async {
+        do {
+            let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+            let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+            
+            let url = EndPoint.playlistAppleMusicRead("p.YJXV7dEIekpNVAQ").path
+            let params = ["musicUserToken" : userToken]
+            
+            APIService().post(of: APIResponse<[SpotifyMusic]>.self, url: url, parameters: params) { response in
+                switch response.code {
+                case 200:
+                    print(response.data, "song 확인")
+                default:
+                    AlertController(message: response.msg).show()
+                }
             }
         } catch {
             print("error")
