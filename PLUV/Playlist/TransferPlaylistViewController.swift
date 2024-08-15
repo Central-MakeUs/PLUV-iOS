@@ -50,11 +50,7 @@ class TransferPlaylistViewController: UIViewController {
         super.viewDidLoad()
         
         setUI()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
         setPlaylist()
-        setData()
         setCellSelected()
     }
     
@@ -104,6 +100,13 @@ class TransferPlaylistViewController: UIViewController {
             make.height.equalTo(101)
             make.top.equalTo(playlistCollectionView.snp.bottom)
         }
+        
+        moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
+    }
+    
+    @objc private func clickTransferButton() {
+        let selectMusicVC = SelectMusicViewController()
+        self.navigationController?.pushViewController(selectMusicVC, animated: true)
     }
     
     private func setCellSelected() {
@@ -147,7 +150,6 @@ class TransferPlaylistViewController: UIViewController {
     
     private func setData() {
         playlistCollectionView.delegate = nil
-        playlistCollectionView.dataSource = nil
         
         self.playlistCollectionView.rx.setDelegate(self)
             .disposed(by: disposeBag)

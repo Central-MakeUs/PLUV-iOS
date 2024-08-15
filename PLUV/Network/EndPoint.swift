@@ -9,6 +9,7 @@ import Foundation
 
 enum EndPoint {
     case playlistSpotifyRead
+    case playlistMusicSpotifyRead(String)
 }
 
 extension EndPoint {
@@ -23,6 +24,8 @@ extension EndPoint {
         switch self {
         case .playlistSpotifyRead:
             return EndPoint.makeEndPoint("/playlist/spotify/read")
+        case .playlistMusicSpotifyRead(let id):
+            return EndPoint.makeEndPoint("/playlist/spotify/\(id)/read")
         }
     }
 }
