@@ -97,6 +97,7 @@
 		6889F51B2C6D4A91001F5FC2 /* APIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponse.swift; sourceTree = "<group>"; };
 		6889F51D2C6D52B7001F5FC2 /* SelectMusicViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMusicViewModel.swift; sourceTree = "<group>"; };
 		6889F5202C6E6E78001F5FC2 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		6889F5222C6E82F3001F5FC2 /* PLUV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PLUV.entitlements; sourceTree = "<group>"; };
 		688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferSourceViewController.swift; sourceTree = "<group>"; };
 		688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTableViewCell.swift; sourceTree = "<group>"; };
 		68DC4C722C6B6DE5006D8E97 /* TransferPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPlaylistViewController.swift; sourceTree = "<group>"; };
@@ -287,6 +288,7 @@
 		68DC8A952C3C535300A03042 /* PLUV */ = {
 			isa = PBXGroup;
 			children = (
+				6889F5222C6E82F3001F5FC2 /* PLUV.entitlements */,
 				68F6FD082C5D100B001128FF /* SpotifyManager */,
 				68DC4C7E2C6B6FA6006D8E97 /* Network */,
 				68DC4C832C6B70DB006D8E97 /* DataModel */,
@@ -814,6 +816,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = PLUV/PLUV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4YMA7W8T46;
@@ -854,6 +857,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = PLUV/PLUV.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4YMA7W8T46;
