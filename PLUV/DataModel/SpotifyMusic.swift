@@ -10,7 +10,7 @@ import Foundation
 struct SpotifyMusic: Codable {
     let title: String
     let artistNames: String
-    let isrcCode: String
+    let isrcCode: String?
     let imageURL: String
 
     enum CodingKeys: String, CodingKey {
