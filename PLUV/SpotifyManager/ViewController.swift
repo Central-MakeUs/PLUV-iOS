@@ -293,8 +293,6 @@ extension ViewController {
             let responseObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
             print("Access Token Dictionary=", responseObject ?? "")
             completion(responseObject, nil)
-            
-            self.stringToken = responseObject!["access_token"] as! String
         }
         task.resume()
     }

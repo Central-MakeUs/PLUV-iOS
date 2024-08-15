@@ -28,7 +28,7 @@ extension HomeViewController {
     
     private func setUI() {
         self.view.backgroundColor = .white
-        self.navigationItem.setHidesBackButton(true, animated: false)
+        //self.navigationItem.setHidesBackButton(true, animated: false)
         
         self.view.addSubview(transferDirectButton)
         transferDirectButton.snp.makeConstraints { make in
