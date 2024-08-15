@@ -74,7 +74,7 @@ extension HomeViewController {
             let url = EndPoint.playlistAppleRead.path
             let params = ["musicUserToken" : userToken]
             
-            APIService().post(of: [SpotifyPlaylist].self, url: url, parameters: params) { response in
+            APIService().post(of: [Playlist].self, url: url, parameters: params) { response in
                 print(response, "apple music playlist 확인")
             }
         } catch {
@@ -90,7 +90,7 @@ extension HomeViewController {
             let url = EndPoint.playlistAppleMusicRead("p.YJXV7dEIekpNVAQ").path
             let params = ["musicUserToken" : userToken]
             
-            APIService().post(of: APIResponse<[SpotifyMusic]>.self, url: url, parameters: params) { response in
+            APIService().post(of: APIResponse<[Music]>.self, url: url, parameters: params) { response in
                 switch response.code {
                 case 200:
                     print(response.data, "song 확인")

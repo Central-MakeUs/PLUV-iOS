@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SpotifyPlaylist: Codable {
+struct Playlist: Codable {
     let id: String
     let thumbnailURL: String
     let songCount: Int?

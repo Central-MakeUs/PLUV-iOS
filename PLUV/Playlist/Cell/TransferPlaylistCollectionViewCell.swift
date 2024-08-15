@@ -82,7 +82,7 @@ final class TransferPlaylistCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func prepare(playlist: SpotifyPlaylist) {
+    func prepare(playlist: Playlist) {
         let thumbNailUrl = URL(string: playlist.thumbnailURL)
         self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
         self.playlistTitleLabel.text = playlist.name

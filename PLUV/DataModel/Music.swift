@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SpotifyMusic: Codable {
+struct Music: Codable {
     let title: String
     let artistNames: String
     let isrcCode: String?

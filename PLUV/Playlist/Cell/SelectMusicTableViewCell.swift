@@ -92,7 +92,7 @@ class SelectMusicTableViewCell: UITableViewCell {
         }
     }
     
-    func prepare(music: SpotifyMusic) {
+    func prepare(music: Music) {
         let thumbNailUrl = URL(string: music.imageURL)
         self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
         self.songTitleLabel.text = music.title
