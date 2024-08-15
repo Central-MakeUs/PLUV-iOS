@@ -8,6 +8,9 @@
 import Foundation
 
 enum EndPoint {
+    case loginApple
+    case loginAppleAdd
+    
     case playlistSpotifyRead
     case playlistMusicSpotifyRead(String)
 }
@@ -22,6 +25,10 @@ extension EndPoint {
     
     var path: String {
         switch self {
+        case .loginApple:
+            return EndPoint.makeEndPoint("/login/apple")
+        case .loginAppleAdd:
+            return EndPoint.makeEndPoint("/login/apple/add")
         case .playlistSpotifyRead:
             return EndPoint.makeEndPoint("/playlist/spotify/read")
         case .playlistMusicSpotifyRead(let id):
