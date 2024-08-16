@@ -116,6 +116,21 @@ class LoginViewController: UIViewController {
         authorizationController.presentationContextProvider = self
         authorizationController.performRequests()
     }
+    
+    private func loginAPI(token: String) {
+        let url = EndPoint.loginApple.path
+        let params = ["idToken" : token]
+        APIService().post(of: APIResponse<AccessTokenModel>.self, url: url, parameters: params) { response in
+            switch response.code {
+            case 200:
+                print(response.data, "Bearer Access Token")
+                let homeVC = HomeViewController()
+                self.navigationController?.pushViewController(homeVC, animated: true)
+            default:
+                AlertController(message: response.msg).show()
+            }
+        }
+    }
 }
 
 extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding{
@@ -140,6 +155,8 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
                 print("identityToken: \(identityToken)")
                 print("authCodeString: \(authCodeString)")
                 print("identifyTokenString: \(identifyTokenString)\n")
+                
+                self.loginAPI(token: identifyTokenString)
             }
             
             print("useridentifier: \(userIdentifier)")
@@ -164,10 +181,8 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
         }
     }
     
-    
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         // 로그인 실패(유저의 취소도 포함)
         print("login failed - \(error.localizedDescription)")
     }
 }
-
