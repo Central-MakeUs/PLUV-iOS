@@ -25,8 +25,8 @@ class HomeViewController: UIViewController {
         setUI()
         setTestAppleMusic()
         Task {
-            await self.setApplePlaylist()
-            await self.setApplePlaylistMusic()
+            await self.setApplePlaylistAPI()
+            await self.setApplePlaylistMusicAPI()
         }
     }
 }
@@ -55,7 +55,7 @@ extension HomeViewController {
         // MusicKitManager.shared.fetchMusic("알레프")
     }
     
-    private func setApplePlaylist() async {
+    private func setApplePlaylistAPI() async {
         /*
          deprecated
          
@@ -82,7 +82,7 @@ extension HomeViewController {
         }
     }
     
-    private func setApplePlaylistMusic() async {
+    private func setApplePlaylistMusicAPI() async {
         do {
             let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
             let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)

@@ -50,7 +50,7 @@ class TransferPlaylistViewController: UIViewController {
         super.viewDidLoad()
         
         setUI()
-        setPlaylist()
+        setPlaylistAPI()
         setCellSelected()
     }
     
@@ -187,7 +187,7 @@ class TransferPlaylistViewController: UIViewController {
         */
     }
     
-    private func setPlaylist() {
+    private func setPlaylistAPI() {
         let url = EndPoint.playlistSpotifyRead.path
         let params = ["accessToken" : "BQAs8NqH9Oy2VjRp7QTJmdn4cNQmJ4qF4GjrMUDmBE6XQbqaWgWaEQ6HjudxF8GgYz5Bkv-ENFZwF-7sQxejYHT4DyeDEY4BM3wQFQGBgYtSjd4zfLbUodiYxtOY7tJjziWZBM8DSleBTaZM6DTszWb42vj20SLOlNNq6C7DX9uMkRUjqWw7brj-gT7db7_6WWHI3fdLrnPhQ0OkSEb52AJTjpWlk7axpy2SZrDfeVp5hnkPJLrRdAxVQfyV3bsZmpQLhbzQlhAveDgJZ_CKuBLyVUDmRS7-F9nSfN0ap32vEcnY4REa6kbP6oQGNCJGZeQ6R9_Ej2Rtd6R6GdY41w"]
         
