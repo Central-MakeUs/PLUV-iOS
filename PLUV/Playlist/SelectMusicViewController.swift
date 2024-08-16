@@ -247,7 +247,7 @@ class SelectMusicViewController: UIViewController {
         let url = EndPoint.playlistMusicSpotifyRead("5GXMligGpoyLOKvnTq5HkI").path
         let params = ["accessToken" : "BQBioHEBnhEszrDy2LMQsTJ-x9xdCzFEeyWRvlS4Xv02mDZrD3_O7YmKbmssr9_NCJazlUZXXC1dlKDRdpaYbEbA4oc84C5CdmFxGfIDIzKNVYtd8dWge0A_n9U-AOhl82STuZY_DWnWK6GE_Sq6dmDJQA1UVZuVQo5ltoK9-ajZqEVFQX6zkGW5WeHLb8v94PiVNs3NLIhC-GcLMXlIP26XkkHTCdWzYaJ3_Q2-yFVhaD1PBkItcVKEYwq--Rt2Lf3YDYLKXhbPEcWR4_IzwfOwRiagW2E0dGRK5Qd_Vs1qO3-Q6o9RAoxjFMEBoe0P5EcModjDVZEhoN2Cef5MSQ"]
         
-        APIService().post(of: APIResponse<[SpotifyMusic]>.self, url: url, parameters: params) { response in
+        APIService().post(of: APIResponse<[Music]>.self, url: url, parameters: params) { response in
             switch response.code {
             case 200:
                 self.viewModel.musicItem = Observable.just(response.data)
