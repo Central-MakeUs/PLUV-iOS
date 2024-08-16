@@ -19,6 +19,7 @@
 		6889F51E2C6D52B7001F5FC2 /* SelectMusicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F51D2C6D52B7001F5FC2 /* SelectMusicViewModel.swift */; };
 		6889F5212C6E6E78001F5FC2 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5202C6E6E78001F5FC2 /* LoginViewController.swift */; };
 		6889F5252C6E9A4F001F5FC2 /* MusicKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5242C6E9A4F001F5FC2 /* MusicKitManager.swift */; };
+		6889F5272C6F4193001F5FC2 /* AccessTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5262C6F4193001F5FC2 /* AccessTokenModel.swift */; };
 		688EFDB52C42867B0067D053 /* TransferSourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */; };
 		688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */; };
 		68DC4C732C6B6DE5006D8E97 /* TransferPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C722C6B6DE5006D8E97 /* TransferPlaylistViewController.swift */; };
@@ -100,6 +101,7 @@
 		6889F5202C6E6E78001F5FC2 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		6889F5222C6E82F3001F5FC2 /* PLUV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PLUV.entitlements; sourceTree = "<group>"; };
 		6889F5242C6E9A4F001F5FC2 /* MusicKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicKitManager.swift; sourceTree = "<group>"; };
+		6889F5262C6F4193001F5FC2 /* AccessTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessTokenModel.swift; sourceTree = "<group>"; };
 		688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferSourceViewController.swift; sourceTree = "<group>"; };
 		688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTableViewCell.swift; sourceTree = "<group>"; };
 		68DC4C722C6B6DE5006D8E97 /* TransferPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPlaylistViewController.swift; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 				6889F51B2C6D4A91001F5FC2 /* APIResponse.swift */,
 				68DC4C842C6B70F3006D8E97 /* Playlist.swift */,
 				6889F5192C6D49E3001F5FC2 /* Music.swift */,
+				6889F5262C6F4193001F5FC2 /* AccessTokenModel.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -629,6 +632,7 @@
 				688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */,
 				68DC4C772C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift in Sources */,
 				68F6FAB22C4A9CCA001128FF /* WhiteButton.swift in Sources */,
+				6889F5272C6F4193001F5FC2 /* AccessTokenModel.swift in Sources */,
 				68F6FCFF2C5BA631001128FF /* LoadingView.swift in Sources */,
 				68F6FCFA2C5A4107001128FF /* MusicPlatform.swift in Sources */,
 				68F6FD0A2C5D101A001128FF /* Constants.swift in Sources */,
