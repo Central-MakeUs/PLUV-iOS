@@ -115,7 +115,7 @@ class ViewController: UIViewController {
         guard let sessionManager = sessionManager else { return }
         sessionManager.initiateSession(with: scopes, options: .clientOnly, campaign: nil)
         
-        let vc = TransferPlaylistViewController()
+        let vc = SelectPlaylistViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
 

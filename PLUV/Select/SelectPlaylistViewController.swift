@@ -10,9 +10,9 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-class TransferPlaylistViewController: UIViewController {
+class SelectPlaylistViewController: UIViewController {
     
-    let viewModel = TransferPlaylistViewModel()
+    let viewModel = SelectPlaylistViewModel()
     
     private let playlistTitleView = UIView()
     private let sourceToDestinationLabel = UILabel().then {
@@ -200,7 +200,7 @@ class TransferPlaylistViewController: UIViewController {
 }
 
 @available(iOS 14.0, *)
-extension TransferPlaylistViewController: UICollectionViewDelegateFlowLayout {
+extension SelectPlaylistViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout else {
             return CGSize.zero
