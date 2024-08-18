@@ -10,7 +10,7 @@ import Alamofire
 
 struct APIService {
     
-    func post<T: Codable>(of type: T.Type, url: URLConvertible, parameters: [String : String], success: @escaping (T) -> (), failure: ((Error) -> ())? = nil) {
+    func post<T: Codable>(of type: T.Type, url: URLConvertible, parameters: [String : Any], success: @escaping (T) -> (), failure: ((Error) -> ())? = nil) {
         
         let headers: HTTPHeaders = ["Content-Type":"application/json", "Accept":"application/json"]
         
