@@ -21,6 +21,12 @@
 		6889F5252C6E9A4F001F5FC2 /* MusicKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5242C6E9A4F001F5FC2 /* MusicKitManager.swift */; };
 		6889F5272C6F4193001F5FC2 /* AccessTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5262C6F4193001F5FC2 /* AccessTokenModel.swift */; };
 		6889F52A2C723BE9001F5FC2 /* MovePlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5292C723BE9001F5FC2 /* MovePlaylistViewController.swift */; };
+		6889F5332C724B58001F5FC2 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F52E2C724B57001F5FC2 /* ProgressView.swift */; };
+		6889F5342C724B58001F5FC2 /* RotationAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F52F2C724B58001F5FC2 /* RotationAnimation.swift */; };
+		6889F5352C724B58001F5FC2 /* ProgressShapeLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5302C724B58001F5FC2 /* ProgressShapeLayer.swift */; };
+		6889F5362C724B58001F5FC2 /* StrokeColorAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5312C724B58001F5FC2 /* StrokeColorAnimation.swift */; };
+		6889F5372C724B58001F5FC2 /* StrokeAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5322C724B58001F5FC2 /* StrokeAnimation.swift */; };
+		6889F5392C7258E8001F5FC2 /* ActionBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5382C7258E8001F5FC2 /* ActionBottomView.swift */; };
 		688EFDB52C42867B0067D053 /* TransferSourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */; };
 		688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */; };
 		68DC4C732C6B6DE5006D8E97 /* SelectPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C722C6B6DE5006D8E97 /* SelectPlaylistViewController.swift */; };
@@ -104,6 +110,12 @@
 		6889F5242C6E9A4F001F5FC2 /* MusicKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicKitManager.swift; sourceTree = "<group>"; };
 		6889F5262C6F4193001F5FC2 /* AccessTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessTokenModel.swift; sourceTree = "<group>"; };
 		6889F5292C723BE9001F5FC2 /* MovePlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovePlaylistViewController.swift; sourceTree = "<group>"; };
+		6889F52E2C724B57001F5FC2 /* ProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
+		6889F52F2C724B58001F5FC2 /* RotationAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RotationAnimation.swift; sourceTree = "<group>"; };
+		6889F5302C724B58001F5FC2 /* ProgressShapeLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressShapeLayer.swift; sourceTree = "<group>"; };
+		6889F5312C724B58001F5FC2 /* StrokeColorAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrokeColorAnimation.swift; sourceTree = "<group>"; };
+		6889F5322C724B58001F5FC2 /* StrokeAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrokeAnimation.swift; sourceTree = "<group>"; };
+		6889F5382C7258E8001F5FC2 /* ActionBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionBottomView.swift; sourceTree = "<group>"; };
 		688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferSourceViewController.swift; sourceTree = "<group>"; };
 		688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTableViewCell.swift; sourceTree = "<group>"; };
 		68DC4C722C6B6DE5006D8E97 /* SelectPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlaylistViewController.swift; sourceTree = "<group>"; };
@@ -227,6 +239,18 @@
 				6889F5292C723BE9001F5FC2 /* MovePlaylistViewController.swift */,
 			);
 			path = Move;
+			sourceTree = "<group>";
+		};
+		6889F52D2C724B31001F5FC2 /* ProgressView */ = {
+			isa = PBXGroup;
+			children = (
+				6889F5302C724B58001F5FC2 /* ProgressShapeLayer.swift */,
+				6889F52E2C724B57001F5FC2 /* ProgressView.swift */,
+				6889F52F2C724B58001F5FC2 /* RotationAnimation.swift */,
+				6889F5322C724B58001F5FC2 /* StrokeAnimation.swift */,
+				6889F5312C724B58001F5FC2 /* StrokeColorAnimation.swift */,
+			);
+			path = ProgressView;
 			sourceTree = "<group>";
 		};
 		688EFDB02C4281DC0067D053 /* Platform */ = {
@@ -353,10 +377,12 @@
 		68F6FAAE2C4A8E4E001128FF /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				6889F52D2C724B31001F5FC2 /* ProgressView */,
 				68F6FCFE2C5BA631001128FF /* LoadingView.swift */,
 				6859C90D2C6125C400E03179 /* PlatformView.swift */,
 				6859C90F2C612ACE00E03179 /* DotView.swift */,
 				68F6FAAF2C4A8ECF001128FF /* MoveView.swift */,
+				6889F5382C7258E8001F5FC2 /* ActionBottomView.swift */,
 				68F6FAB12C4A9CCA001128FF /* WhiteButton.swift */,
 				68F6FAB72C4A9F27001128FF /* BlackButton.swift */,
 			);
@@ -635,6 +661,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6889F5342C724B58001F5FC2 /* RotationAnimation.swift in Sources */,
 				68F6FAB42C4A9D8B001128FF /* TransferDestinationViewController.swift in Sources */,
 				68DC4C732C6B6DE5006D8E97 /* SelectPlaylistViewController.swift in Sources */,
 				6889F51E2C6D52B7001F5FC2 /* SelectMusicViewModel.swift in Sources */,
@@ -646,16 +673,19 @@
 				6889F5272C6F4193001F5FC2 /* AccessTokenModel.swift in Sources */,
 				68F6FCFF2C5BA631001128FF /* LoadingView.swift in Sources */,
 				6889F52A2C723BE9001F5FC2 /* MovePlaylistViewController.swift in Sources */,
+				6889F5372C724B58001F5FC2 /* StrokeAnimation.swift in Sources */,
 				68F6FCFA2C5A4107001128FF /* MusicPlatform.swift in Sources */,
 				68F6FD0A2C5D101A001128FF /* Constants.swift in Sources */,
 				6889F5162C6CE56F001F5FC2 /* SelectMusicViewController.swift in Sources */,
 				68F6FABB2C50D288001128FF /* UIColor+Extension.swift in Sources */,
 				68DC4C882C6B7146006D8E97 /* AlertViewController.swift in Sources */,
+				6889F5392C7258E8001F5FC2 /* ActionBottomView.swift in Sources */,
 				6859C90E2C6125C400E03179 /* PlatformView.swift in Sources */,
 				68DC4C792C6B6F48006D8E97 /* UIViewController+Extension.swift in Sources */,
 				68F6FD0C2C5D11D4001128FF /* ViewController.swift in Sources */,
 				68F6FAB62C4A9D9A001128FF /* TransferCheckViewController.swift in Sources */,
 				6889F5122C6CD194001F5FC2 /* SelectPlaylistViewModel.swift in Sources */,
+				6889F5352C724B58001F5FC2 /* ProgressShapeLayer.swift in Sources */,
 				6889F51C2C6D4A91001F5FC2 /* APIResponse.swift in Sources */,
 				68DC8A9B2C3C535300A03042 /* HomeViewController.swift in Sources */,
 				6889F5212C6E6E78001F5FC2 /* LoginViewController.swift in Sources */,
@@ -669,6 +699,8 @@
 				6889F5182C6D234C001F5FC2 /* SelectMusicTableViewCell.swift in Sources */,
 				688EFDB52C42867B0067D053 /* TransferSourceViewController.swift in Sources */,
 				68DC4C852C6B70F3006D8E97 /* Playlist.swift in Sources */,
+				6889F5332C724B58001F5FC2 /* ProgressView.swift in Sources */,
+				6889F5362C724B58001F5FC2 /* StrokeColorAnimation.swift in Sources */,
 				68DC4C822C6B70C2006D8E97 /* APIService.swift in Sources */,
 				68DC8A992C3C535300A03042 /* SceneDelegate.swift in Sources */,
 			);
