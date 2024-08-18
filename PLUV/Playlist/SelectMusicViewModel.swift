@@ -10,5 +10,5 @@ import RxSwift
 import RxCocoa
 
 class SelectMusicViewModel {
-    var musicItem: Observable<[SpotifyMusic]> = Observable.just([])
+    var musicItem: Observable<[Music]> = Observable.just([])
 }

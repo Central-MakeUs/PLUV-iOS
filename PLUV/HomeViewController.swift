@@ -6,8 +6,10 @@
 //
 
 import UIKit
+import StoreKit
 import SnapKit
 import Then
+import MusicKit
 
 class HomeViewController: UIViewController {
     
@@ -21,6 +23,11 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         setUI()
+        setTestAppleMusic()
+        Task {
+            await self.setApplePlaylistAPI()
+            await self.setApplePlaylistMusicAPI()
+        }
     }
 }
 
@@ -42,5 +49,57 @@ extension HomeViewController {
     @objc private func clickTransferDirectButton() {
         let transferSourceViewController = TransferSourceViewController()
         self.navigationController?.pushViewController(transferSourceViewController, animated: true)
+    }
+    
+    private func setTestAppleMusic() {
+        // MusicKitManager.shared.fetchMusic("알레프")
+    }
+    
+    private func setApplePlaylistAPI() async {
+        /*
+         deprecated
+         
+        let controller = SKCloudServiceController()
+        controller.requestUserToken(forDeveloperToken: "") { userToken, error in
+            print("music user token : \(String(describing: userToken))")
+        }
+         */
+        
+        do {
+            let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+            let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+            print(developerToken, "developer token\n")
+            print(userToken, "apple music user token")
+            
+            let url = EndPoint.playlistAppleRead.path
+            let params = ["musicUserToken" : userToken]
+            
+            APIService().post(of: [Playlist].self, url: url, parameters: params) { response in
+                print(response, "apple music playlist 확인")
+            }
+        } catch {
+            print("error")
+        }
+    }
+    
+    private func setApplePlaylistMusicAPI() async {
+        do {
+            let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+            let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+            
+            let url = EndPoint.playlistAppleMusicRead("p.YJXV7dEIekpNVAQ").path
+            let params = ["musicUserToken" : userToken]
+            
+            APIService().post(of: APIResponse<[Music]>.self, url: url, parameters: params) { response in
+                switch response.code {
+                case 200:
+                    print(response.data, "song 확인")
+                default:
+                    AlertController(message: response.msg).show()
+                }
+            }
+        } catch {
+            print("error")
+        }
     }
 }

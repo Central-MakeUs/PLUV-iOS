@@ -14,10 +14,12 @@
 		6889F5122C6CD194001F5FC2 /* TransferPlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5112C6CD194001F5FC2 /* TransferPlaylistViewModel.swift */; };
 		6889F5162C6CE56F001F5FC2 /* SelectMusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5152C6CE56F001F5FC2 /* SelectMusicViewController.swift */; };
 		6889F5182C6D234C001F5FC2 /* SelectMusicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5172C6D234C001F5FC2 /* SelectMusicTableViewCell.swift */; };
-		6889F51A2C6D49E3001F5FC2 /* SpotifyMusic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5192C6D49E3001F5FC2 /* SpotifyMusic.swift */; };
+		6889F51A2C6D49E3001F5FC2 /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5192C6D49E3001F5FC2 /* Music.swift */; };
 		6889F51C2C6D4A91001F5FC2 /* APIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F51B2C6D4A91001F5FC2 /* APIResponse.swift */; };
 		6889F51E2C6D52B7001F5FC2 /* SelectMusicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F51D2C6D52B7001F5FC2 /* SelectMusicViewModel.swift */; };
 		6889F5212C6E6E78001F5FC2 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5202C6E6E78001F5FC2 /* LoginViewController.swift */; };
+		6889F5252C6E9A4F001F5FC2 /* MusicKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5242C6E9A4F001F5FC2 /* MusicKitManager.swift */; };
+		6889F5272C6F4193001F5FC2 /* AccessTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5262C6F4193001F5FC2 /* AccessTokenModel.swift */; };
 		688EFDB52C42867B0067D053 /* TransferSourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */; };
 		688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */; };
 		68DC4C732C6B6DE5006D8E97 /* TransferPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C722C6B6DE5006D8E97 /* TransferPlaylistViewController.swift */; };
@@ -25,7 +27,7 @@
 		68DC4C792C6B6F48006D8E97 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */; };
 		68DC4C802C6B70AE006D8E97 /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C7F2C6B70AE006D8E97 /* EndPoint.swift */; };
 		68DC4C822C6B70C2006D8E97 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C812C6B70C2006D8E97 /* APIService.swift */; };
-		68DC4C852C6B70F3006D8E97 /* SpotifyPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C842C6B70F3006D8E97 /* SpotifyPlaylist.swift */; };
+		68DC4C852C6B70F3006D8E97 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C842C6B70F3006D8E97 /* Playlist.swift */; };
 		68DC4C882C6B7146006D8E97 /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C872C6B7146006D8E97 /* AlertViewController.swift */; };
 		68DC8A972C3C535300A03042 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC8A962C3C535300A03042 /* AppDelegate.swift */; };
 		68DC8A992C3C535300A03042 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC8A982C3C535300A03042 /* SceneDelegate.swift */; };
@@ -93,11 +95,13 @@
 		6889F5112C6CD194001F5FC2 /* TransferPlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPlaylistViewModel.swift; sourceTree = "<group>"; };
 		6889F5152C6CE56F001F5FC2 /* SelectMusicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMusicViewController.swift; sourceTree = "<group>"; };
 		6889F5172C6D234C001F5FC2 /* SelectMusicTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMusicTableViewCell.swift; sourceTree = "<group>"; };
-		6889F5192C6D49E3001F5FC2 /* SpotifyMusic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyMusic.swift; sourceTree = "<group>"; };
+		6889F5192C6D49E3001F5FC2 /* Music.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Music.swift; sourceTree = "<group>"; };
 		6889F51B2C6D4A91001F5FC2 /* APIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponse.swift; sourceTree = "<group>"; };
 		6889F51D2C6D52B7001F5FC2 /* SelectMusicViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMusicViewModel.swift; sourceTree = "<group>"; };
 		6889F5202C6E6E78001F5FC2 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		6889F5222C6E82F3001F5FC2 /* PLUV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PLUV.entitlements; sourceTree = "<group>"; };
+		6889F5242C6E9A4F001F5FC2 /* MusicKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicKitManager.swift; sourceTree = "<group>"; };
+		6889F5262C6F4193001F5FC2 /* AccessTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessTokenModel.swift; sourceTree = "<group>"; };
 		688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferSourceViewController.swift; sourceTree = "<group>"; };
 		688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTableViewCell.swift; sourceTree = "<group>"; };
 		68DC4C722C6B6DE5006D8E97 /* TransferPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPlaylistViewController.swift; sourceTree = "<group>"; };
@@ -105,7 +109,7 @@
 		68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		68DC4C7F2C6B70AE006D8E97 /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
 		68DC4C812C6B70C2006D8E97 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
-		68DC4C842C6B70F3006D8E97 /* SpotifyPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyPlaylist.swift; sourceTree = "<group>"; };
+		68DC4C842C6B70F3006D8E97 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		68DC4C872C6B7146006D8E97 /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		68DC8A932C3C535300A03042 /* PLUV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PLUV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		68DC8A962C3C535300A03042 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -207,6 +211,14 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
+		6889F5232C6E99CD001F5FC2 /* AppleMusicManager */ = {
+			isa = PBXGroup;
+			children = (
+				6889F5242C6E9A4F001F5FC2 /* MusicKitManager.swift */,
+			);
+			path = AppleMusicManager;
+			sourceTree = "<group>";
+		};
 		688EFDB02C4281DC0067D053 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
@@ -249,8 +261,9 @@
 			isa = PBXGroup;
 			children = (
 				6889F51B2C6D4A91001F5FC2 /* APIResponse.swift */,
-				68DC4C842C6B70F3006D8E97 /* SpotifyPlaylist.swift */,
-				6889F5192C6D49E3001F5FC2 /* SpotifyMusic.swift */,
+				68DC4C842C6B70F3006D8E97 /* Playlist.swift */,
+				6889F5192C6D49E3001F5FC2 /* Music.swift */,
+				6889F5262C6F4193001F5FC2 /* AccessTokenModel.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -290,6 +303,7 @@
 			children = (
 				6889F5222C6E82F3001F5FC2 /* PLUV.entitlements */,
 				68F6FD082C5D100B001128FF /* SpotifyManager */,
+				6889F5232C6E99CD001F5FC2 /* AppleMusicManager */,
 				68DC4C7E2C6B6FA6006D8E97 /* Network */,
 				68DC4C832C6B70DB006D8E97 /* DataModel */,
 				68F6FAB92C50D27D001128FF /* Extension */,
@@ -618,6 +632,7 @@
 				688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */,
 				68DC4C772C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift in Sources */,
 				68F6FAB22C4A9CCA001128FF /* WhiteButton.swift in Sources */,
+				6889F5272C6F4193001F5FC2 /* AccessTokenModel.swift in Sources */,
 				68F6FCFF2C5BA631001128FF /* LoadingView.swift in Sources */,
 				68F6FCFA2C5A4107001128FF /* MusicPlatform.swift in Sources */,
 				68F6FD0A2C5D101A001128FF /* Constants.swift in Sources */,
@@ -632,15 +647,16 @@
 				6889F51C2C6D4A91001F5FC2 /* APIResponse.swift in Sources */,
 				68DC8A9B2C3C535300A03042 /* HomeViewController.swift in Sources */,
 				6889F5212C6E6E78001F5FC2 /* LoginViewController.swift in Sources */,
+				6889F5252C6E9A4F001F5FC2 /* MusicKitManager.swift in Sources */,
 				68DC8A972C3C535300A03042 /* AppDelegate.swift in Sources */,
 				68F6FAB02C4A8ECF001128FF /* MoveView.swift in Sources */,
 				68F6FD012C5BAB3B001128FF /* LoadingState.swift in Sources */,
 				6859C9102C612ACE00E03179 /* DotView.swift in Sources */,
 				68DC4C802C6B70AE006D8E97 /* EndPoint.swift in Sources */,
-				6889F51A2C6D49E3001F5FC2 /* SpotifyMusic.swift in Sources */,
+				6889F51A2C6D49E3001F5FC2 /* Music.swift in Sources */,
 				6889F5182C6D234C001F5FC2 /* SelectMusicTableViewCell.swift in Sources */,
 				688EFDB52C42867B0067D053 /* TransferSourceViewController.swift in Sources */,
-				68DC4C852C6B70F3006D8E97 /* SpotifyPlaylist.swift in Sources */,
+				68DC4C852C6B70F3006D8E97 /* Playlist.swift in Sources */,
 				68DC4C822C6B70C2006D8E97 /* APIService.swift in Sources */,
 				68DC8A992C3C535300A03042 /* SceneDelegate.swift in Sources */,
 			);

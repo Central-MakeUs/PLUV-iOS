@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct SpotifyPlaylist: Codable {
+struct Playlist: Codable {
     let id: String
     let thumbnailURL: String
-    let songCount: Int
+    let songCount: Int?
     let name: String
     let source: Source
 
@@ -23,4 +23,5 @@ struct SpotifyPlaylist: Codable {
 
 enum Source: String, Codable {
     case spotify
+    case apple
 }
