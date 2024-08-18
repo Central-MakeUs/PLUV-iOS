@@ -26,7 +26,6 @@ class SelectMusicTableViewCell: UITableViewCell {
         $0.textColor = .gray500
         $0.font = .systemFont(ofSize: 13) /// g, y, p 같은 문자 이슈로 1point 줄임
     }
-    private let checkView = UIView()
     private let checkImageView = UIImageView().then {
         $0.image = UIImage(named: "check_image")
     }
@@ -58,18 +57,11 @@ class SelectMusicTableViewCell: UITableViewCell {
             make.width.equalTo(thumbnailImageView.snp.height)
         }
         
-        self.contentsView.addSubview(checkView)
-        checkView.snp.makeConstraints { make in
+        self.contentsView.addSubview(checkImageView)
+        checkImageView.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
             make.width.height.equalTo(16)
             make.centerY.equalToSuperview()
-        }
-        
-        self.checkView.addSubview(checkImageView)
-        checkImageView.snp.makeConstraints { make in
-            make.width.equalTo(10)
-            make.height.equalTo(6)
-            make.center.equalToSuperview()
         }
         
         self.contentsView.addSubview(labelView)
