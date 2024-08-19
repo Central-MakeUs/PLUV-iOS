@@ -221,6 +221,23 @@ class SelectMusicViewController: UIViewController {
         
         // moveView.trasferButton.isEnabled = false
         moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
+        
+        setXButton()
+    }
+    
+    private func setXButton() {
+        let rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(clickXButton))
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
+    }
+    
+    @objc private func clickXButton() {
+        if let navigationController = self.navigationController {
+            let viewControllers = navigationController.viewControllers
+            if viewControllers.count > 5 {
+                let previousViewController = viewControllers[viewControllers.count - 6]
+                navigationController.popToViewController(previousViewController, animated: true)
+            }
+        }
     }
     
     @objc private func clickTransferButton() {
