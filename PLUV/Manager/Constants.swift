@@ -7,7 +7,7 @@
 
 import SpotifyiOS
 
-let accessTokenKey = "access-token-key"
+let spotifyAccessTokenKey = "SpotifyAccessToken"
 let redirectUri = URL(string:"pluv://")!
 let spotifyClientId = "dd0b2848d9bf4d8bb70aaa9c8a0c14c6"
 let spotifyClientSecretKey = "945a78fbd4b64bf696729f42e4975f97"
