@@ -116,6 +116,7 @@ class SelectPlaylistViewController: UIViewController {
             make.top.equalTo(playlistCollectionView.snp.bottom)
         }
         
+        moveView.trasferButton.isEnabled = false
         moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
     }
     
@@ -180,6 +181,7 @@ class SelectPlaylistViewController: UIViewController {
         /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
         self.playlistCollectionView.rx.modelSelected(Playlist.self)
             .subscribe(onNext: { [weak self] playlistItem in
+                self?.moveView.trasferButton.isEnabled = true
                 self?.viewModel.playlistItem = playlistItem
             })
             .disposed(by: disposeBag)
