@@ -241,8 +241,15 @@ class SelectMusicViewController: UIViewController {
     }
     
     @objc private func clickTransferButton() {
-        let movePlaylistVC = MovePlaylistViewController(playlistItem: self.viewModel.playlistItem, source: sourcePlatform, destination: destinationPlatform)
-        self.navigationController?.pushViewController(movePlaylistVC, animated: true)
+        self.viewModel.musicItem
+            .map { musicArray in
+                let movePlaylistVC = MovePlaylistViewController(playlistItem: self.viewModel.playlistItem, musicItems: musicArray, source: self.sourcePlatform, destination: self.destinationPlatform)
+                self.navigationController?.pushViewController(movePlaylistVC, animated: true)
+            }
+            .subscribe { musicArray in
+                print(musicArray)
+            }
+            .disposed(by: disposeBag)
     }
     
     private func setPlaylistData() {

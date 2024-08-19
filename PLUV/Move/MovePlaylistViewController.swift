@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MusicKit
 
 class MovePlaylistViewController: UIViewController {
     
@@ -67,9 +68,10 @@ class MovePlaylistViewController: UIViewController {
     
     private let stopView = ActionBottomView(actionName: "작업 중단하기")
     
-    init(playlistItem: Playlist, source: MusicPlatform, destination: MusicPlatform) {
+    init(playlistItem: Playlist, musicItems: [Music], source: MusicPlatform, destination: MusicPlatform) {
         super.init(nibName: nil, bundle: nil)
         self.viewModel.playlistItem = playlistItem
+        self.viewModel.musicItems = musicItems
         self.sourcePlatform = source
         self.destinationPlatform = destination
     }
@@ -83,6 +85,7 @@ class MovePlaylistViewController: UIViewController {
         
         setUI()
         setPlaylistData()
+        searchAPI()
         
         circleLoadingIndicator.isAnimating = true
         
@@ -223,6 +226,87 @@ class MovePlaylistViewController: UIViewController {
                 let previousViewController = viewControllers[viewControllers.count - 7]
                 navigationController.popToViewController(previousViewController, animated: true)
             }
+        }
+    }
+    
+    private func searchAPI() {
+        if sourcePlatform == .AppleMusic {
+            Task {
+                await self.searchAppleToSpotifyAPI(musics: self.viewModel.musicItems)
+            }
+        } else if sourcePlatform == .Spotify {
+            Task {
+                await self.searchSpotifyToAppleAPI(musics: self.viewModel.musicItems)
+            }
+        }
+    }
+    
+    /// 애플에 있는 것 스포티파이에서 검색
+    private func searchAppleToSpotifyAPI(musics: [Music]) async {
+        do {
+            let jsonData = try JSONEncoder().encode(musics)
+            let jsonString = String(data: jsonData, encoding: .utf8) ?? ""
+            let musicParams = jsonString.replacingOccurrences(of: "\\", with: "").replacingOccurrences(of: "artistNames", with: "artistName")
+            
+            if let parameterJsonData = musicParams.data(using: .utf8) {
+                do {
+                    if let parameterJsonArray = try JSONSerialization.jsonObject(with: parameterJsonData, options: []) as? [[String: Any]] {
+                        
+                        let url = EndPoint.musicSpotifySearch.path
+                        let params = ["destinationAccessToken" : TokenManager.shared.spotifyAccessToken,
+                                      "musics" : parameterJsonArray] as [String : Any]
+                        
+                        APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
+                            switch response.code {
+                            case 200:
+                                print(response.data, "애플에 있는 것 스포티파이에서 검색")
+                            default:
+                                AlertController(message: response.msg).show()
+                            }
+                        }
+                    }
+                } catch {
+                    print("JSON 변환 실패: \(error.localizedDescription)")
+                }
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    /// 스포티파이에 있는 것 애플에서 검색
+    private func searchSpotifyToAppleAPI(musics: [Music]) async {
+        do {
+            let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+            let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+            
+            let jsonData = try JSONEncoder().encode(musics)
+            let jsonString = String(data: jsonData, encoding: .utf8) ?? ""
+            let musicParams = jsonString.replacingOccurrences(of: "\\", with: "").replacingOccurrences(of: "artistNames", with: "artistName")
+            
+            if let parameterJsonData = musicParams.data(using: .utf8) {
+                do {
+                    if let parameterJsonArray = try JSONSerialization.jsonObject(with: parameterJsonData, options: []) as? [[String: Any]] {
+                        
+                        let url = EndPoint.musicAppleSearch.path
+                        let params = ["destinationAccessToken" : userToken,
+                                      "musics" : parameterJsonArray] as [String : Any]
+                        
+                        APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
+                            switch response.code {
+                            case 200:
+                                print(response.data, "스포티파이에 있는 것 애플에서 검색")
+                            default:
+                                AlertController(message: response.msg).show()
+                            }
+                        }
+                    }
+                } catch {
+                    print("JSON 변환 실패: \(error.localizedDescription)")
+                }
+            }
+        } catch {
+            print(error)
         }
     }
 }

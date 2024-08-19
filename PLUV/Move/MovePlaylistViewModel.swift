@@ -6,7 +6,10 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 class MovePlaylistViewModel {
     var playlistItem: Playlist = Playlist(id: "", thumbnailURL: "", songCount: nil, name: "", source: .apple)
+    var musicItems: [Music] = []
 }
