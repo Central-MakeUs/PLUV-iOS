@@ -219,12 +219,13 @@ class SelectMusicViewController: UIViewController {
             make.height.equalTo(101)
         }
         
-        moveView.trasferButton.isEnabled = false
+        // moveView.trasferButton.isEnabled = false
         moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
     }
     
     @objc private func clickTransferButton() {
-        
+        let movePlaylistVC = MovePlaylistViewController(playlistItem: self.viewModel.playlistItem, source: sourcePlatform, destination: destinationPlatform)
+        self.navigationController?.pushViewController(movePlaylistVC, animated: true)
     }
     
     private func setPlaylistData() {

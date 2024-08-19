@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		680A78532C73A4B100F28510 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 680A78522C73A4B100F28510 /* TokenManager.swift */; };
+		680A78552C73C2D700F28510 /* MovePlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 680A78542C73C2D700F28510 /* MovePlaylistViewModel.swift */; };
 		6859C90A2C60FCA600E03179 /* SpotifyiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6859C9092C60FCA600E03179 /* SpotifyiOS.framework */; };
 		6859C90C2C60FDAF00E03179 /* SpotifyiOS.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6859C9092C60FCA600E03179 /* SpotifyiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6859C90E2C6125C400E03179 /* PlatformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6859C90D2C6125C400E03179 /* PlatformView.swift */; };
@@ -98,6 +99,7 @@
 		3BB5AD2FDF8DECA404F3ED11 /* Pods-PLUV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PLUV.debug.xcconfig"; path = "Target Support Files/Pods-PLUV/Pods-PLUV.debug.xcconfig"; sourceTree = "<group>"; };
 		4F7F4BCA539804B1532B17B5 /* Pods-PLUVTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PLUVTests.release.xcconfig"; path = "Target Support Files/Pods-PLUVTests/Pods-PLUVTests.release.xcconfig"; sourceTree = "<group>"; };
 		680A78522C73A4B100F28510 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
+		680A78542C73C2D700F28510 /* MovePlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovePlaylistViewModel.swift; sourceTree = "<group>"; };
 		6859C9092C60FCA600E03179 /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyiOS.framework; sourceTree = "<group>"; };
 		6859C90D2C6125C400E03179 /* PlatformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformView.swift; sourceTree = "<group>"; };
 		6859C90F2C612ACE00E03179 /* DotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotView.swift; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 			isa = PBXGroup;
 			children = (
 				6889F5292C723BE9001F5FC2 /* MovePlaylistViewController.swift */,
+				680A78542C73C2D700F28510 /* MovePlaylistViewModel.swift */,
 			);
 			path = Move;
 			sourceTree = "<group>";
@@ -695,6 +698,7 @@
 				6889F5252C6E9A4F001F5FC2 /* MusicKitManager.swift in Sources */,
 				68DC8A972C3C535300A03042 /* AppDelegate.swift in Sources */,
 				68F6FAB02C4A8ECF001128FF /* MoveView.swift in Sources */,
+				680A78552C73C2D700F28510 /* MovePlaylistViewModel.swift in Sources */,
 				68F6FD012C5BAB3B001128FF /* LoadingState.swift in Sources */,
 				6859C9102C612ACE00E03179 /* DotView.swift in Sources */,
 				68DC4C802C6B70AE006D8E97 /* EndPoint.swift in Sources */,
