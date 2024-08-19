@@ -38,6 +38,7 @@ class MovePlaylistViewController: UIViewController {
     private var sourceImageView = UIImageView().then {
         $0.backgroundColor = .green
         $0.layer.cornerRadius = 8
+        $0.clipsToBounds = true
     }
     private let dotImageView = UIImageView().then {
         $0.image = UIImage(named: "movedot_image")
