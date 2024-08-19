@@ -120,7 +120,7 @@ class SelectPlaylistViewController: UIViewController {
     }
     
     @objc private func clickTransferButton() {
-        let selectMusicVC = SelectMusicViewController()
+        let selectMusicVC = SelectMusicViewController(playlistItem: self.viewModel.playlistItem, source: sourcePlatform, destination: destinationPlatform)
         self.navigationController?.pushViewController(selectMusicVC, animated: true)
     }
     
@@ -170,7 +170,7 @@ class SelectPlaylistViewController: UIViewController {
             .disposed(by: disposeBag)
         
         /// CollectionView에 들어갈 Cell에 정보 제공
-        self.viewModel.playlistItem
+        self.viewModel.playlistItems
             .observe(on: MainScheduler.instance)
             .bind(to: self.playlistCollectionView.rx.items(cellIdentifier: SelectPlaylistCollectionViewCell.identifier, cellType: SelectPlaylistCollectionViewCell.self)) { index, item, cell in
                 cell.prepare(playlist: item, platform: self.sourcePlatform)
@@ -180,7 +180,7 @@ class SelectPlaylistViewController: UIViewController {
         /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
         self.playlistCollectionView.rx.modelSelected(Playlist.self)
             .subscribe(onNext: { [weak self] playlistItem in
-                playlistItem.id
+                self?.viewModel.playlistItem = playlistItem
             })
             .disposed(by: disposeBag)
         
@@ -217,7 +217,7 @@ class SelectPlaylistViewController: UIViewController {
         let params = ["accessToken" : TokenManager.shared.spotifyAccessToken]
         
         APIService().post(of: [Playlist].self, url: url, parameters: params) { response in
-            self.viewModel.playlistItem = Observable.just(response)
+            self.viewModel.playlistItems = Observable.just(response)
             self.setData()
         }
     }
@@ -240,7 +240,7 @@ class SelectPlaylistViewController: UIViewController {
             let params = ["musicUserToken" : userToken]
             
             APIService().post(of: [Playlist].self, url: url, parameters: params) { response in
-                self.viewModel.playlistItem = Observable.just(response)
+                self.viewModel.playlistItems = Observable.just(response)
                 self.setData()
             }
         } catch {

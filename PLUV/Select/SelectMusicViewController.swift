@@ -9,17 +9,20 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import MusicKit
 
 class SelectMusicViewController: UIViewController {
     
     let viewModel = SelectMusicViewModel()
+    
+    private var sourcePlatform: MusicPlatform = .AppleMusic
+    private var destinationPlatform: MusicPlatform = .Spotify
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
     private let selectMusicTitleView = UIView()
     private let sourceToDestinationLabel = UILabel().then {
-        $0.text = "스포티파이 > 애플뮤직"
         $0.font = .systemFont(ofSize: 14, weight: .regular)
         $0.textColor = .subBlue
     }
@@ -36,12 +39,10 @@ class SelectMusicViewController: UIViewController {
         $0.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
         $0.layer.borderWidth = 0.5
         $0.clipsToBounds = true
-        $0.backgroundColor = .systemPink
     }
     private let sourcePlatformLabel = UILabel().then {
         $0.textColor = .gray600
         $0.font = .systemFont(ofSize: 14)
-        $0.text = "스포티파이"
     }
     private let playlistMenuImageView = UIImageView().then {
         $0.image = UIImage(named: "menu_image")
@@ -49,19 +50,16 @@ class SelectMusicViewController: UIViewController {
     private let playlistNameLabel = UILabel().then {
         $0.textColor = .gray800
         $0.font = .systemFont(ofSize: 18, weight: .medium)
-        $0.text = "여유로운 오후의 취향저격 팝"
     }
     private let playlistSongCountLabel = UILabel().then {
         $0.textColor = .gray500
         $0.font = .systemFont(ofSize: 14)
-        $0.text = "총 10곡"
     }
     
     private let selectSongView = UIView()
     private let songCountLabel = UILabel().then {
         $0.textColor = .gray700
         $0.font = .systemFont(ofSize: 14)
-        $0.text = "10곡"
     }
     private let selectAllLabel = UILabel().then {
         $0.textColor = .mainPurple //.gray800
@@ -79,6 +77,17 @@ class SelectMusicViewController: UIViewController {
     
     private var moveView = MoveView(view: UIViewController())
     private let disposeBag = DisposeBag()
+    
+    init(playlistItem: Playlist, source: MusicPlatform, destination: MusicPlatform) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel.playlistItem = playlistItem
+        self.sourcePlatform = source
+        self.destinationPlatform = destination
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,8 +109,6 @@ class SelectMusicViewController: UIViewController {
         contentView.snp.makeConstraints { make in
             make.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
-        
-        contentView.backgroundColor = .green
         
         self.contentView.addSubview(selectMusicTitleView)
         selectMusicTitleView.snp.makeConstraints { make in
@@ -213,12 +220,23 @@ class SelectMusicViewController: UIViewController {
         }
         
         moveView.trasferButton.isEnabled = false
-        
         moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
     }
     
     @objc private func clickTransferButton() {
         
+    }
+    
+    private func setPlaylistData() {
+        let thumbnailURL = URL(string: self.viewModel.playlistItem.thumbnailURL)
+        playlistThumnailImageView.kf.setImage(with: thumbnailURL)
+        sourceToDestinationLabel.text = sourcePlatform.name + " > " + destinationPlatform.name
+        sourcePlatformLabel.text = sourcePlatform.name
+        playlistNameLabel.text = self.viewModel.playlistItem.name
+        self.viewModel.musicItemCount { count in
+            self.playlistSongCountLabel.text = "총 \(count)곡"
+            self.songCountLabel.text = "\(count)곡"
+        }
     }
     
     private func setData() {
@@ -244,15 +262,48 @@ class SelectMusicViewController: UIViewController {
     }
     
     private func setMusicListAPI() {
-        let url = EndPoint.playlistMusicSpotifyRead("5GXMligGpoyLOKvnTq5HkI").path
+        if sourcePlatform == .AppleMusic {
+            Task {
+                await self.setAppleMusicListAPI()
+            }
+        } else if sourcePlatform == .Spotify {
+            setSpotifyMusicListAPI()
+        }
+    }
+    
+    private func setAppleMusicListAPI() async {
+        do {
+            let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+            let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+            
+            let url = EndPoint.playlistAppleMusicRead(self.viewModel.playlistItem.id).path
+            let params = ["musicUserToken" : userToken]
+            
+            APIService().post(of: APIResponse<[Music]>.self, url: url, parameters: params) { response in
+                switch response.code {
+                case 200:
+                    self.viewModel.musicItem = Observable.just(response.data)
+                    self.setData()
+                    self.setPlaylistData()
+                default:
+                    AlertController(message: response.msg).show()
+                }
+            }
+        } catch {
+            print("ERROR : setAppleMusicListAPI")
+        }
+    }
+    
+    private func setSpotifyMusicListAPI() {
+        let url = EndPoint.playlistMusicSpotifyRead(self.viewModel.playlistItem.id).path
         let params = ["accessToken" : TokenManager.shared.spotifyAccessToken]
         
         APIService().post(of: APIResponse<[Music]>.self, url: url, parameters: params) { response in
             switch response.code {
             case 200:
                 self.viewModel.musicItem = Observable.just(response.data)
-                print(response.data, "song 확인")
                 self.setData()
+                self.setPlaylistData()
             default:
                 AlertController(message: response.msg).show()
             }
