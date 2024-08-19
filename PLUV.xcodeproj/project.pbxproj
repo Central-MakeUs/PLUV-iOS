@@ -32,7 +32,7 @@
 		688EFDB52C42867B0067D053 /* TransferSourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */; };
 		688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */; };
 		68DC4C732C6B6DE5006D8E97 /* SelectPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C722C6B6DE5006D8E97 /* SelectPlaylistViewController.swift */; };
-		68DC4C772C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C762C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift */; };
+		68DC4C772C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C762C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift */; };
 		68DC4C792C6B6F48006D8E97 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */; };
 		68DC4C802C6B70AE006D8E97 /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C7F2C6B70AE006D8E97 /* EndPoint.swift */; };
 		68DC4C822C6B70C2006D8E97 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C812C6B70C2006D8E97 /* APIService.swift */; };
@@ -122,7 +122,7 @@
 		688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferSourceViewController.swift; sourceTree = "<group>"; };
 		688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTableViewCell.swift; sourceTree = "<group>"; };
 		68DC4C722C6B6DE5006D8E97 /* SelectPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlaylistViewController.swift; sourceTree = "<group>"; };
-		68DC4C762C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPlaylistCollectionViewCell.swift; sourceTree = "<group>"; };
+		68DC4C762C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlaylistCollectionViewCell.swift; sourceTree = "<group>"; };
 		68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		68DC4C7F2C6B70AE006D8E97 /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
 		68DC4C812C6B70C2006D8E97 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
@@ -213,7 +213,7 @@
 		6889F5142C6CE4B4001F5FC2 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				68DC4C762C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift */,
+				68DC4C762C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift */,
 				6889F5172C6D234C001F5FC2 /* SelectMusicTableViewCell.swift */,
 			);
 			path = Cell;
@@ -671,7 +671,7 @@
 				68F6FAB82C4A9F27001128FF /* BlackButton.swift in Sources */,
 				68F6FCFC2C5A92F2001128FF /* UIButton+Extension.swift in Sources */,
 				688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */,
-				68DC4C772C6B6E9E006D8E97 /* TransferPlaylistCollectionViewCell.swift in Sources */,
+				68DC4C772C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift in Sources */,
 				68F6FAB22C4A9CCA001128FF /* WhiteButton.swift in Sources */,
 				6889F5272C6F4193001F5FC2 /* AccessTokenModel.swift in Sources */,
 				68F6FCFF2C5BA631001128FF /* LoadingView.swift in Sources */,

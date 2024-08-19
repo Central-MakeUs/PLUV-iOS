@@ -159,9 +159,10 @@ class TransferCheckViewController: UIViewController {
             
         } else if sourcePlatform == .Spotify {
             connectSpotifySession()
-            let selectPlaylistVC = SelectPlaylistViewController()
-            self.navigationController?.pushViewController(selectPlaylistVC, animated: true)
         }
+        
+        let selectPlaylistVC = SelectPlaylistViewController(source: sourcePlatform, destination: destinationPlatform)
+        self.navigationController?.pushViewController(selectPlaylistVC, animated: true)
     }
 }
 

@@ -9,14 +9,17 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import MusicKit
 
 class SelectPlaylistViewController: UIViewController {
     
     let viewModel = SelectPlaylistViewModel()
     
+    private var sourcePlatform: MusicPlatform = .AppleMusic
+    private var destinationPlatform: MusicPlatform = .Spotify
+    
     private let playlistTitleView = UIView()
     private let sourceToDestinationLabel = UILabel().then {
-        $0.text = "스포티파이 > 애플뮤직"
         $0.font = .systemFont(ofSize: 14, weight: .regular)
         $0.textColor = .subBlue
     }
@@ -38,13 +41,23 @@ class SelectPlaylistViewController: UIViewController {
         layout.sectionInset = UIEdgeInsets(top: 0, left: 15, bottom: 30, right: 15)
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.register(TransferPlaylistCollectionViewCell.self, forCellWithReuseIdentifier: TransferPlaylistCollectionViewCell.identifier)
+        cv.register(SelectPlaylistCollectionViewCell.self, forCellWithReuseIdentifier: SelectPlaylistCollectionViewCell.identifier)
         
         return cv
     }()
     
     private var moveView = MoveView(view: UIViewController())
     private let disposeBag = DisposeBag()
+    
+    init(source: MusicPlatform, destination: MusicPlatform) {
+        super.init(nibName: nil, bundle: nil)
+        self.sourcePlatform = source
+        self.destinationPlatform = destination
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,6 +83,8 @@ class SelectPlaylistViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(24)
             make.height.equalTo(14)
         }
+        
+        sourceToDestinationLabel.text = sourcePlatform.name + " > " + destinationPlatform.name
         
         self.playlistTitleView.addSubview(playlistTitleLabel)
         playlistTitleLabel.snp.makeConstraints { make in
@@ -140,7 +155,7 @@ class SelectPlaylistViewController: UIViewController {
                     let isSelected = (indexPath == selectedIndexPath)
                     
                     // 선택 상태에 따라 셀 업데이트
-                    if let customCell = cell as? TransferPlaylistCollectionViewCell {
+                    if let customCell = cell as? SelectPlaylistCollectionViewCell {
                         customCell.updateSelectionState(isSelected: isSelected)
                     }
                 }
@@ -157,8 +172,8 @@ class SelectPlaylistViewController: UIViewController {
         /// CollectionView에 들어갈 Cell에 정보 제공
         self.viewModel.playlistItem
             .observe(on: MainScheduler.instance)
-            .bind(to: self.playlistCollectionView.rx.items(cellIdentifier: TransferPlaylistCollectionViewCell.identifier, cellType: TransferPlaylistCollectionViewCell.self)) { index, item, cell in
-                cell.prepare(playlist: item)
+            .bind(to: self.playlistCollectionView.rx.items(cellIdentifier: SelectPlaylistCollectionViewCell.identifier, cellType: SelectPlaylistCollectionViewCell.self)) { index, item, cell in
+                cell.prepare(playlist: item, platform: self.sourcePlatform)
             }
             .disposed(by: disposeBag)
         
@@ -188,13 +203,48 @@ class SelectPlaylistViewController: UIViewController {
     }
     
     private func setPlaylistAPI() {
+        if sourcePlatform == .AppleMusic {
+            Task {
+                await self.setApplePlaylistAPI()
+            }
+        } else if sourcePlatform == .Spotify {
+            setSpotifyPlaylistAPI()
+        }
+    }
+    
+    private func setSpotifyPlaylistAPI() {
         let url = EndPoint.playlistSpotifyRead.path
         let params = ["accessToken" : TokenManager.shared.spotifyAccessToken]
         
         APIService().post(of: [Playlist].self, url: url, parameters: params) { response in
             self.viewModel.playlistItem = Observable.just(response)
-            print(response, "playlistItem 확인")
             self.setData()
+        }
+    }
+    
+    private func setApplePlaylistAPI() async {
+        /*
+         deprecated
+         
+         let controller = SKCloudServiceController()
+         controller.requestUserToken(forDeveloperToken: "") { userToken, error in
+         print("music user token : \(String(describing: userToken))")
+         }
+         */
+        
+        do {
+            let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+            let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+            
+            let url = EndPoint.playlistAppleRead.path
+            let params = ["musicUserToken" : userToken]
+            
+            APIService().post(of: [Playlist].self, url: url, parameters: params) { response in
+                self.viewModel.playlistItem = Observable.just(response)
+                self.setData()
+            }
+        } catch {
+            print("ERROR : setApplePlaylistAPI")
         }
     }
 }
