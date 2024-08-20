@@ -89,7 +89,7 @@ class MovePlaylistViewController: UIViewController {
         
         circleLoadingIndicator.isAnimating = true
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .never) {
             self.circleLoadingIndicator.isAnimating = false
         }
     }
@@ -259,7 +259,17 @@ class MovePlaylistViewController: UIViewController {
                         APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
                             switch response.code {
                             case 200:
+                                var idArr: [String] = []
+                                let searchArr: [Search] = response.data
+                                for search in searchArr {
+                                    if search.isEqual == true {
+                                        idArr.append(search.destinationMusics.first!.id!)
+                                    } else {
+                                        idArr.append(search.destinationMusics.first!.id!)
+                                    }
+                                }
                                 print(response.data, "애플에 있는 것 스포티파이에서 검색")
+                                self.addAppleToSpotify(musicIdsArr: idArr)
                             default:
                                 AlertController(message: response.msg).show()
                             }
@@ -295,7 +305,19 @@ class MovePlaylistViewController: UIViewController {
                         APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
                             switch response.code {
                             case 200:
+                                var idArr: [String] = []
+                                let searchArr: [Search] = response.data
+                                for search in searchArr {
+                                    if search.isEqual == true {
+                                        idArr.append(search.destinationMusics.first!.id!)
+                                    } else {
+                                        idArr.append(search.destinationMusics.first!.id!)
+                                    }
+                                }
                                 print(response.data, "스포티파이에 있는 것 애플에서 검색")
+                                Task {
+                                    await self.addSpotifyToApple(musicIdsArr: idArr)
+                                }
                             default:
                                 AlertController(message: response.msg).show()
                             }
@@ -307,6 +329,73 @@ class MovePlaylistViewController: UIViewController {
             }
         } catch {
             print(error)
+        }
+    }
+    
+    ///  애플에 있는 것 스포티파이에 등록
+    private func addAppleToSpotify(musicIdsArr: [String]) {
+        let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+        
+        print(loginToken, "UserDefaults 로그인 토큰 확인\n")
+        print(TokenManager.shared.spotifyAccessToken, "스포티파이 토큰")
+        
+        let url = EndPoint.musicSpotifyAdd.path
+        let params = [
+                        "playListName": self.viewModel.playlistItem.name,
+                        "destinationAccessToken": TokenManager.shared.spotifyAccessToken,
+                        "musicIds": musicIdsArr,
+                        "transferFailMusics": [
+                        ],
+                        "thumbNailUrl": self.viewModel.playlistItem.thumbnailURL,
+                        "source": "apple"
+        ] as [String : Any]
+        
+        APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: loginToken) { response in
+            switch response.code {
+            case 201:
+                print(response.data, "addAppleToSpotify")
+                self.circleLoadingIndicator.isAnimating = false
+                AlertController(message: "플레이리스트가 생성되었습니다.", completion: {
+                    self.clickXButton()
+                }).show()
+            default:
+                AlertController(message: response.msg).show()
+            }
+        }
+    }
+    
+    /// 스포티파이에서 애플로 등록
+    private func addSpotifyToApple(musicIdsArr: [String]) async {
+        do {
+            let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+            let musicUserToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+            
+            let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+            let url = EndPoint.musicAppleAdd.path
+            let params = [
+                            "playListName": self.viewModel.playlistItem.name,
+                            "destinationAccessToken": musicUserToken,
+                            "musicIds": musicIdsArr,
+                            "transferFailMusics": [
+                            ],
+                            "thumbNailUrl": self.viewModel.playlistItem.thumbnailURL,
+                            "source": "spotify"
+            ] as [String : Any]
+            
+            APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: loginToken) { response in
+                switch response.code {
+                case 201:
+                    print(response.data, "addSpotifyToApple")
+                    self.circleLoadingIndicator.isAnimating = false
+                    AlertController(message: "플레이리스트가 생성되었습니다.", completion: {
+                        self.clickXButton()
+                    }).show()
+                default:
+                    AlertController(message: response.msg).show()
+                }
+            }
+        } catch {
+            print("ERROR : addSpotifyToApple")
         }
     }
 }

@@ -123,7 +123,8 @@ class LoginViewController: UIViewController {
         APIService().post(of: APIResponse<AccessTokenModel>.self, url: url, parameters: params) { response in
             switch response.code {
             case 200:
-                print(response.data, "Bearer Access Token")
+                UserDefaults.standard.setValue(response.data.token, forKey: APIService.shared.loginAccessTokenKey)
+                print(response.data.token, "Bearer Access Token")
                 let homeVC = HomeViewController()
                 self.navigationController?.pushViewController(homeVC, animated: true)
             default:
