@@ -19,6 +19,8 @@ class TransferCheckViewController: UIViewController {
     private let checkTitleView = UIView()
     private let checkTitleLabel = UILabel().then {
         $0.numberOfLines = 0
+        $0.font = .systemFont(ofSize: 24, weight: .semibold)
+        $0.textColor = .gray800
     }
     
     private lazy var selectSourcePlatformView = PlatformView(platform: sourcePlatform)
