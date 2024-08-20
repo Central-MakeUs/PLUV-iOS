@@ -92,6 +92,9 @@ class LoginViewController: UIViewController {
     }
     
     private func setData() {
+        googleLoginButton.isHidden = true
+        spotifyLoginButton.isHidden = true
+        
         googleLoginButton.addTarget(self, action: #selector(clickGoogleLogin), for: .touchUpInside)
         spotifyLoginButton.addTarget(self, action: #selector(clickSpotifyLogin), for: .touchUpInside)
         appleLoginButton.addTarget(self, action: #selector(clickAppleLogin), for: .touchUpInside)
