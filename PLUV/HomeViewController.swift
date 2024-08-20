@@ -36,10 +36,22 @@ class HomeViewController: UIViewController {
         $0.contentMode = .scaleAspectFill
         $0.backgroundColor = .white
     }
+    private let recentEmptyLabel = UILabel().then {
+        $0.text = "최근 옮긴 항목이 없습니다."
+        $0.font = .systemFont(ofSize: 13)
+        $0.textColor = .gray400
+        $0.textAlignment = .center
+    }
     private let saveListImageView = UIImageView().then {
         $0.image = UIImage(named: "savelist_image")
         $0.contentMode = .scaleAspectFill
         $0.backgroundColor = .white
+    }
+    private let saveEmptyLabel = UILabel().then {
+        $0.text = "저장한 플레이리스트가 없습니다."
+        $0.font = .systemFont(ofSize: 13)
+        $0.textColor = .gray400
+        $0.textAlignment = .center
     }
     
     var musicList: [Music] = []
@@ -101,11 +113,25 @@ extension HomeViewController {
             make.height.equalTo(56)
         }
         
+        self.view.addSubview(recentEmptyLabel)
+        recentEmptyLabel.snp.makeConstraints { make in
+            make.top.equalTo(recentListImageView.snp.bottom).offset(50)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(16)
+        }
+        
         self.view.addSubview(saveListImageView)
         saveListImageView.snp.makeConstraints { make in
             make.top.equalTo(recentListImageView.snp.bottom).offset(176)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(56)
+        }
+        
+        self.view.addSubview(saveEmptyLabel)
+        saveEmptyLabel.snp.makeConstraints { make in
+            make.top.equalTo(saveListImageView.snp.bottom).offset(50)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(16)
         }
     }
     
