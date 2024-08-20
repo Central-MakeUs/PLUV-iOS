@@ -15,7 +15,10 @@ class TransferSourceViewController: UIViewController {
     private let sourceList = Observable.just(MusicPlatform.allCases)
     private let sourceTitleView = UIView()
     private let sourceTitleLabel = UILabel().then {
+        $0.text = "어디에서\n플레이리스트를 불러올까요?"
         $0.numberOfLines = 0
+        $0.font = .systemFont(ofSize: 24, weight: .semibold)
+        $0.textColor = .gray800
     }
     private let sourceTableView = UITableView().then {
         $0.separatorStyle = .none
@@ -49,7 +52,6 @@ extension TransferSourceViewController {
             make.leading.trailing.equalToSuperview().inset(24)
             make.top.bottom.equalToSuperview().inset(28)
         }
-        sourceTitleLabel.text = "어디에서\n플레이리스트를 불러올까요?"
         
         self.view.addSubview(sourceTableView)
         sourceTableView.snp.makeConstraints { make in

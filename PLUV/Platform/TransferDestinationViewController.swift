@@ -17,7 +17,10 @@ class TransferDestinationViewController: UIViewController {
     private var destinationList = Observable.just(MusicPlatform.allCases)
     private let destinationTitleView = UIView()
     private let destinationTitleLabel = UILabel().then {
+        $0.text = "어디로\n플레이리스트를 옮길까요?"
         $0.numberOfLines = 0
+        $0.font = .systemFont(ofSize: 24, weight: .semibold)
+        $0.textColor = .gray800
     }
     
     private lazy var selectSourcePlatformView = PlatformView(platform: sourcePlatform)
@@ -56,7 +59,6 @@ extension TransferDestinationViewController {
             make.leading.trailing.equalToSuperview().inset(24)
             make.top.bottom.equalToSuperview().inset(28)
         }
-        destinationTitleLabel.text = "어디로\n플레이리스트를 옮길까요?"
         
         self.view.addSubview(selectSourcePlatformView)
         selectSourcePlatformView.snp.makeConstraints { make in
