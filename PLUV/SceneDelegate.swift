@@ -61,8 +61,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var LoginVC = UINavigationController(rootViewController: MovePlaylistViewController())
-    lazy var SpotifyVC = ViewController()
+    var LoginVC = UINavigationController(rootViewController: LoginViewController())
+    lazy var SpotifyVC = TransferCheckViewController()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -90,9 +90,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let accessToken = SpotifyVC.appRemote.connectionParameters.accessToken {
             SpotifyVC.appRemote.connectionParameters.accessToken = accessToken
             SpotifyVC.appRemote.connect()
+            TokenManager.shared.spotifyAccessToken = accessToken
         } else if let accessToken = SpotifyVC.accessToken {
             SpotifyVC.appRemote.connectionParameters.accessToken = accessToken
             SpotifyVC.appRemote.connect()
+            TokenManager.shared.spotifyAccessToken = accessToken
         }
     }
 

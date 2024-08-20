@@ -10,9 +10,9 @@ import RxSwift
 import RxCocoa
 import Kingfisher
 
-final class TransferPlaylistCollectionViewCell: UICollectionViewCell {
+final class SelectPlaylistCollectionViewCell: UICollectionViewCell {
     
-    static let identifier = String(describing: TransferPlaylistCollectionViewCell.self)
+    static let identifier = String(describing: SelectPlaylistCollectionViewCell.self)
     
     private let thumbnailImageView = UIImageView().then {
         $0.layer.cornerRadius = 8
@@ -82,7 +82,12 @@ final class TransferPlaylistCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func prepare(playlist: Playlist) {
+    func prepare(playlist: Playlist, platform: MusicPlatform) {
+        self.dateLabel.isHidden = true
+        if platform == .AppleMusic {
+            self.songCountLabel.isHidden = true
+        }
+        
         let thumbNailUrl = URL(string: playlist.thumbnailURL)
         self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
         self.playlistTitleLabel.text = playlist.name

@@ -68,7 +68,9 @@ extension TransferSourceViewController {
         moveView.backButton.isEnabled = false
         moveView.trasferButton.isEnabled = false
         
-        sourceTableView.isScrollEnabled = false
+        // sourceTableView.isScrollEnabled = false
+        
+        setXButton()
     }
     
     private func setData() {
@@ -101,6 +103,21 @@ extension TransferSourceViewController {
                 return cell
             }
             .disposed(by: self.disposeBag)
+    }
+    
+    private func setXButton() {
+        let rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(clickXButton))
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
+    }
+    
+    @objc private func clickXButton() {
+        if let navigationController = self.navigationController {
+            let viewControllers = navigationController.viewControllers
+            if viewControllers.count > 1 {
+                let previousViewController = viewControllers[viewControllers.count - 2]
+                navigationController.popToViewController(previousViewController, animated: true)
+            }
+        }
     }
 }
 

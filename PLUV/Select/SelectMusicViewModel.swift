@@ -10,5 +10,16 @@ import RxSwift
 import RxCocoa
 
 class SelectMusicViewModel {
+    var playlistItem: Playlist = Playlist(id: "", thumbnailURL: "", songCount: nil, name: "", source: .apple)
     var musicItem: Observable<[Music]> = Observable.just([])
+    let disposeBag = DisposeBag()
+    
+    func musicItemCount(completion: @escaping (Int) -> Void)  {
+        musicItem
+            .map { $0.count }
+            .subscribe(onNext: { count in
+                completion(count)
+            })
+            .disposed(by: disposeBag)
+    }
 }

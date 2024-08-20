@@ -88,6 +88,8 @@ extension TransferDestinationViewController {
         }
         
         moveView.trasferButton.isEnabled = false
+        
+        setXButton()
     }
     
     private func setData() {
@@ -127,6 +129,21 @@ extension TransferDestinationViewController {
                 return cell
             }
             .disposed(by: self.disposeBag)
+    }
+    
+    private func setXButton() {
+        let rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(clickXButton))
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
+    }
+    
+    @objc private func clickXButton() {
+        if let navigationController = self.navigationController {
+            let viewControllers = navigationController.viewControllers
+            if viewControllers.count > 2 {
+                let previousViewController = viewControllers[viewControllers.count - 3]
+                navigationController.popToViewController(previousViewController, animated: true)
+            }
+        }
     }
 }
 
