@@ -199,8 +199,7 @@ class SelectMusicViewController: UIViewController {
         checkImageView.snp.makeConstraints { make in
             make.trailing.equalTo(selectAllLabel.snp.leading).offset(-6)
             make.centerY.equalToSuperview()
-            make.width.equalTo(10)
-            make.height.equalTo(6)
+            make.width.height.equalTo(16)
         }
         
         self.contentView.addSubview(selectMusicTableView)
