@@ -15,7 +15,7 @@ class LoginViewController: UIViewController {
         $0.contentMode = .scaleAspectFit
     }
     private let loginTitleLabel = UILabel().then {
-        $0.text = "로그인 후 모든 서비스를 이용해보세요!"
+        $0.text = "시작과 함께 모든 서비스를 이용해보세요!"
         $0.font = .systemFont(ofSize: 16)
         $0.textColor = .gray800
         $0.textAlignment = .center
@@ -29,7 +29,11 @@ class LoginViewController: UIViewController {
         $0.contentMode = .scaleAspectFit
     }
     private let appleLoginButton = UIButton().then {
-        $0.setImage(UIImage(named: "login_apple_image"), for: .normal)
+        $0.backgroundColor = .mainPurple
+        $0.layer.cornerRadius = 10
+        $0.setTitle("시작하기", for: .normal)
+        $0.setTitleColor(.white, for: .normal)
+        // $0.setImage(UIImage(named: "login_apple_image"), for: .normal)
         $0.contentMode = .scaleAspectFit
     }
     private let loginSubLabel = UIImageView().then {
@@ -82,6 +86,7 @@ class LoginViewController: UIViewController {
             make.height.equalTo(54)
         }
         
+        /*
         self.view.addSubview(loginSubLabel)
         loginSubLabel.snp.makeConstraints { make in
             make.top.equalTo(appleLoginButton.snp.bottom).offset(36)
@@ -89,6 +94,7 @@ class LoginViewController: UIViewController {
             make.width.equalTo(196)
             make.height.equalTo(38)
         }
+         */
     }
     
     private func setData() {
@@ -110,6 +116,10 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func clickAppleLogin() {
+        let homeVC = HomeViewController()
+        self.navigationController?.pushViewController(homeVC, animated: true)
+        
+        /*
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         let request = appleIDProvider.createRequest()
         request.requestedScopes = [.fullName, .email] //유저로 부터 알 수 있는 정보들(name, email)
@@ -118,6 +128,7 @@ class LoginViewController: UIViewController {
         authorizationController.delegate = self
         authorizationController.presentationContextProvider = self
         authorizationController.performRequests()
+         */
     }
     
     private func loginAPI(token: String) {
