@@ -10,6 +10,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 import MusicKit
+import MediaPlayer
 
 class SelectPlaylistViewController: UIViewController {
     
@@ -223,8 +224,21 @@ class SelectPlaylistViewController: UIViewController {
     
     private func setPlaylistAPI() {
         if sourcePlatform == .AppleMusic {
-            Task {
-                await self.setApplePlaylistAPI()
+            MPMediaLibrary.requestAuthorization { status in
+                switch status {
+                case .authorized:
+                    // 권한이 부여된 경우
+                    print("Apple Music authorization granted")
+                    Task {
+                        await self.setApplePlaylistAPI()
+                    }
+                default:
+                    DispatchQueue.main.async {
+                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있습니다.") {
+                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        }.show()
+                    }
+                }
             }
         } else if sourcePlatform == .Spotify {
             setSpotifyPlaylistAPI()

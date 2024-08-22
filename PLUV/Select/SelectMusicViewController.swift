@@ -35,7 +35,7 @@ class SelectMusicViewController: UIViewController {
     
     private let playlistView = UIView()
     private let playlistThumnailImageView = UIImageView().then {
-        $0.layer.cornerRadius = 8
+        // $0.layer.cornerRadius = 8
         $0.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
         $0.layer.borderWidth = 0.5
         $0.clipsToBounds = true
@@ -199,8 +199,7 @@ class SelectMusicViewController: UIViewController {
         checkImageView.snp.makeConstraints { make in
             make.trailing.equalTo(selectAllLabel.snp.leading).offset(-6)
             make.centerY.equalToSuperview()
-            make.width.equalTo(10)
-            make.height.equalTo(6)
+            make.width.height.equalTo(16)
         }
         
         self.contentView.addSubview(selectMusicTableView)
