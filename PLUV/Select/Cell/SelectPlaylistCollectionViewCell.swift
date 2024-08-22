@@ -15,7 +15,7 @@ final class SelectPlaylistCollectionViewCell: UICollectionViewCell {
     static let identifier = String(describing: SelectPlaylistCollectionViewCell.self)
     
     private let thumbnailImageView = UIImageView().then {
-        $0.layer.cornerRadius = 8
+        // $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
     }
     private let playButtonImageView = UIImageView().then {
@@ -53,12 +53,14 @@ final class SelectPlaylistCollectionViewCell: UICollectionViewCell {
             make.height.equalTo(thumbnailImageView.snp.width)
         }
         
+        /*
         self.thumbnailImageView.addSubview(playButtonImageView)
         playButtonImageView.snp.makeConstraints { make in
             make.width.equalTo(17)
             make.height.equalTo(19)
             make.trailing.bottom.equalToSuperview().inset(12)
         }
+         */
         
         self.contentView.addSubview(playlistTitleLabel)
         playlistTitleLabel.snp.makeConstraints { make in

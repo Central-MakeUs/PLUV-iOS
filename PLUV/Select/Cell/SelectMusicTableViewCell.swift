@@ -13,7 +13,7 @@ class SelectMusicTableViewCell: UITableViewCell {
     private let contentsView = UIView()
     private let thumbnailImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
-        $0.layer.cornerRadius = 2
+        // $0.layer.cornerRadius = 2
         $0.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
         $0.layer.borderWidth = 0.5
         $0.clipsToBounds = true
