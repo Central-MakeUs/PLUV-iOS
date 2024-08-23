@@ -124,6 +124,17 @@ class TransferCheckViewController: UIViewController {
             checkTitleLabel.text = "\(destinationPlatform.name)으로\n플레이리스트를 옮길까요?"
         }
         
+        let fullText = checkTitleLabel.text ?? ""
+        let changeText = destinationPlatform.name
+        let attributedString = NSMutableAttributedString(string: fullText)
+        
+        if let range = fullText.range(of: changeText) {
+            let nsRange = NSRange(range, in: fullText)
+            attributedString.addAttribute(.foregroundColor, value: UIColor.mainPurple, range: nsRange)
+        }
+        
+        checkTitleLabel.attributedText = attributedString
+        
         self.view.addSubview(selectSourcePlatformView)
         selectSourcePlatformView.snp.makeConstraints { make in
             make.top.equalTo(checkTitleView.snp.bottom).offset(4)

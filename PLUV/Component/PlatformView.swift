@@ -10,7 +10,10 @@ import UIKit
 final class PlatformView: UIView {
     
     var platformImageView = UIImageView()
-    var platformTitleLabel = UILabel()
+    var platformTitleLabel = UILabel().then {
+        $0.textColor = .gray600
+        $0.font = .systemFont(ofSize: 14)
+    }
     
     init(platform: MusicPlatform) {
         super.init(frame: .zero)

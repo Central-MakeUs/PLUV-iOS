@@ -15,7 +15,10 @@ final class TransferTableViewCell: UITableViewCell {
     var selectPlatform: String = MusicPlatform.AppleMusic.name
     private let platformContentView = UIView()
     private let platformImageView = UIImageView()
-    private let platformTitleLabel = UILabel()
+    private let platformTitleLabel = UILabel().then {
+        $0.textColor = .gray800
+        $0.font = .systemFont(ofSize: 20, weight: .medium)
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
