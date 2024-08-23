@@ -79,9 +79,11 @@ class LoginViewController: UIViewController {
             make.height.equalTo(54)
         }
         
+        /// 바닥 기준으로 layout 짜기
         self.view.addSubview(appleLoginButton)
         appleLoginButton.snp.makeConstraints { make in
-            make.top.equalTo(spotifyLoginButton.snp.bottom).offset(12)
+            // make.top.equalTo(spotifyLoginButton.snp.bottom).offset(12)
+            make.bottom.equalToSuperview().offset(-50)
             make.leading.trailing.equalToSuperview().inset(24)
             make.height.equalTo(54)
         }
