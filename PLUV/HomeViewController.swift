@@ -13,6 +13,9 @@ import MusicKit
 
 class HomeViewController: UIViewController {
     
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
+    
     private let backgroundImageView = UIImageView().then {
         $0.image = UIImage(named: "backgroundhome_image")
     }
@@ -69,13 +72,27 @@ extension HomeViewController {
         self.view.backgroundColor = .gray100
         self.navigationItem.setHidesBackButton(true, animated: false)
         
-        self.view.addSubview(backgroundImageView)
+        scrollView.contentInsetAdjustmentBehavior = .never
+
+        self.view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.leading.trailing.equalToSuperview()
+        }
+        
+        self.scrollView.addSubview(contentView)
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView.contentLayoutGuide)
+            make.width.equalTo(scrollView.frameLayoutGuide)
+            make.height.equalTo(820)
+        }
+        
+        self.contentView.addSubview(backgroundImageView)
         backgroundImageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.height.equalTo(359)
         }
         
-        self.view.addSubview(logoImageView)
+        self.contentView.addSubview(logoImageView)
         logoImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(62)
             make.leading.equalToSuperview().offset(16)
@@ -83,7 +100,7 @@ extension HomeViewController {
             make.height.equalTo(24)
         }
         
-        self.view.addSubview(transferDirectButton)
+        self.contentView.addSubview(transferDirectButton)
         transferDirectButton.snp.makeConstraints { make in
             make.top.equalTo(logoImageView.snp.bottom).offset(15)
             make.leading.trailing.equalToSuperview().inset(16)
@@ -91,7 +108,7 @@ extension HomeViewController {
         }
         transferDirectButton.addTarget(self, action: #selector(clickTransferDirectButton), for: .touchUpInside)
         
-        self.view.addSubview(transferScreenshotButton)
+        self.contentView.addSubview(transferScreenshotButton)
         transferScreenshotButton.snp.makeConstraints { make in
             make.top.equalTo(transferDirectButton.snp.bottom).offset(12)
             make.leading.trailing.equalToSuperview().inset(16)
@@ -99,35 +116,35 @@ extension HomeViewController {
         }
         transferScreenshotButton.addTarget(self, action: #selector(clickTransferScreenshotButton), for: .touchUpInside)
         
-        self.view.addSubview(myPlaylistImageView)
+        self.contentView.addSubview(myPlaylistImageView)
         myPlaylistImageView.snp.makeConstraints { make in
             make.top.equalTo(backgroundImageView.snp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(48)
         }
         
-        self.view.addSubview(recentListImageView)
+        self.contentView.addSubview(recentListImageView)
         recentListImageView.snp.makeConstraints { make in
             make.top.equalTo(myPlaylistImageView.snp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(56)
         }
         
-        self.view.addSubview(recentEmptyLabel)
+        self.contentView.addSubview(recentEmptyLabel)
         recentEmptyLabel.snp.makeConstraints { make in
             make.top.equalTo(recentListImageView.snp.bottom).offset(50)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(16)
         }
         
-        self.view.addSubview(saveListImageView)
+        self.contentView.addSubview(saveListImageView)
         saveListImageView.snp.makeConstraints { make in
             make.top.equalTo(recentListImageView.snp.bottom).offset(176)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(56)
         }
         
-        self.view.addSubview(saveEmptyLabel)
+        self.contentView.addSubview(saveEmptyLabel)
         saveEmptyLabel.snp.makeConstraints { make in
             make.top.equalTo(saveListImageView.snp.bottom).offset(50)
             make.leading.trailing.equalToSuperview()
