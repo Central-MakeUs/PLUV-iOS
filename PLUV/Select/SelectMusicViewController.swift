@@ -15,6 +15,8 @@ class SelectMusicViewController: UIViewController {
     
     let viewModel = SelectMusicViewModel()
     
+    let loadingView = LoadingView(loadingState: .LoadMusic)
+    
     private var sourcePlatform: MusicPlatform = .AppleMusic
     private var destinationPlatform: MusicPlatform = .Spotify
     
@@ -221,6 +223,11 @@ class SelectMusicViewController: UIViewController {
         // moveView.trasferButton.isEnabled = false
         moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
         
+        self.view.addSubview(loadingView)
+        loadingView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
         setXButton()
     }
     
@@ -309,6 +316,8 @@ class SelectMusicViewController: UIViewController {
                     self.viewModel.musicItem = Observable.just(response.data)
                     self.setData()
                     self.setPlaylistData()
+                    self.loadingView.removeFromSuperview()
+                    self.view.layoutIfNeeded()
                 default:
                     AlertController(message: response.msg).show()
                 }
@@ -328,6 +337,8 @@ class SelectMusicViewController: UIViewController {
                 self.viewModel.musicItem = Observable.just(response.data)
                 self.setData()
                 self.setPlaylistData()
+                self.loadingView.removeFromSuperview()
+                self.view.layoutIfNeeded()
             default:
                 AlertController(message: response.msg).show()
             }
