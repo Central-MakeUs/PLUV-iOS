@@ -220,9 +220,6 @@ class SelectMusicViewController: UIViewController {
             make.height.equalTo(101)
         }
         
-        // moveView.trasferButton.isEnabled = false
-        moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
-        
         self.view.addSubview(loadingView)
         loadingView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -234,6 +231,7 @@ class SelectMusicViewController: UIViewController {
     private func setButtons() {
         setXButton()
         setSelectAllButton()
+        bindtrasferButton()
     }
     
     private func setXButton() {
@@ -270,6 +268,16 @@ class SelectMusicViewController: UIViewController {
         }
         
         self.selectMusicTableView.reloadData()
+    }
+    
+    private func bindtrasferButton() {
+        moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
+        
+        /// selectedMusic의 변화를 관찰하여 trasferButton의 활성화 상태를 업데이트
+        self.viewModel.selectedMusic
+            .map { !$0.isEmpty } /// 선택된 음악이 있으면 true, 없으면 false
+            .bind(to: moveView.trasferButton.rx.isEnabled)
+            .disposed(by: disposeBag)
     }
     
     @objc private func clickTransferButton() {
