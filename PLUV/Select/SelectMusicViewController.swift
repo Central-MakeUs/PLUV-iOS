@@ -313,7 +313,7 @@ class SelectMusicViewController: UIViewController {
             APIService().post(of: APIResponse<[Music]>.self, url: url, parameters: params) { response in
                 switch response.code {
                 case 200:
-                    self.viewModel.musicItem = Observable.just(response.data)
+                    self.viewModel.musicItem.accept(response.data)
                     self.setData()
                     self.setPlaylistData()
                     self.loadingView.removeFromSuperview()
@@ -334,7 +334,7 @@ class SelectMusicViewController: UIViewController {
         APIService().post(of: APIResponse<[Music]>.self, url: url, parameters: params) { response in
             switch response.code {
             case 200:
-                self.viewModel.musicItem = Observable.just(response.data)
+                self.viewModel.musicItem.accept(response.data)
                 self.setData()
                 self.setPlaylistData()
                 self.loadingView.removeFromSuperview()
