@@ -19,6 +19,8 @@ class SelectPlaylistViewController: UIViewController {
     private var sourcePlatform: MusicPlatform = .AppleMusic
     private var destinationPlatform: MusicPlatform = .Spotify
     
+    let loadingView = LoadingView(loadingState: .LoadPlaylist)
+    
     private let playlistTitleView = UIView()
     private let sourceToDestinationLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 14, weight: .regular)
@@ -119,6 +121,11 @@ class SelectPlaylistViewController: UIViewController {
         
         moveView.trasferButton.isEnabled = false
         moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
+        
+        self.view.addSubview(loadingView)
+        loadingView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         
         setXButton()
     }
@@ -252,6 +259,8 @@ class SelectPlaylistViewController: UIViewController {
         APIService().post(of: [Playlist].self, url: url, parameters: params) { response in
             self.viewModel.playlistItems = Observable.just(response)
             self.setData()
+            self.loadingView.removeFromSuperview()
+            self.view.layoutIfNeeded()
         }
     }
     
@@ -275,6 +284,8 @@ class SelectPlaylistViewController: UIViewController {
             APIService().post(of: [Playlist].self, url: url, parameters: params) { response in
                 self.viewModel.playlistItems = Observable.just(response)
                 self.setData()
+                self.loadingView.removeFromSuperview()
+                self.view.layoutIfNeeded()
             }
         } catch {
             print("ERROR : setApplePlaylistAPI")
