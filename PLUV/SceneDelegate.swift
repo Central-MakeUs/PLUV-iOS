@@ -6,7 +6,9 @@
 //
 
 import UIKit
+import SpotifyiOS
 
+/*
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -18,9 +20,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
+        window = UIWindow(frame: UIScreen.main.bounds)
         window = UIWindow(windowScene: windowScene)
-        let vc = ViewController()
-        window?.rootViewController = vc
+        let homeVC = UINavigationController(rootViewController: TransferDestinationViewController())
+        window?.rootViewController = homeVC
         window?.makeKeyAndVisible()
     }
 
@@ -54,4 +57,50 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 }
+*/
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
+    var window: UIWindow?
+    var LoginVC = UINavigationController(rootViewController: LoginViewController())
+    lazy var SpotifyVC = TransferCheckViewController()
+
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window!.makeKeyAndVisible()
+        window!.windowScene = windowScene
+        window?.overrideUserInterfaceStyle = .light
+        window!.rootViewController = LoginVC
+    }
+
+    // For spotify authorization and authentication flow
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        guard let url = URLContexts.first?.url else { return }
+        let parameters = SpotifyVC.appRemote.authorizationParameters(from: url)
+        if let code = parameters?["code"] {
+            SpotifyVC.responseCode = code
+        } else if let access_token = parameters?[SPTAppRemoteAccessTokenKey] {
+            SpotifyVC.accessToken = access_token
+        } else if let error_description = parameters?[SPTAppRemoteErrorDescriptionKey] {
+            print("No access token error =", error_description)
+        }
+    }
+
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        if let accessToken = SpotifyVC.appRemote.connectionParameters.accessToken {
+            SpotifyVC.appRemote.connectionParameters.accessToken = accessToken
+            SpotifyVC.appRemote.connect()
+            TokenManager.shared.spotifyAccessToken = accessToken
+        } else if let accessToken = SpotifyVC.accessToken {
+            SpotifyVC.appRemote.connectionParameters.accessToken = accessToken
+            SpotifyVC.appRemote.connect()
+            TokenManager.shared.spotifyAccessToken = accessToken
+        }
+    }
+
+    func sceneWillResignActive(_ scene: UIScene) {
+        if SpotifyVC.appRemote.isConnected {
+            SpotifyVC.appRemote.disconnect()
+        }
+    }
+}
