@@ -182,7 +182,7 @@ class SelectPlaylistViewController: UIViewController {
                     
                     // 선택 상태에 따라 셀 업데이트
                     if let customCell = cell as? SelectPlaylistCollectionViewCell {
-                        customCell.updateSelectionState(isSelected: isSelected)
+                        customCell.updateSelectionUI(isSelected: isSelected)
                     }
                 }
             })
