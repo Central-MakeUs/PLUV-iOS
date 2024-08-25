@@ -7,6 +7,7 @@
 
 import UIKit
 import MusicKit
+import MediaPlayer
 
 class MovePlaylistViewController: UIViewController {
     
@@ -230,13 +231,26 @@ class MovePlaylistViewController: UIViewController {
     }
     
     private func searchAPI() {
-        if sourcePlatform == .AppleMusic {
+        if sourcePlatform == .AppleMusic && destinationPlatform == .Spotify {
             Task {
                 await self.searchAppleToSpotifyAPI(musics: self.viewModel.musicItems)
             }
-        } else if sourcePlatform == .Spotify {
-            Task {
-                await self.searchSpotifyToAppleAPI(musics: self.viewModel.musicItems)
+        } else if sourcePlatform == .Spotify && destinationPlatform == .AppleMusic {
+            MPMediaLibrary.requestAuthorization { status in
+                switch status {
+                case .authorized:
+                    // 권한이 부여된 경우
+                    print("Apple Music authorization granted")
+                    Task {
+                        await self.searchSpotifyToAppleAPI(musics: self.viewModel.musicItems)
+                    }
+                default:
+                    DispatchQueue.main.async {
+                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있습니다.") {
+                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        }.show()
+                    }
+                }
             }
         }
     }
