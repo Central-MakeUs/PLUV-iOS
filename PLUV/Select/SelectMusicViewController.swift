@@ -281,6 +281,9 @@ class SelectMusicViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+        /// 모든 cell 선택된 상태로 세팅
+        self.viewModel.selectedMusic.accept(viewModel.musicItem.value)
+        
         /// TableView에 들어갈 Cell에 정보 제공
         self.viewModel.musicItem
             .observe(on: MainScheduler.instance)
