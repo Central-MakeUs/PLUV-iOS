@@ -228,7 +228,12 @@ class SelectMusicViewController: UIViewController {
             make.edges.equalToSuperview()
         }
         
+        setButtons()
+    }
+    
+    private func setButtons() {
         setXButton()
+        setSelectAllButton()
     }
     
     private func setXButton() {
@@ -244,6 +249,27 @@ class SelectMusicViewController: UIViewController {
                 navigationController.popToViewController(previousViewController, animated: true)
             }
         }
+    }
+    
+    private func setSelectAllButton() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(clickSelectAllButton))
+        selectAllLabel.addGestureRecognizer(tapGesture)
+        selectAllLabel.isUserInteractionEnabled = true
+    }
+    
+    @objc private func clickSelectAllButton() {
+        /// 모든 셀을 선택할지 해제할지 결정
+        let allSelected = viewModel.selectedMusic.value.count == viewModel.musicItem.value.count
+        
+        if allSelected {
+            /// 모두 선택 해제
+            viewModel.selectedMusic.accept([])
+        } else {
+            /// 모두 선택
+            viewModel.selectedMusic.accept(viewModel.musicItem.value)
+        }
+        
+        self.selectMusicTableView.reloadData()
     }
     
     @objc private func clickTransferButton() {
