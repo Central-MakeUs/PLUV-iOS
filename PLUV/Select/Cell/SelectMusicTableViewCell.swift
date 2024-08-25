@@ -39,13 +39,18 @@ class SelectMusicTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        /// 셀을 재사용할 때 기본 상태로 초기화
+        self.contentView.backgroundColor = .white
+        self.checkImageView.image = nil
+    }
+    
     override func layoutSubviews() {
         setUI()
     }
     
     private func setUI() {
-        self.contentView.backgroundColor = .selectPurple
-        
         self.contentView.addSubview(contentsView)
         contentsView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(24)
@@ -90,5 +95,15 @@ class SelectMusicTableViewCell: UITableViewCell {
         self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
         self.songTitleLabel.text = music.title
         self.singerLabel.text = music.artistNames
+    }
+    
+    func updateSelectionUI(isSelected: Bool) {
+        if isSelected {
+            self.contentView.backgroundColor = .selectPurple
+            self.checkImageView.image = UIImage(named: "check_image")
+        } else {
+            self.contentView.backgroundColor = .white
+            self.checkImageView.image = nil
+        }
     }
 }
