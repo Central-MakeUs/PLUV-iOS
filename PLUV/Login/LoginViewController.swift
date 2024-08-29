@@ -118,8 +118,8 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func clickAppleLogin() {
-        let homeVC = HomeViewController()
-        self.navigationController?.pushViewController(homeVC, animated: true)
+        let tabBarVC = TabBarViewController()
+        self.navigationController?.pushViewController(tabBarVC, animated: true)
         
         /*
         let appleIDProvider = ASAuthorizationAppleIDProvider()
