@@ -35,6 +35,7 @@
 		68DB037B2C7CF3C900FBD014 /* ValidationSimilarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DB037A2C7CF3C900FBD014 /* ValidationSimilarViewController.swift */; };
 		68DB037D2C7CF3DF00FBD014 /* ValidationNotFoundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DB037C2C7CF3DF00FBD014 /* ValidationNotFoundViewController.swift */; };
 		68DB03812C80F18E00FBD014 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DB03802C80F18D00FBD014 /* TabBarViewController.swift */; };
+		68DB03832C80F1AB00FBD014 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DB03822C80F1AA00FBD014 /* MyPageViewController.swift */; };
 		68DC4C732C6B6DE5006D8E97 /* SelectPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C722C6B6DE5006D8E97 /* SelectPlaylistViewController.swift */; };
 		68DC4C772C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C762C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift */; };
 		68DC4C792C6B6F48006D8E97 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */; };
@@ -129,6 +130,7 @@
 		68DB037A2C7CF3C900FBD014 /* ValidationSimilarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationSimilarViewController.swift; sourceTree = "<group>"; };
 		68DB037C2C7CF3DF00FBD014 /* ValidationNotFoundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationNotFoundViewController.swift; sourceTree = "<group>"; };
 		68DB03802C80F18D00FBD014 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		68DB03822C80F1AA00FBD014 /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
 		68DC4C722C6B6DE5006D8E97 /* SelectPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlaylistViewController.swift; sourceTree = "<group>"; };
 		68DC4C762C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlaylistCollectionViewCell.swift; sourceTree = "<group>"; };
 		68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -294,6 +296,14 @@
 			path = Validation;
 			sourceTree = "<group>";
 		};
+		68DB037E2C80F08F00FBD014 /* MyPage */ = {
+			isa = PBXGroup;
+			children = (
+				68DB03822C80F1AA00FBD014 /* MyPageViewController.swift */,
+			);
+			path = MyPage;
+			sourceTree = "<group>";
+		};
 		68DB037F2C80F0B100FBD014 /* TabBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -378,6 +388,7 @@
 				6889F5132C6CE496001F5FC2 /* Select */,
 				68DB03792C7CF39300FBD014 /* Validation */,
 				6889F5282C723BD3001F5FC2 /* Move */,
+				68DB037E2C80F08F00FBD014 /* MyPage */,
 				68DC8A962C3C535300A03042 /* AppDelegate.swift */,
 				68DC8A982C3C535300A03042 /* SceneDelegate.swift */,
 				68DC8A9A2C3C535300A03042 /* HomeViewController.swift */,
@@ -699,6 +710,7 @@
 				6889F51E2C6D52B7001F5FC2 /* SelectMusicViewModel.swift in Sources */,
 				68F6FAB82C4A9F27001128FF /* BlackButton.swift in Sources */,
 				68F6FCFC2C5A92F2001128FF /* UIButton+Extension.swift in Sources */,
+				68DB03832C80F1AB00FBD014 /* MyPageViewController.swift in Sources */,
 				688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */,
 				68DC4C772C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift in Sources */,
 				68F6FAB22C4A9CCA001128FF /* WhiteButton.swift in Sources */,
