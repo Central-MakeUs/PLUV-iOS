@@ -50,6 +50,7 @@ class LoginViewController: UIViewController {
     
     private func setUI() {
         self.view.backgroundColor = .white
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         self.view.addSubview(logoImageView)
         logoImageView.snp.makeConstraints { make in
