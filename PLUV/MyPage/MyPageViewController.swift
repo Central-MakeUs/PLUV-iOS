@@ -25,7 +25,7 @@ class MyPageViewController: UIViewController {
         $0.contentMode = .scaleAspectFit
     }
     private let nickNameLabel = UILabel().then {
-        $0.text = "닉넴"
+        $0.text = "플러버"
         $0.textColor = .gray800
         $0.font = .systemFont(ofSize: 22, weight: .bold)
     }
