@@ -32,6 +32,8 @@
 		6889F53B2C72710F001F5FC2 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F53A2C72710F001F5FC2 /* Search.swift */; };
 		688EFDB52C42867B0067D053 /* TransferSourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */; };
 		688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */; };
+		68DB037B2C7CF3C900FBD014 /* ValidationSimilarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DB037A2C7CF3C900FBD014 /* ValidationSimilarViewController.swift */; };
+		68DB037D2C7CF3DF00FBD014 /* ValidationNotFoundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DB037C2C7CF3DF00FBD014 /* ValidationNotFoundViewController.swift */; };
 		68DC4C732C6B6DE5006D8E97 /* SelectPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C722C6B6DE5006D8E97 /* SelectPlaylistViewController.swift */; };
 		68DC4C772C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C762C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift */; };
 		68DC4C792C6B6F48006D8E97 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */; };
@@ -123,6 +125,8 @@
 		6889F53A2C72710F001F5FC2 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		688EFDB42C42867B0067D053 /* TransferSourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferSourceViewController.swift; sourceTree = "<group>"; };
 		688EFDB62C42886E0067D053 /* TransferTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTableViewCell.swift; sourceTree = "<group>"; };
+		68DB037A2C7CF3C900FBD014 /* ValidationSimilarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationSimilarViewController.swift; sourceTree = "<group>"; };
+		68DB037C2C7CF3DF00FBD014 /* ValidationNotFoundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationNotFoundViewController.swift; sourceTree = "<group>"; };
 		68DC4C722C6B6DE5006D8E97 /* SelectPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlaylistViewController.swift; sourceTree = "<group>"; };
 		68DC4C762C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlaylistCollectionViewCell.swift; sourceTree = "<group>"; };
 		68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -279,6 +283,15 @@
 			path = State;
 			sourceTree = "<group>";
 		};
+		68DB03792C7CF39300FBD014 /* Validation */ = {
+			isa = PBXGroup;
+			children = (
+				68DB037A2C7CF3C900FBD014 /* ValidationSimilarViewController.swift */,
+				68DB037C2C7CF3DF00FBD014 /* ValidationNotFoundViewController.swift */,
+			);
+			path = Validation;
+			sourceTree = "<group>";
+		};
 		68DC4C752C6B6E5B006D8E97 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -352,6 +365,7 @@
 				6889F51F2C6E6E5D001F5FC2 /* Login */,
 				688EFDB02C4281DC0067D053 /* Platform */,
 				6889F5132C6CE496001F5FC2 /* Select */,
+				68DB03792C7CF39300FBD014 /* Validation */,
 				6889F5282C723BD3001F5FC2 /* Move */,
 				68DC8A962C3C535300A03042 /* AppDelegate.swift */,
 				68DC8A982C3C535300A03042 /* SceneDelegate.swift */,
@@ -691,6 +705,7 @@
 				68DC4C792C6B6F48006D8E97 /* UIViewController+Extension.swift in Sources */,
 				68F6FAB62C4A9D9A001128FF /* TransferCheckViewController.swift in Sources */,
 				6889F5122C6CD194001F5FC2 /* SelectPlaylistViewModel.swift in Sources */,
+				68DB037D2C7CF3DF00FBD014 /* ValidationNotFoundViewController.swift in Sources */,
 				6889F5352C724B58001F5FC2 /* ProgressShapeLayer.swift in Sources */,
 				6889F51C2C6D4A91001F5FC2 /* APIResponse.swift in Sources */,
 				68DC8A9B2C3C535300A03042 /* HomeViewController.swift in Sources */,
@@ -700,6 +715,7 @@
 				68F6FAB02C4A8ECF001128FF /* MoveView.swift in Sources */,
 				680A78552C73C2D700F28510 /* MovePlaylistViewModel.swift in Sources */,
 				68F6FD012C5BAB3B001128FF /* LoadingState.swift in Sources */,
+				68DB037B2C7CF3C900FBD014 /* ValidationSimilarViewController.swift in Sources */,
 				6859C9102C612ACE00E03179 /* DotView.swift in Sources */,
 				68DC4C802C6B70AE006D8E97 /* EndPoint.swift in Sources */,
 				6889F51A2C6D49E3001F5FC2 /* Music.swift in Sources */,
