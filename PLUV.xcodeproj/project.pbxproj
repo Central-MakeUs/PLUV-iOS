@@ -315,6 +315,14 @@
 			path = TabBar;
 			sourceTree = "<group>";
 		};
+		68DB03842C81093700FBD014 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				68DC8A9A2C3C535300A03042 /* HomeViewController.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
 		68DC4C752C6B6E5B006D8E97 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -391,10 +399,10 @@
 				6889F5132C6CE496001F5FC2 /* Select */,
 				68DB03792C7CF39300FBD014 /* Validation */,
 				6889F5282C723BD3001F5FC2 /* Move */,
+				68DB03842C81093700FBD014 /* Home */,
 				68DB037E2C80F08F00FBD014 /* MyPage */,
 				68DC8A962C3C535300A03042 /* AppDelegate.swift */,
 				68DC8A982C3C535300A03042 /* SceneDelegate.swift */,
-				68DC8A9A2C3C535300A03042 /* HomeViewController.swift */,
 				68DC8A9F2C3C535500A03042 /* Assets.xcassets */,
 				68DC8AA12C3C535500A03042 /* LaunchScreen.storyboard */,
 				68DC8AA42C3C535500A03042 /* Info.plist */,
