@@ -83,7 +83,7 @@ extension HomeViewController {
         contentView.snp.makeConstraints { make in
             make.edges.equalTo(scrollView.contentLayoutGuide)
             make.width.equalTo(scrollView.frameLayoutGuide)
-            make.height.equalTo(820)
+            make.height.equalTo(940)
         }
         
         self.contentView.addSubview(backgroundImageView)
