@@ -107,7 +107,8 @@ class MyPageViewController: UIViewController {
     }
     
     @objc private func clickMyPageInfoButton() {
-        print("clickMyPageInfoButton")
+        let memberInfoViewController = MemberInfoViewController()
+        self.navigationController?.pushViewController(memberInfoViewController, animated: true)
     }
 }
 
