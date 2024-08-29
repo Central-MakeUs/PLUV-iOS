@@ -42,13 +42,23 @@ class MyPageViewController: UIViewController {
         setData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
     private func setUI() {
         self.view.backgroundColor = .gray100
         self.navigationItem.setHidesBackButton(true, animated: false)
         
         self.view.addSubview(titleView)
         titleView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(47) /// 임시로 safeArea 만큼 내려줌
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
         }
         
