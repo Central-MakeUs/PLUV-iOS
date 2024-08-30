@@ -15,6 +15,7 @@
 		6859C9102C612ACE00E03179 /* DotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6859C90F2C612ACE00E03179 /* DotView.swift */; };
 		68830FAA2C81D8CF00995785 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68830FA92C81D8CF00995785 /* WebViewController.swift */; };
 		68830FAD2C81F57900995785 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68830FAC2C81F57900995785 /* FeedViewController.swift */; };
+		68830FAF2C8264CA00995785 /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68830FAE2C8264CA00995785 /* FeedViewModel.swift */; };
 		68830FB12C82657F00995785 /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68830FB02C82657F00995785 /* Feed.swift */; };
 		68830FB32C8265F600995785 /* FeedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68830FB22C8265F600995785 /* FeedCollectionViewCell.swift */; };
 		6889F5122C6CD194001F5FC2 /* SelectPlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5112C6CD194001F5FC2 /* SelectPlaylistViewModel.swift */; };
@@ -118,6 +119,7 @@
 		6859C90F2C612ACE00E03179 /* DotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotView.swift; sourceTree = "<group>"; };
 		68830FA92C81D8CF00995785 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		68830FAC2C81F57900995785 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		68830FAE2C8264CA00995785 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
 		68830FB02C82657F00995785 /* Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feed.swift; sourceTree = "<group>"; };
 		68830FB22C8265F600995785 /* FeedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCollectionViewCell.swift; sourceTree = "<group>"; };
 		6889F5112C6CD194001F5FC2 /* SelectPlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlaylistViewModel.swift; sourceTree = "<group>"; };
@@ -230,6 +232,7 @@
 			isa = PBXGroup;
 			children = (
 				68830FAC2C81F57900995785 /* FeedViewController.swift */,
+				68830FAE2C8264CA00995785 /* FeedViewModel.swift */,
 				68830FB22C8265F600995785 /* FeedCollectionViewCell.swift */,
 			);
 			path = Feed;
@@ -761,6 +764,7 @@
 				688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */,
 				68DC4C772C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift in Sources */,
 				68F6FAB22C4A9CCA001128FF /* WhiteButton.swift in Sources */,
+				68830FAF2C8264CA00995785 /* FeedViewModel.swift in Sources */,
 				6889F5272C6F4193001F5FC2 /* AccessTokenModel.swift in Sources */,
 				68F6FCFF2C5BA631001128FF /* LoadingView.swift in Sources */,
 				6889F52A2C723BE9001F5FC2 /* MovePlaylistViewController.swift in Sources */,
