@@ -164,7 +164,7 @@ extension HomeViewController {
     }
     
     @objc private func clickTransferScreenshotButton() {
-        AlertController(message: "추후 공개될 예정입니다!").show()
+        AlertController(message: "추후 공개될 예정이에요!").show()
     }
     
     /// 테스트

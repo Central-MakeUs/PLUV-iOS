@@ -241,7 +241,7 @@ class SelectPlaylistViewController: UIViewController {
                     }
                 default:
                     DispatchQueue.main.async {
-                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있습니다.") {
+                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있어요") {
                             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                         }.show()
                     }

@@ -246,7 +246,7 @@ class MovePlaylistViewController: UIViewController {
                     }
                 default:
                     DispatchQueue.main.async {
-                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있습니다.") {
+                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있어요") {
                             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                         }.show()
                     }
@@ -369,7 +369,7 @@ class MovePlaylistViewController: UIViewController {
             case 201:
                 print(response.data, "addAppleToSpotify")
                 self.circleLoadingIndicator.isAnimating = false
-                AlertController(message: "플레이리스트가 생성되었습니다.", completion: {
+                AlertController(message: "플레이리스트를 옮겼어요", completion: {
                     self.clickXButton()
                 }).show()
             default:
@@ -402,7 +402,7 @@ class MovePlaylistViewController: UIViewController {
                 case 201:
                     print(response.data, "addSpotifyToApple")
                     self.circleLoadingIndicator.isAnimating = false
-                    AlertController(message: "플레이리스트가 생성되었습니다.", completion: {
+                    AlertController(message: "플레이리스트를 옮겼어요", completion: {
                         self.clickXButton()
                     }).show()
                 default:
