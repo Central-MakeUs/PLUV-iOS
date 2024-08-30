@@ -87,6 +87,8 @@ class MemberInfoViewController: UIViewController {
         }
         
         self.view.addSubview(deleteAccountView)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(clickDeleteAccountView))
+        deleteAccountView.addGestureRecognizer(tapGesture)
         deleteAccountView.snp.makeConstraints { make in
             make.top.equalTo(separatorView.snp.bottom)
             make.leading.trailing.equalToSuperview()
@@ -102,5 +104,10 @@ class MemberInfoViewController: UIViewController {
     
     @objc private func clickBackButton() {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func clickDeleteAccountView() {
+        let deleteAccountVC = DeleteAccountViewController()
+        self.navigationController?.pushViewController(deleteAccountVC, animated: true)
     }
 }
