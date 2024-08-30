@@ -23,6 +23,10 @@ enum EndPoint {
     
     case playlistAppleRead
     case playlistAppleMusicRead(String)
+    
+    case inquiry
+    case termsOfService
+    case privacyPolicy
 }
 
 extension EndPoint {
@@ -62,6 +66,13 @@ extension EndPoint {
             return EndPoint.makeEndPoint("/music/spotify/add")
         case .musicSpotifySearch:
             return EndPoint.makeEndPoint("/music/spotify/search")
+            
+        case .inquiry:
+            return "https://walla.my/survey/ewFV6AO4W9HhXwM8ilWG"
+        case .termsOfService:
+            return EndPoint.makeEndPoint("/policy")
+        case .privacyPolicy:
+            return EndPoint.makeEndPoint("/personal")
         }
     }
 }
