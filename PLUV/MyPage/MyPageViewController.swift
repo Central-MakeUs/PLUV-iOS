@@ -110,7 +110,11 @@ class MyPageViewController: UIViewController {
                    .observe(on: MainScheduler.instance)
                    .subscribe(onNext: { [weak self] myPageItem in
                        if myPageItem == .LogOut {
-                           
+                           AlertController(message: "로그아웃 하시겠어요?", isCancel: true) {
+                               let LoginVC = UINavigationController(rootViewController: LoginViewController())
+                               SceneDelegate().setRootViewController(LoginVC)
+                               self?.navigationController?.popToRootViewController(animated: true)
+                           }.show()
                        } else {
                            let webVC = WebViewController()
                            webVC.urlString = myPageItem.url
