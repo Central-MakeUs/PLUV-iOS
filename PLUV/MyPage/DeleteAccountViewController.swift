@@ -143,6 +143,34 @@ class DeleteAccountViewController: UIViewController {
     }
     
     @objc func clickDeleteAccountButton() {
-        print("clickDeleteAccountButton 확인")
+        deleteAccountAPI()
+    }
+    
+    private func deleteAccountAPI() {
+        let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+        
+        let url = EndPoint.memberUnregister.path
+        
+        APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: nil, AccessToken: loginToken) { response in
+            switch response.code {
+            case 200:
+                let LoginVC = UINavigationController(rootViewController: LoginViewController())
+                self.setRootViewController(LoginVC)
+                self.navigationController?.popToRootViewController(animated: true)
+            default:
+                AlertController(message: response.msg).show()
+            }
+        }
+    }
+    
+    func setRootViewController(_ viewController: UIViewController) {
+        guard let window = UIApplication.shared.connectedScenes
+                .filter({ $0.activationState == .foregroundActive })
+                .first(where: { $0 is UIWindowScene }) as? UIWindowScene else {
+            return
+        }
+
+        window.windows.first?.rootViewController = viewController
+        window.windows.first?.makeKeyAndVisible()
     }
 }
