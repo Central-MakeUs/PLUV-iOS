@@ -239,7 +239,7 @@ class MovePlaylistViewController: UIViewController {
             MPMediaLibrary.requestAuthorization { status in
                 switch status {
                 case .authorized:
-                    // 권한이 부여된 경우
+                    /// 권한이 부여된 경우
                     print("Apple Music authorization granted")
                     Task {
                         await self.searchSpotifyToAppleAPI(musics: self.viewModel.musicItems)
@@ -348,9 +348,9 @@ class MovePlaylistViewController: UIViewController {
     
     ///  애플에 있는 것 스포티파이에 등록
     private func addAppleToSpotify(musicIdsArr: [String]) {
-        //let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+        let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
         
-        //print(loginToken, "UserDefaults 로그인 토큰 확인\n")
+        print(loginToken, "UserDefaults 로그인 토큰 확인\n")
         print(TokenManager.shared.spotifyAccessToken, "스포티파이 토큰")
         
         let url = EndPoint.musicSpotifyAdd.path
@@ -364,7 +364,7 @@ class MovePlaylistViewController: UIViewController {
                         "source": "apple"
         ] as [String : Any]
         
-        APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: "") { response in
+        APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: loginToken) { response in
             switch response.code {
             case 201:
                 print(response.data, "addAppleToSpotify")
@@ -384,7 +384,7 @@ class MovePlaylistViewController: UIViewController {
             let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
             let musicUserToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
             
-            //let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+            let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
             
             let url = EndPoint.musicAppleAdd.path
             let params = [
@@ -397,7 +397,7 @@ class MovePlaylistViewController: UIViewController {
                             "source": "spotify"
             ] as [String : Any]
             
-            APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: "") { response in
+            APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: loginToken) { response in
                 switch response.code {
                 case 201:
                     print(response.data, "addSpotifyToApple")
