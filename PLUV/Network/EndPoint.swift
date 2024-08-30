@@ -11,16 +11,18 @@ enum EndPoint {
     case loginApple
     case loginAppleAdd
     
-    case playlistSpotifyRead
-    case playlistMusicSpotifyRead(String)
-    
-    case playlistAppleRead
-    case playlistAppleMusicRead(String)
+    case memberUnregister
     
     case musicAppleAdd
     case musicAppleSearch
     case musicSpotifyAdd
     case musicSpotifySearch
+    
+    case playlistSpotifyRead
+    case playlistMusicSpotifyRead(String)
+    
+    case playlistAppleRead
+    case playlistAppleMusicRead(String)
 }
 
 extension EndPoint {
@@ -38,6 +40,9 @@ extension EndPoint {
         case .loginAppleAdd:
             return EndPoint.makeEndPoint("/login/apple/add")
         
+        case .memberUnregister:
+            return EndPoint.makeEndPoint("/member/unregister")
+            
         case .playlistSpotifyRead:
             return EndPoint.makeEndPoint("/playlist/spotify/read")
         case .playlistMusicSpotifyRead(let id):
