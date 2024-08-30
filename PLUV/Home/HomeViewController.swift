@@ -64,6 +64,12 @@ class HomeViewController: UIViewController {
         
         setUI()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        /// 탭 바 표시하기
+        self.tabBarController?.tabBar.isHidden = false
+    }
 }
 
 extension HomeViewController {
