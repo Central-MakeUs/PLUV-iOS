@@ -105,6 +105,20 @@ class MyPageViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+        /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
+        self.myPageTableView.rx.modelSelected(MyPageItem.self)
+                   .observe(on: MainScheduler.instance)
+                   .subscribe(onNext: { [weak self] myPageItem in
+                       if myPageItem == .LogOut {
+                           
+                       } else {
+                           let webVC = WebViewController()
+                           webVC.urlString = myPageItem.url
+                           self?.navigationController?.pushViewController(webVC, animated: true)
+                       }
+                   })
+                   .disposed(by: disposeBag)
+        
         /// TableView에 들어갈 Cell에 정보 제공
         self.myPageItemList
             .observe(on: MainScheduler.instance)
