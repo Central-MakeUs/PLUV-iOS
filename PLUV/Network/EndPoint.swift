@@ -8,6 +8,8 @@
 import Foundation
 
 enum EndPoint {
+    case feed
+    
     case loginApple
     case loginAppleAdd
     
@@ -39,6 +41,9 @@ extension EndPoint {
     
     var path: String {
         switch self {
+        case .feed:
+            return EndPoint.makeEndPoint("/feed")
+            
         case .loginApple:
             return EndPoint.makeEndPoint("/login/apple")
         case .loginAppleAdd:
