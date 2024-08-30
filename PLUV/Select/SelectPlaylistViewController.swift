@@ -234,7 +234,7 @@ class SelectPlaylistViewController: UIViewController {
             MPMediaLibrary.requestAuthorization { status in
                 switch status {
                 case .authorized:
-                    // 권한이 부여된 경우
+                    /// 권한이 부여된 경우
                     print("Apple Music authorization granted")
                     Task {
                         await self.setApplePlaylistAPI()
@@ -276,7 +276,9 @@ class SelectPlaylistViewController: UIViewController {
         
         do {
             let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+            print(developerToken, "developerToken")
             let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+            print(userToken, "userToken")
             
             let url = EndPoint.playlistAppleRead.path
             let params = ["musicUserToken" : userToken]
