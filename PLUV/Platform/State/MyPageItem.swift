@@ -25,4 +25,17 @@ enum MyPageItem: Int, CaseIterable {
             "로그아웃"
         }
     }
+    
+    var url: String {
+        switch self {
+        case .Inquiry:
+            EndPoint.inquiry.path
+        case .TermsOfService:
+            EndPoint.termsOfService.path
+        case .PrivacyPolicy:
+            EndPoint.privacyPolicy.path
+        case .LogOut:
+            ""
+        }
+    }
 }
