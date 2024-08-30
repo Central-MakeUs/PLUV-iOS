@@ -15,6 +15,18 @@ class FeedViewController: UIViewController {
         $0.textColor = .gray800
         $0.font = .systemFont(ofSize: 20, weight: .semibold)
     }
+    private var feedCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 16
+        layout.minimumInteritemSpacing = 16
+        layout.scrollDirection = .vertical
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.register(SelectPlaylistCollectionViewCell.self, forCellWithReuseIdentifier: SelectPlaylistCollectionViewCell.identifier)
+        
+        return cv
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,5 +59,14 @@ class FeedViewController: UIViewController {
             make.top.leading.trailing.bottom.equalToSuperview().inset(16)
             make.height.equalTo(28)
         }
+        
+        self.view.addSubview(feedCollectionView)
+        feedCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(titleView.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview().inset(80)
+        }
+        feedCollectionView.showsVerticalScrollIndicator = false
+        feedCollectionView.allowsMultipleSelection = false
     }
 }
