@@ -11,16 +11,22 @@ enum EndPoint {
     case loginApple
     case loginAppleAdd
     
+    case memberUnregister
+    
+    case musicAppleAdd
+    case musicAppleSearch
+    case musicSpotifyAdd
+    case musicSpotifySearch
+    
     case playlistSpotifyRead
     case playlistMusicSpotifyRead(String)
     
     case playlistAppleRead
     case playlistAppleMusicRead(String)
     
-    case musicAppleAdd
-    case musicAppleSearch
-    case musicSpotifyAdd
-    case musicSpotifySearch
+    case inquiry
+    case termsOfService
+    case privacyPolicy
 }
 
 extension EndPoint {
@@ -38,6 +44,9 @@ extension EndPoint {
         case .loginAppleAdd:
             return EndPoint.makeEndPoint("/login/apple/add")
         
+        case .memberUnregister:
+            return EndPoint.makeEndPoint("/member/unregister")
+            
         case .playlistSpotifyRead:
             return EndPoint.makeEndPoint("/playlist/spotify/read")
         case .playlistMusicSpotifyRead(let id):
@@ -57,6 +66,13 @@ extension EndPoint {
             return EndPoint.makeEndPoint("/music/spotify/add")
         case .musicSpotifySearch:
             return EndPoint.makeEndPoint("/music/spotify/search")
+            
+        case .inquiry:
+            return "https://walla.my/survey/ewFV6AO4W9HhXwM8ilWG"
+        case .termsOfService:
+            return EndPoint.makeEndPoint("/policy")
+        case .privacyPolicy:
+            return EndPoint.makeEndPoint("/personal")
         }
     }
 }

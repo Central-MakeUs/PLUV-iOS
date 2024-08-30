@@ -37,7 +37,7 @@ struct APIService {
         }
     }
     
-    func postWithAccessToken<T: Codable>(of type: T.Type, url: URLConvertible, parameters: [String : Any], AccessToken: String, success: @escaping (T) -> (), failure: ((Error) -> ())? = nil) {
+    func postWithAccessToken<T: Codable>(of type: T.Type, url: URLConvertible, parameters: [String : Any]?, AccessToken: String, success: @escaping (T) -> (), failure: ((Error) -> ())? = nil) {
         
         let headers: HTTPHeaders = ["Content-Type":"application/json",
                                     "Accept":"application/json",

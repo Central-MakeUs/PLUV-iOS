@@ -103,4 +103,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             SpotifyVC.appRemote.disconnect()
         }
     }
+    
+    func setRootViewController(_ viewController: UIViewController) {
+        guard let window = UIApplication.shared.connectedScenes
+                .filter({ $0.activationState == .foregroundActive })
+                .first(where: { $0 is UIWindowScene }) as? UIWindowScene else {
+            return
+        }
+
+        window.windows.first?.rootViewController = viewController
+        window.windows.first?.makeKeyAndVisible()
+    }
 }
