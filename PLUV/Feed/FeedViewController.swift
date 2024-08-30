@@ -72,7 +72,7 @@ class FeedViewController: UIViewController {
         feedCollectionView.snp.makeConstraints { make in
             make.top.equalTo(titleView.snp.bottom)
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalToSuperview().inset(90)
+            make.bottom.equalToSuperview().inset(82)
         }
         feedCollectionView.showsVerticalScrollIndicator = false
         feedCollectionView.allowsMultipleSelection = false
