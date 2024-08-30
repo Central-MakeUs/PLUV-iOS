@@ -40,6 +40,7 @@
 		68DB038A2C81170D00FBD014 /* MyPageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DB03892C81170D00FBD014 /* MyPageItem.swift */; };
 		68DB038C2C8122C200FBD014 /* MemberInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DB038B2C8122C200FBD014 /* MemberInfoViewController.swift */; };
 		68DB038E2C812D0200FBD014 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DB038D2C812D0200FBD014 /* UIImage+Extension.swift */; };
+		68DB03902C813EA600FBD014 /* DeleteAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DB038F2C813EA600FBD014 /* DeleteAccountViewController.swift */; };
 		68DC4C732C6B6DE5006D8E97 /* SelectPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C722C6B6DE5006D8E97 /* SelectPlaylistViewController.swift */; };
 		68DC4C772C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C762C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift */; };
 		68DC4C792C6B6F48006D8E97 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */; };
@@ -139,6 +140,7 @@
 		68DB03892C81170D00FBD014 /* MyPageItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageItem.swift; sourceTree = "<group>"; };
 		68DB038B2C8122C200FBD014 /* MemberInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberInfoViewController.swift; sourceTree = "<group>"; };
 		68DB038D2C812D0200FBD014 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		68DB038F2C813EA600FBD014 /* DeleteAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountViewController.swift; sourceTree = "<group>"; };
 		68DC4C722C6B6DE5006D8E97 /* SelectPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlaylistViewController.swift; sourceTree = "<group>"; };
 		68DC4C762C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlaylistCollectionViewCell.swift; sourceTree = "<group>"; };
 		68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -311,6 +313,7 @@
 				68DB03822C80F1AA00FBD014 /* MyPageViewController.swift */,
 				68DB03872C8115D200FBD014 /* MyPageTableViewCell.swift */,
 				68DB038B2C8122C200FBD014 /* MemberInfoViewController.swift */,
+				68DB038F2C813EA600FBD014 /* DeleteAccountViewController.swift */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -730,6 +733,7 @@
 				6889F51E2C6D52B7001F5FC2 /* SelectMusicViewModel.swift in Sources */,
 				68F6FAB82C4A9F27001128FF /* BlackButton.swift in Sources */,
 				68F6FCFC2C5A92F2001128FF /* UIButton+Extension.swift in Sources */,
+				68DB03902C813EA600FBD014 /* DeleteAccountViewController.swift in Sources */,
 				68DB03832C80F1AB00FBD014 /* MyPageViewController.swift in Sources */,
 				688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */,
 				68DC4C772C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift in Sources */,
