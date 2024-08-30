@@ -79,6 +79,7 @@ extension HomeViewController {
         self.navigationItem.setHidesBackButton(true, animated: false)
         
         scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.showsVerticalScrollIndicator = false
 
         self.view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
