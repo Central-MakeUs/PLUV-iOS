@@ -13,6 +13,7 @@
 		6859C90C2C60FDAF00E03179 /* SpotifyiOS.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6859C9092C60FCA600E03179 /* SpotifyiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6859C90E2C6125C400E03179 /* PlatformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6859C90D2C6125C400E03179 /* PlatformView.swift */; };
 		6859C9102C612ACE00E03179 /* DotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6859C90F2C612ACE00E03179 /* DotView.swift */; };
+		68830FAA2C81D8CF00995785 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68830FA92C81D8CF00995785 /* WebViewController.swift */; };
 		6889F5122C6CD194001F5FC2 /* SelectPlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5112C6CD194001F5FC2 /* SelectPlaylistViewModel.swift */; };
 		6889F5162C6CE56F001F5FC2 /* SelectMusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5152C6CE56F001F5FC2 /* SelectMusicViewController.swift */; };
 		6889F5182C6D234C001F5FC2 /* SelectMusicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6889F5172C6D234C001F5FC2 /* SelectMusicTableViewCell.swift */; };
@@ -112,6 +113,7 @@
 		6859C9092C60FCA600E03179 /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyiOS.framework; sourceTree = "<group>"; };
 		6859C90D2C6125C400E03179 /* PlatformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformView.swift; sourceTree = "<group>"; };
 		6859C90F2C612ACE00E03179 /* DotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotView.swift; sourceTree = "<group>"; };
+		68830FA92C81D8CF00995785 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		6889F5112C6CD194001F5FC2 /* SelectPlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlaylistViewModel.swift; sourceTree = "<group>"; };
 		6889F5152C6CE56F001F5FC2 /* SelectMusicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMusicViewController.swift; sourceTree = "<group>"; };
 		6889F5172C6D234C001F5FC2 /* SelectMusicTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMusicTableViewCell.swift; sourceTree = "<group>"; };
@@ -367,6 +369,7 @@
 			isa = PBXGroup;
 			children = (
 				68DC4C872C6B7146006D8E97 /* AlertViewController.swift */,
+				68830FA92C81D8CF00995785 /* WebViewController.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -727,6 +730,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6889F5342C724B58001F5FC2 /* RotationAnimation.swift in Sources */,
+				68830FAA2C81D8CF00995785 /* WebViewController.swift in Sources */,
 				68F6FAB42C4A9D8B001128FF /* TransferDestinationViewController.swift in Sources */,
 				68DB03812C80F18E00FBD014 /* TabBarViewController.swift in Sources */,
 				68DC4C732C6B6DE5006D8E97 /* SelectPlaylistViewController.swift in Sources */,
