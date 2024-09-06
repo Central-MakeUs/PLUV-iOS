@@ -315,7 +315,7 @@ class MovePlaylistViewController: UIViewController {
                         let url = EndPoint.musicAppleSearch.path
                         let params = ["destinationAccessToken" : userToken,
                                       "musics" : parameterJsonArray] as [String : Any]
-                        
+                        print(params, "파람 확인")
                         APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
                             switch response.code {
                             case 200:
@@ -325,7 +325,9 @@ class MovePlaylistViewController: UIViewController {
                                     if search.isEqual == true {
                                         idArr.append(search.destinationMusics.first!.id!)
                                     } else {
-                                        idArr.append(search.destinationMusics.first!.id!)
+                                        if let id = search.destinationMusics.first?.id {
+                                            idArr.append(id)
+                                        }
                                     }
                                 }
                                 print(response.data, "스포티파이에 있는 것 애플에서 검색")

@@ -62,9 +62,9 @@ class MyPageViewController: UIViewController {
             make.leading.trailing.equalToSuperview()
         }
         
-        self.view.addSubview(myPageTitleLabel)
+        self.titleView.addSubview(myPageTitleLabel)
         myPageTitleLabel.snp.makeConstraints { make in
-            make.top.leading.trailing.bottom.equalTo(titleView).inset(16)
+            make.top.leading.trailing.bottom.equalToSuperview().inset(16)
             make.height.equalTo(28)
         }
         
