@@ -93,7 +93,8 @@ class FeedViewController: UIViewController {
         /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
         self.feedCollectionView.rx.modelSelected(Feed.self)
             .subscribe(onNext: { [weak self] feedItem in
-                /// pushVC
+                self?.viewModel.selectFeedItem = Observable.just(feedItem)
+                
             })
             .disposed(by: disposeBag)
     }
