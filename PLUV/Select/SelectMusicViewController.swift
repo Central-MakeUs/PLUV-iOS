@@ -220,15 +220,18 @@ class SelectMusicViewController: UIViewController {
             make.height.equalTo(101)
         }
         
-        // moveView.trasferButton.isEnabled = false
-        moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
-        
         self.view.addSubview(loadingView)
         loadingView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
+        setButtons()
+    }
+    
+    private func setButtons() {
         setXButton()
+        setSelectAllButton()
+        bindtrasferButton()
     }
     
     private func setXButton() {
@@ -246,8 +249,39 @@ class SelectMusicViewController: UIViewController {
         }
     }
     
+    private func setSelectAllButton() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(clickSelectAllButton))
+        selectAllLabel.addGestureRecognizer(tapGesture)
+        selectAllLabel.isUserInteractionEnabled = true
+    }
+    
+    @objc private func clickSelectAllButton() {
+        /// 모든 셀을 선택할지 해제할지 결정
+        let allSelected = viewModel.selectedMusic.value.count == viewModel.musicItem.value.count
+        
+        if allSelected {
+            /// 모두 선택 해제
+            viewModel.selectedMusic.accept([])
+        } else {
+            /// 모두 선택
+            viewModel.selectedMusic.accept(viewModel.musicItem.value)
+        }
+        
+        self.selectMusicTableView.reloadData()
+    }
+    
+    private func bindtrasferButton() {
+        moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
+        
+        /// selectedMusic의 변화를 관찰하여 trasferButton의 활성화 상태를 업데이트
+        self.viewModel.selectedMusic
+            .map { !$0.isEmpty } /// 선택된 음악이 있으면 true, 없으면 false
+            .bind(to: moveView.trasferButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+    }
+    
     @objc private func clickTransferButton() {
-        self.viewModel.musicItem
+        self.viewModel.selectedMusic
             .map { musicArray in
                 let movePlaylistVC = MovePlaylistViewController(playlistItem: self.viewModel.playlistItem, musicItems: musicArray, source: self.sourcePlatform, destination: self.destinationPlatform)
                 self.navigationController?.pushViewController(movePlaylistVC, animated: true)
@@ -281,15 +315,35 @@ class SelectMusicViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+        /// 모든 cell 선택된 상태로 세팅
+        self.viewModel.selectedMusic.accept(viewModel.musicItem.value)
+        
         /// TableView에 들어갈 Cell에 정보 제공
         self.viewModel.musicItem
             .observe(on: MainScheduler.instance)
-            .bind(to: self.selectMusicTableView.rx.items) { tableView, row, item in
-                let cell = tableView.dequeueReusableCell(withIdentifier: SelectMusicTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as! SelectMusicTableViewCell
-                cell.prepare(music: item)
-                return cell
+            .bind(to: self.selectMusicTableView.rx.items(cellIdentifier: SelectMusicTableViewCell.identifier, cellType: SelectMusicTableViewCell.self)) { row, music, cell in
+                cell.prepare(music: music)
+                
+                /// 현재 음악이 선택된 상태인지 확인하고 UI 업데이트
+                let isSelected = self.viewModel.selectedMusic.value.contains(where: { $0.title == music.title && $0.artistNames == music.artistNames })
+                cell.updateSelectionUI(isSelected: isSelected)
             }
-            .disposed(by: self.disposeBag)
+            .disposed(by: disposeBag)
+        
+        /// 셀 선택 처리
+        self.selectMusicTableView.rx.modelSelected(Music.self)
+            .subscribe(onNext: { [weak self] music in
+                self?.viewModel.musicSelect(music: music)
+                self?.selectMusicTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        /// 선택한 음악의 변화를 관찰하고 이에 따라 UI를 업데이트
+        self.viewModel.selectedMusic
+            .subscribe(onNext: { [weak self] selectedMusic in
+                self?.selectMusicTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setMusicListAPI() {
@@ -313,7 +367,7 @@ class SelectMusicViewController: UIViewController {
             APIService().post(of: APIResponse<[Music]>.self, url: url, parameters: params) { response in
                 switch response.code {
                 case 200:
-                    self.viewModel.musicItem = Observable.just(response.data)
+                    self.viewModel.musicItem.accept(response.data)
                     self.setData()
                     self.setPlaylistData()
                     self.loadingView.removeFromSuperview()
@@ -334,7 +388,7 @@ class SelectMusicViewController: UIViewController {
         APIService().post(of: APIResponse<[Music]>.self, url: url, parameters: params) { response in
             switch response.code {
             case 200:
-                self.viewModel.musicItem = Observable.just(response.data)
+                self.viewModel.musicItem.accept(response.data)
                 self.setData()
                 self.setPlaylistData()
                 self.loadingView.removeFromSuperview()

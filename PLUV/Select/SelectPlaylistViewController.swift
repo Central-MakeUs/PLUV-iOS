@@ -182,7 +182,7 @@ class SelectPlaylistViewController: UIViewController {
                     
                     // 선택 상태에 따라 셀 업데이트
                     if let customCell = cell as? SelectPlaylistCollectionViewCell {
-                        customCell.updateSelectionState(isSelected: isSelected)
+                        customCell.updateSelectionUI(isSelected: isSelected)
                     }
                 }
             })
@@ -234,14 +234,14 @@ class SelectPlaylistViewController: UIViewController {
             MPMediaLibrary.requestAuthorization { status in
                 switch status {
                 case .authorized:
-                    // 권한이 부여된 경우
+                    /// 권한이 부여된 경우
                     print("Apple Music authorization granted")
                     Task {
                         await self.setApplePlaylistAPI()
                     }
                 default:
                     DispatchQueue.main.async {
-                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있습니다.") {
+                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있어요") {
                             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                         }.show()
                     }
@@ -276,7 +276,9 @@ class SelectPlaylistViewController: UIViewController {
         
         do {
             let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+            print(developerToken, "developerToken")
             let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+            print(userToken, "userToken")
             
             let url = EndPoint.playlistAppleRead.path
             let params = ["musicUserToken" : userToken]

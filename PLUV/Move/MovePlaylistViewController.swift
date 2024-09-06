@@ -239,14 +239,14 @@ class MovePlaylistViewController: UIViewController {
             MPMediaLibrary.requestAuthorization { status in
                 switch status {
                 case .authorized:
-                    // 권한이 부여된 경우
+                    /// 권한이 부여된 경우
                     print("Apple Music authorization granted")
                     Task {
                         await self.searchSpotifyToAppleAPI(musics: self.viewModel.musicItems)
                     }
                 default:
                     DispatchQueue.main.async {
-                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있습니다.") {
+                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있어요") {
                             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                         }.show()
                     }
@@ -315,7 +315,7 @@ class MovePlaylistViewController: UIViewController {
                         let url = EndPoint.musicAppleSearch.path
                         let params = ["destinationAccessToken" : userToken,
                                       "musics" : parameterJsonArray] as [String : Any]
-                        
+                        print(params, "파람 확인")
                         APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
                             switch response.code {
                             case 200:
@@ -325,7 +325,9 @@ class MovePlaylistViewController: UIViewController {
                                     if search.isEqual == true {
                                         idArr.append(search.destinationMusics.first!.id!)
                                     } else {
-                                        idArr.append(search.destinationMusics.first!.id!)
+                                        if let id = search.destinationMusics.first?.id {
+                                            idArr.append(id)
+                                        }
                                     }
                                 }
                                 print(response.data, "스포티파이에 있는 것 애플에서 검색")
@@ -348,9 +350,9 @@ class MovePlaylistViewController: UIViewController {
     
     ///  애플에 있는 것 스포티파이에 등록
     private func addAppleToSpotify(musicIdsArr: [String]) {
-        //let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+        let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
         
-        //print(loginToken, "UserDefaults 로그인 토큰 확인\n")
+        print(loginToken, "UserDefaults 로그인 토큰 확인\n")
         print(TokenManager.shared.spotifyAccessToken, "스포티파이 토큰")
         
         let url = EndPoint.musicSpotifyAdd.path
@@ -364,12 +366,12 @@ class MovePlaylistViewController: UIViewController {
                         "source": "apple"
         ] as [String : Any]
         
-        APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: "") { response in
+        APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: loginToken) { response in
             switch response.code {
             case 201:
                 print(response.data, "addAppleToSpotify")
                 self.circleLoadingIndicator.isAnimating = false
-                AlertController(message: "플레이리스트가 생성되었습니다.", completion: {
+                AlertController(message: "플레이리스트를 옮겼어요", completion: {
                     self.clickXButton()
                 }).show()
             default:
@@ -384,7 +386,7 @@ class MovePlaylistViewController: UIViewController {
             let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
             let musicUserToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
             
-            //let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+            let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
             
             let url = EndPoint.musicAppleAdd.path
             let params = [
@@ -397,12 +399,12 @@ class MovePlaylistViewController: UIViewController {
                             "source": "spotify"
             ] as [String : Any]
             
-            APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: "") { response in
+            APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: loginToken) { response in
                 switch response.code {
                 case 201:
                     print(response.data, "addSpotifyToApple")
                     self.circleLoadingIndicator.isAnimating = false
-                    AlertController(message: "플레이리스트가 생성되었습니다.", completion: {
+                    AlertController(message: "플레이리스트를 옮겼어요", completion: {
                         self.clickXButton()
                     }).show()
                 default:

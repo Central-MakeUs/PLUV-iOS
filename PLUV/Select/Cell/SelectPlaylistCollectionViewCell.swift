@@ -102,7 +102,7 @@ final class SelectPlaylistCollectionViewCell: UICollectionViewCell {
         thumbnailImageView.layer.borderWidth = 0
     }
     
-    func updateSelectionState(isSelected: Bool) {
+    func updateSelectionUI(isSelected: Bool) {
         thumbnailImageView.layer.borderWidth = isSelected ? 2.4 : 0
     }
 }

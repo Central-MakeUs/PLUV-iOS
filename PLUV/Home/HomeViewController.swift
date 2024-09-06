@@ -64,6 +64,12 @@ class HomeViewController: UIViewController {
         
         setUI()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        /// 탭 바 표시하기
+        self.tabBarController?.tabBar.isHidden = false
+    }
 }
 
 extension HomeViewController {
@@ -73,6 +79,7 @@ extension HomeViewController {
         self.navigationItem.setHidesBackButton(true, animated: false)
         
         scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.showsVerticalScrollIndicator = false
 
         self.view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -83,7 +90,7 @@ extension HomeViewController {
         contentView.snp.makeConstraints { make in
             make.edges.equalTo(scrollView.contentLayoutGuide)
             make.width.equalTo(scrollView.frameLayoutGuide)
-            make.height.equalTo(820)
+            make.height.equalTo(940)
         }
         
         self.contentView.addSubview(backgroundImageView)
@@ -158,7 +165,7 @@ extension HomeViewController {
     }
     
     @objc private func clickTransferScreenshotButton() {
-        AlertController(message: "추후 공개될 예정입니다!").show()
+        AlertController(message: "추후 공개될 예정이에요!").show()
     }
     
     /// 테스트

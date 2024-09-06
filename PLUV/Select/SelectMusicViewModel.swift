@@ -11,7 +11,8 @@ import RxCocoa
 
 class SelectMusicViewModel {
     var playlistItem: Playlist = Playlist(id: "", thumbnailURL: "", songCount: nil, name: "", source: .apple)
-    var musicItem: Observable<[Music]> = Observable.just([])
+    var musicItem = BehaviorRelay<[Music]>(value: [])
+    let selectedMusic = BehaviorRelay<[Music]>(value: [])
     let disposeBag = DisposeBag()
     
     func musicItemCount(completion: @escaping (Int) -> Void)  {
@@ -21,5 +22,17 @@ class SelectMusicViewModel {
                 completion(count)
             })
             .disposed(by: disposeBag)
+    }
+    
+    func musicSelect(music: Music) {
+        var currentSelect = selectedMusic.value
+        
+        if let index = currentSelect.firstIndex(where: { $0.title == music.title && $0.artistNames == music.artistNames }) {
+            currentSelect.remove(at: index)
+        } else {
+            currentSelect.append(music)
+        }
+        
+        selectedMusic.accept(currentSelect)
     }
 }
