@@ -9,6 +9,8 @@ import Foundation
 
 enum EndPoint {
     case feed
+    case feedId(String)
+    case feedIdMusic(String)
     
     case loginApple
     case loginAppleAdd
@@ -43,6 +45,10 @@ extension EndPoint {
         switch self {
         case .feed:
             return EndPoint.makeEndPoint("/feed")
+        case .feedId(let id):
+            return EndPoint.makeEndPoint("/feed/\(id)")
+        case .feedIdMusic(let id):
+            return EndPoint.makeEndPoint("/feed/\(id)/music")
             
         case .loginApple:
             return EndPoint.makeEndPoint("/login/apple")
