@@ -85,5 +85,11 @@ final class FeedDetailTableViewCell: UITableViewCell {
         }
     }
     
+    func prepare(music: Music) {
+        let thumbNailUrl = URL(string: music.imageURL)
+        self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
+        self.songTitleLabel.text = music.title
+        self.singerLabel.text = music.artistNames
+    }
 }
 
