@@ -50,7 +50,9 @@ class FeedDetailViewController: UIViewController {
         
         setUI()
         setNavigationBar()
-        setPlaylistData()    }
+        setPlaylistData()
+        setFeedDetailMusicItemAPI()
+    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -136,6 +138,42 @@ class FeedDetailViewController: UIViewController {
             self.songCountLabel.text = "\(count)곡"
         }
          */
+    }
+    
+    private func setFeedDetailMusicItemAPI() {
+        guard let id = self.viewModel.selectFeedItem?.id else { return }
+        let url = EndPoint.feedIdMusic(String(id)).path
+        
+        APIService().get(of: APIResponse<[Music]>.self, url: url) { response in
+            switch response.code {
+            case 200:
+                self.viewModel.selectFeedMusicItem.accept(response.data)
+                self.setData()
+                self.view.layoutIfNeeded()
+            default:
+                AlertController(message: response.msg).show()
+            }
+        }
+    }
+    
+    private func setData() {
+        self.feedDetailTableView.rx.setDelegate(self)
+            .disposed(by: self.disposeBag)
+        
+        /// TableView에 들어갈 Cell에 정보 제공
+        self.viewModel.selectFeedMusicItem
+            .observe(on: MainScheduler.instance)
+            .bind(to: self.feedDetailTableView.rx.items(cellIdentifier: FeedDetailTableViewCell.identifier, cellType: FeedDetailTableViewCell.self)) { row, music, cell in
+                cell.prepare(music: music)
+            }
+            .disposed(by: disposeBag)
+        
+        // 데이터 로드 후 레이아웃 강제 업데이트
+        DispatchQueue.main.async {
+            self.feedDetailTableView.reloadData()
+            self.feedDetailTableView.layoutIfNeeded()
+            self.setTableViewHeight()
+        }
     }
     
     private func setNavigationBar() {
