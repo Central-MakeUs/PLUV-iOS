@@ -20,13 +20,26 @@ class FeedDetailViewController: UIViewController {
     private let feedDetailImageView = UIImageView()
     
     private let feedDetailTitleView = UIView()
+    private let separateLine = UIView().then {
+        $0.backgroundColor = .gray200
+    }
     private let feedDetailContentView = UIView()
     private let playlistTitleImageView = UIImageView().then {
         $0.image = UIImage(named: "menu_image")
     }
-    private let playlistTitleLabel = UILabel()
-    private let songCountAndDateLabel = UILabel()
-    private let sharePersonNameLabel = UILabel()
+    private let playlistTitleLabel = UILabel().then {
+        $0.numberOfLines = 0
+        $0.textColor = .gray800
+        $0.font = .systemFont(ofSize: 22, weight: .semibold)
+    }
+    private let songCountAndDateLabel = UILabel().then {
+        $0.textColor = .gray600
+        $0.font = .systemFont(ofSize: 14)
+    }
+    private let sharePersonNameLabel = UILabel().then {
+        $0.textColor = .gray800
+        $0.font = .systemFont(ofSize: 16, weight: .medium)
+    }
     
     private let feedDetailTableView = UITableView().then {
         $0.separatorStyle = .none
@@ -56,12 +69,14 @@ class FeedDetailViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        setTableViewHeight() // 레이아웃이 갱신될 때마다 테이블 뷰 높이 갱신
+        setTableViewHeight() /// 레이아웃이 갱신될 때마다 테이블 뷰 높이 갱신
     }
     
     private func setUI() {
         self.view.backgroundColor = .white
         self.navigationItem.setHidesBackButton(true, animated: false)
+        
+        scrollView.showsVerticalScrollIndicator = false
         
         self.view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -70,14 +85,14 @@ class FeedDetailViewController: UIViewController {
         
         self.scrollView.addSubview(contentView)
         contentView.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView) // scrollView 안에서 contentView의 모든 가장자리를 맞춤
-            make.width.equalTo(scrollView) // 가로 고정
+            make.edges.equalTo(scrollView) /// scrollView 안에서 contentView의 모든 가장자리를 맞춤
+            make.width.equalTo(scrollView) /// 가로 고정
         }
         
         self.contentView.addSubview(feedDetailImageView)
         feedDetailImageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalTo(contentView)
-            make.height.equalTo(feedDetailImageView.snp.width) // 정사각형 비율
+            make.height.equalTo(feedDetailImageView.snp.width) /// 정사각형 비율
         }
         
         self.contentView.addSubview(feedDetailTitleView)
@@ -92,52 +107,85 @@ class FeedDetailViewController: UIViewController {
             make.top.leading.trailing.bottom.equalToSuperview().inset(24)
         }
         
-        self.contentView.addSubview(feedDetailTableView)
-        feedDetailTableView.snp.makeConstraints { make in
-            make.top.equalTo(feedDetailTitleView.snp.bottom)
-            make.leading.trailing.equalTo(contentView)
-            // 높이 제약은 따로 설정하지 않고, 테이블 뷰의 contentSize에 맞춰 동적으로 설정
+        self.feedDetailTitleView.addSubview(separateLine)
+        separateLine.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(1)
         }
         
-        // 테이블 뷰 높이 제약 추가
+        self.feedDetailContentView.addSubview(playlistTitleImageView)
+        playlistTitleImageView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.height.equalTo(20)
+        }
+        
+        self.feedDetailContentView.addSubview(playlistTitleLabel)
+        playlistTitleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.centerY.equalTo(playlistTitleImageView.snp.centerY)
+            make.leading.equalTo(playlistTitleImageView.snp.trailing).offset(8)
+            make.height.equalTo(24)
+            make.trailing.equalToSuperview()
+        }
+        
+        self.feedDetailContentView.addSubview(songCountAndDateLabel)
+        songCountAndDateLabel.snp.makeConstraints { make in
+            make.top.equalTo(playlistTitleLabel.snp.bottom).offset(20)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(14)
+        }
+        
+        self.feedDetailContentView.addSubview(sharePersonNameLabel)
+        sharePersonNameLabel.snp.makeConstraints { make in
+            make.top.equalTo(songCountAndDateLabel.snp.bottom).offset(10)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        
+        self.contentView.addSubview(feedDetailTableView)
+        feedDetailTableView.snp.makeConstraints { make in
+            make.top.equalTo(feedDetailTitleView.snp.bottom).offset(10)
+            make.leading.trailing.equalTo(contentView)
+            /// 높이 제약은 따로 설정하지 않고, 테이블 뷰의 contentSize에 맞춰 동적으로 설정
+        }
+        
+        /// 테이블 뷰 높이 제약 추가
         feedDetailTableViewHeightConstraint = feedDetailTableView.heightAnchor.constraint(equalToConstant: 0)
         feedDetailTableViewHeightConstraint.isActive = true
         
-        // ContentView의 마지막 요소와 ScrollView의 bottom을 맞추기 위한 제약 설정
+        /// ContentView의 마지막 요소와 ScrollView의 bottom을 맞추기 위한 제약 설정
         feedDetailTableView.snp.makeConstraints { make in
-            make.bottom.equalTo(contentView.snp.bottom) // 테이블 뷰의 아래쪽을 contentView의 아래쪽에 맞춤
+            make.bottom.equalTo(contentView.snp.bottom) /// 테이블 뷰의 아래쪽을 contentView의 아래쪽에 맞춤
         }
         
-        feedDetailTableView.isScrollEnabled = false // 테이블 뷰 스크롤 비활성화
+        feedDetailTableView.isScrollEnabled = false /// 테이블 뷰 스크롤 비활성화
     }
     
     private func setTableViewHeight() {
-        feedDetailTableView.layoutIfNeeded() // 테이블 뷰 레이아웃 갱신
-        let contentHeight = feedDetailTableView.contentSize.height // 테이블 뷰 전체 셀 높이
-        feedDetailTableViewHeightConstraint.constant = contentHeight // 높이 제약 업데이트
+        feedDetailTableView.layoutIfNeeded() /// 테이블 뷰 레이아웃 갱신
+        let contentHeight = feedDetailTableView.contentSize.height + 30 /// 테이블 뷰 전체 셀 높이
+        feedDetailTableViewHeightConstraint.constant = contentHeight /// 높이 제약 업데이트
 
-        // 이미지 높이 + 테이블 뷰 높이를 합산하여 스크롤뷰의 contentSize 설정
-        let totalHeight = feedDetailImageView.frame.height + feedDetailTitleView.frame.height + contentHeight
+        /// 이미지 높이 + 테이블 뷰 높이를 합산하여 스크롤뷰의 contentSize 설정
+        let totalHeight = feedDetailImageView.frame.height + feedDetailTitleView.frame.height + 10 + contentHeight
         scrollView.contentSize = CGSize(width: view.frame.width, height: totalHeight)
         
-        // 레이아웃 재설정
+        /// 레이아웃 재설정
         scrollView.layoutIfNeeded()
     }
     
     private func setPlaylistData() {
-        guard let urlString = self.viewModel.selectFeedItem?.thumbNailURL else { return }
+        guard let selectFeedItem = self.viewModel.selectFeedItem else { return }
+        let urlString = selectFeedItem.thumbNailURL
         let thumbnailURL = URL(string: urlString)
-        feedDetailImageView.kf.setImage(with: thumbnailURL)
+        let playlistTitle = selectFeedItem.title
+        let songCount = String(describing: selectFeedItem.totalSongCount!)
+        let date = String(describing: selectFeedItem.transferredAt)
+        let person = String(describing: selectFeedItem.creatorName)
         
-        /*
-        sourceToDestinationLabel.text = sourcePlatform.name + " > " + destinationPlatform.name
-        sourcePlatformLabel.text = sourcePlatform.name
-        playlistNameLabel.text = self.viewModel.playlistItem.name
-        self.viewModel.musicItemCount { count in
-            self.playlistSongCountLabel.text = "총 \(count)곡"
-            self.songCountLabel.text = "\(count)곡"
-        }
-         */
+        feedDetailImageView.kf.setImage(with: thumbnailURL)
+        playlistTitleLabel.text = playlistTitle
+        songCountAndDateLabel.text = "총 \(songCount)곡  \(date)"
+        sharePersonNameLabel.text = "공유한 사람 : \(person)"
     }
     
     private func setFeedDetailMusicItemAPI() {
@@ -168,7 +216,7 @@ class FeedDetailViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        // 데이터 로드 후 레이아웃 강제 업데이트
+        /// 데이터 로드 후 레이아웃 강제 업데이트
         DispatchQueue.main.async {
             self.feedDetailTableView.reloadData()
             self.feedDetailTableView.layoutIfNeeded()
