@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SelectMusicTableViewCell: UITableViewCell {
+final class SelectMusicTableViewCell: UITableViewCell {
     
     static let identifier = String(describing: SelectMusicTableViewCell.self)
     private let contentsView = UIView()
