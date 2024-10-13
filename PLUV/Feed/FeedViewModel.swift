@@ -10,6 +10,7 @@ import RxSwift
 import RxCocoa
 
 final class FeedViewModel {
-    var selectFeedItem: Observable<Feed>?
+    var selectFeedMusicItem = BehaviorRelay<[Music]>(value: [])
+    var selectFeedItem: Feed?
     var feedItems: Observable<[Feed]> = Observable.just([])
 }
