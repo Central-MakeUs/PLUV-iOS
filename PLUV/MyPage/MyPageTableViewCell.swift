@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MyPageTableViewCell: UITableViewCell {
+final class MyPageTableViewCell: UITableViewCell {
     
     static let identifier = String(describing: MyPageTableViewCell.self)
     private let titleLabel = UILabel().then {

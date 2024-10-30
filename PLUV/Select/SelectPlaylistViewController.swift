@@ -256,11 +256,16 @@ class SelectPlaylistViewController: UIViewController {
         let url = EndPoint.playlistSpotifyRead.path
         let params = ["accessToken" : TokenManager.shared.spotifyAccessToken]
         
-        APIService().post(of: [Playlist].self, url: url, parameters: params) { response in
-            self.viewModel.playlistItems = Observable.just(response)
-            self.setData()
-            self.loadingView.removeFromSuperview()
-            self.view.layoutIfNeeded()
+        APIService().post(of: APIResponse<[Playlist]>.self, url: url, parameters: params) { response in
+            switch response.code {
+            case 200:
+                self.viewModel.playlistItems = Observable.just(response.data)
+                self.setData()
+                self.loadingView.removeFromSuperview()
+                self.view.layoutIfNeeded()
+            default:
+                AlertController(message: response.msg).show()
+            }
         }
     }
     
@@ -283,11 +288,16 @@ class SelectPlaylistViewController: UIViewController {
             let url = EndPoint.playlistAppleRead.path
             let params = ["musicUserToken" : userToken]
             
-            APIService().post(of: [Playlist].self, url: url, parameters: params) { response in
-                self.viewModel.playlistItems = Observable.just(response)
-                self.setData()
-                self.loadingView.removeFromSuperview()
-                self.view.layoutIfNeeded()
+            APIService().post(of: APIResponse<[Playlist]>.self, url: url, parameters: params) { response in
+                switch response.code {
+                case 200:
+                    self.viewModel.playlistItems = Observable.just(response.data)
+                    self.setData()
+                    self.loadingView.removeFromSuperview()
+                    self.view.layoutIfNeeded()
+                default:
+                    AlertController(message: response.msg).show()
+                }
             }
         } catch {
             print("ERROR : setApplePlaylistAPI")
