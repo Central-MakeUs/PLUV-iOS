@@ -47,6 +47,8 @@ class FeedDetailViewController: UIViewController {
     }
     private var feedDetailTableViewHeightConstraint: NSLayoutConstraint!
     
+    private var saveView = MoveView(view: UIViewController())
+    
     private let disposeBag = DisposeBag()
     
     init(viewModel: FeedViewModel) {
@@ -65,6 +67,12 @@ class FeedDetailViewController: UIViewController {
         setNavigationBar()
         setPlaylistData()
         setFeedDetailMusicItemAPI()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        /// 탭 바 숨기기
+        self.tabBarController?.tabBar.isHidden = true
     }
     
     override func viewDidLayoutSubviews() {
@@ -150,7 +158,6 @@ class FeedDetailViewController: UIViewController {
         
         /// 테이블 뷰 높이 제약 추가
         feedDetailTableViewHeightConstraint = feedDetailTableView.heightAnchor.constraint(equalToConstant: 0)
-        feedDetailTableViewHeightConstraint.isActive = true
         
         /// ContentView의 마지막 요소와 ScrollView의 bottom을 맞추기 위한 제약 설정
         feedDetailTableView.snp.makeConstraints { make in
@@ -158,11 +165,20 @@ class FeedDetailViewController: UIViewController {
         }
         
         feedDetailTableView.isScrollEnabled = false /// 테이블 뷰 스크롤 비활성화
+        
+        saveView = MoveView(view: self)
+        self.view.addSubview(saveView)
+        saveView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(101)
+        }
+        
+        saveView.changeName(left: "저장", right: "플레이리스트 옮기기")
     }
     
     private func setTableViewHeight() {
         feedDetailTableView.layoutIfNeeded() /// 테이블 뷰 레이아웃 갱신
-        let contentHeight = feedDetailTableView.contentSize.height + 30 /// 테이블 뷰 전체 셀 높이
+        let contentHeight = feedDetailTableView.contentSize.height + 101 /// 테이블 뷰 전체 셀 높이
         feedDetailTableViewHeightConstraint.constant = contentHeight /// 높이 제약 업데이트
 
         /// 이미지 높이 + 테이블 뷰 높이를 합산하여 스크롤뷰의 contentSize 설정
