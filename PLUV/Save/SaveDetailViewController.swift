@@ -47,18 +47,10 @@ class SaveDetailViewController: UIViewController {
    private let backgroundLabel = UILabel().then {
       $0.backgroundColor = .gray200
    }
-   private var saveSongsCollectionView: UICollectionView = {
-       let layout = UICollectionViewFlowLayout()
-       layout.minimumLineSpacing = 0
-       layout.minimumInteritemSpacing = 0
-       layout.scrollDirection = .vertical
-       layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-       
-       let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-       cv.register(SaveSongsCollectionViewCell.self, forCellWithReuseIdentifier: SaveSongsCollectionViewCell.identifier)
-       
-       return cv
-   }()
+   private let saveSongsTableViewCell = UITableView().then {
+      $0.separatorStyle = .none
+      $0.register(SaveSongsTableViewCell.self, forCellReuseIdentifier: SaveSongsTableViewCell.identifier)
+   }
    private var saveMoveView = SaveMoveView(view: UIViewController())
    
    private let disposeBag = DisposeBag()
@@ -148,13 +140,11 @@ class SaveDetailViewController: UIViewController {
          make.height.equalTo(1.2)
       }
       
-      self.contentView.addSubview(saveSongsCollectionView)
-      saveSongsCollectionView.snp.makeConstraints { make in
+      self.contentView.addSubview(saveSongsTableViewCell)
+      saveSongsTableViewCell.snp.makeConstraints { make in
          make.top.equalTo(backgroundLabel.snp.bottom).offset(10)
          make.leading.trailing.bottom.equalToSuperview()
       }
-      saveSongsCollectionView.showsVerticalScrollIndicator = false
-      saveSongsCollectionView.allowsMultipleSelection = false
       
       saveMoveView = SaveMoveView(view: self)
       self.view.addSubview(saveMoveView)
@@ -169,10 +159,8 @@ class SaveDetailViewController: UIViewController {
    }
 }
 
-@available(iOS 14.0, *)
-extension SaveDetailViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        return CGSize(width: collectionView.frame.width, height: 66)
-    }
+extension SaveDetailViewController: UITableViewDelegate {
+   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+      return 66
+   }
 }

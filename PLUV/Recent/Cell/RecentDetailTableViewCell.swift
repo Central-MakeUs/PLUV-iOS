@@ -1,16 +1,16 @@
 //
-//  RecentDetailCollectionViewCell.swift
+//  RecentDetailTableViewCell.swift
 //  PLUV
 //
-//  Created by jaegu park on 10/21/24.
+//  Created by jaegu park on 11/2/24.
 //
 
 import UIKit
 
-class RecentDetailCollectionViewCell: UICollectionViewCell {
+class RecentDetailTableViewCell: UITableViewCell {
    
-   static let identifier = String(describing: RecentDetailCollectionViewCell.self)
-   
+   static let identifier = String(describing: RecentDetailTableViewCell.self)
+
    private let thumbnailImageView = UIImageView().then {
       $0.layer.cornerRadius = 8
       $0.clipsToBounds = true
@@ -34,12 +34,12 @@ class RecentDetailCollectionViewCell: UICollectionViewCell {
       $0.font = .systemFont(ofSize: 14, weight: .regular)
    }
    
-   override init(frame: CGRect) {
-      super.init(frame: .zero)
+   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+       super.init(style: style, reuseIdentifier: reuseIdentifier)
    }
    
    required init?(coder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
+       fatalError("init(coder:) has not been implemented")
    }
    
    override func layoutSubviews() {

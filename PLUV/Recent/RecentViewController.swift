@@ -14,18 +14,10 @@ class RecentViewController: UIViewController {
    
    let viewModel = FeedViewModel()
    
-   private var recentCollectionView: UICollectionView = {
-       let layout = UICollectionViewFlowLayout()
-       layout.minimumLineSpacing = 0
-       layout.minimumInteritemSpacing = 0
-       layout.scrollDirection = .vertical
-       layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-       
-       let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-       cv.register(RecentDetailCollectionViewCell.self, forCellWithReuseIdentifier: RecentDetailCollectionViewCell.identifier)
-       
-       return cv
-   }()
+   private let recentTableViewCell = UITableView().then {
+      $0.separatorStyle = .none
+      $0.register(RecentDetailTableViewCell.self, forCellReuseIdentifier: RecentDetailTableViewCell.identifier)
+   }
    private let disposeBag = DisposeBag()
    
    override func viewDidLoad() {
@@ -57,13 +49,11 @@ class RecentViewController: UIViewController {
       self.view.backgroundColor = .white
       self.navigationItem.setHidesBackButton(true, animated: false)
       
-      self.view.addSubview(recentCollectionView)
-      recentCollectionView.snp.makeConstraints { make in
+      self.view.addSubview(recentTableViewCell)
+      recentTableViewCell.snp.makeConstraints { make in
          make.top.equalTo(view.safeAreaLayoutGuide)
          make.leading.trailing.bottom.equalToSuperview()
       }
-      recentCollectionView.showsVerticalScrollIndicator = false
-      recentCollectionView.allowsMultipleSelection = false
    }
    
    @objc private func clickBackButton() {
@@ -71,19 +61,19 @@ class RecentViewController: UIViewController {
    }
    
    private func setData() {
-      self.recentCollectionView.rx.setDelegate(self)
+      self.recentTableViewCell.rx.setDelegate(self)
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
       self.viewModel.feedItems
          .observe(on: MainScheduler.instance)
-         .bind(to: self.recentCollectionView.rx.items(cellIdentifier: RecentDetailCollectionViewCell.identifier, cellType: RecentDetailCollectionViewCell.self)) { index, item, cell in
+         .bind(to: self.recentTableViewCell.rx.items(cellIdentifier: RecentDetailTableViewCell.identifier, cellType: RecentDetailTableViewCell.self)) { index, item, cell in
             cell.prepare(feed: item)
          }
          .disposed(by: disposeBag)
       
       /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
-      self.recentCollectionView.rx.modelSelected(Feed.self)
+      self.recentTableViewCell.rx.modelSelected(Feed.self)
          .subscribe(onNext: { [weak self] feedItem in
             self?.viewModel.selectFeedItem = Observable.just(feedItem)
             
@@ -107,10 +97,8 @@ class RecentViewController: UIViewController {
    }
 }
 
-@available(iOS 14.0, *)
-extension RecentViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        return CGSize(width: collectionView.frame.width, height: 94)
-    }
+extension RecentViewController: UITableViewDelegate {
+   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+      return 94
+   }
 }

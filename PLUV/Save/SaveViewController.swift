@@ -13,19 +13,11 @@ import RxCocoa
 class SaveViewController: UIViewController {
    
    let viewModel = FeedViewModel()
-
-   private var saveDetailCollectionView: UICollectionView = {
-       let layout = UICollectionViewFlowLayout()
-       layout.minimumLineSpacing = 0
-       layout.minimumInteritemSpacing = 0
-       layout.scrollDirection = .vertical
-       layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-       
-       let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-       cv.register(SaveDetailCollectionViewCell.self, forCellWithReuseIdentifier: SaveDetailCollectionViewCell.identifier)
-       
-       return cv
-   }()
+   
+   private let saveDetailTableViewCell = UITableView().then {
+      $0.separatorStyle = .none
+      $0.register(SaveDetailTableViewCell.self, forCellReuseIdentifier: SaveDetailTableViewCell.identifier)
+   }
    private let disposeBag = DisposeBag()
    
    override func viewDidLoad() {
@@ -56,33 +48,31 @@ class SaveViewController: UIViewController {
       self.view.backgroundColor = .white
       self.navigationItem.setHidesBackButton(true, animated: false)
       
-      self.view.addSubview(saveDetailCollectionView)
-      saveDetailCollectionView.snp.makeConstraints { make in
+      self.view.addSubview(saveDetailTableViewCell)
+      saveDetailTableViewCell.snp.makeConstraints { make in
          make.top.equalTo(view.safeAreaLayoutGuide)
          make.leading.trailing.bottom.equalToSuperview()
       }
-      saveDetailCollectionView.showsVerticalScrollIndicator = false
-      saveDetailCollectionView.allowsMultipleSelection = false
    }
    
    @objc private func clickBackButton() {
-       self.navigationController?.popViewController(animated: true)
+      self.navigationController?.popViewController(animated: true)
    }
    
    private func setData() {
-      self.saveDetailCollectionView.rx.setDelegate(self)
+      self.saveDetailTableViewCell.rx.setDelegate(self)
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
       self.viewModel.feedItems
          .observe(on: MainScheduler.instance)
-         .bind(to: self.saveDetailCollectionView.rx.items(cellIdentifier: SaveDetailCollectionViewCell.identifier, cellType: SaveDetailCollectionViewCell.self)) { index, item, cell in
+         .bind(to: self.saveDetailTableViewCell.rx.items(cellIdentifier: SaveDetailTableViewCell.identifier, cellType: SaveDetailTableViewCell.self)) { index, item, cell in
             cell.prepare(feed: item)
          }
          .disposed(by: disposeBag)
       
       /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
-      self.saveDetailCollectionView.rx.modelSelected(Feed.self)
+      self.saveDetailTableViewCell.rx.modelSelected(Feed.self)
          .subscribe(onNext: { [weak self] feedItem in
             self?.viewModel.selectFeedItem = Observable.just(feedItem)
             
@@ -106,10 +96,8 @@ class SaveViewController: UIViewController {
    }
 }
 
-@available(iOS 14.0, *)
-extension SaveViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        return CGSize(width: collectionView.frame.width, height: 94)
-    }
+extension SaveViewController: UITableViewDelegate {
+   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+      return 94
+   }
 }

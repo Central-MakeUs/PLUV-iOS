@@ -1,15 +1,15 @@
 //
-//  SaveCollectionViewCell.swift
+//  SaveDetailTableViewCell.swift
 //  PLUV
 //
-//  Created by jaegu park on 10/25/24.
+//  Created by jaegu park on 11/2/24.
 //
 
 import UIKit
 
-class SaveDetailCollectionViewCell: UICollectionViewCell {
-    
-   static let identifier = String(describing: SaveDetailCollectionViewCell.self)
+class SaveDetailTableViewCell: UITableViewCell {
+
+   static let identifier = String(describing: SaveDetailTableViewCell.self)
    
    private let thumbnailImageView = UIImageView().then {
       $0.layer.cornerRadius = 8
@@ -34,12 +34,12 @@ class SaveDetailCollectionViewCell: UICollectionViewCell {
       $0.font = .systemFont(ofSize: 14, weight: .regular)
    }
    
-   override init(frame: CGRect) {
-      super.init(frame: .zero)
+   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+       super.init(style: style, reuseIdentifier: reuseIdentifier)
    }
    
    required init?(coder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
+       fatalError("init(coder:) has not been implemented")
    }
    
    override func layoutSubviews() {

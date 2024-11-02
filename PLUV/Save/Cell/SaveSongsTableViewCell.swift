@@ -1,15 +1,15 @@
 //
-//  SaveSongsCollectionViewCell.swift
+//  SaveSongsTableViewCell.swift
 //  PLUV
 //
-//  Created by jaegu park on 10/25/24.
+//  Created by jaegu park on 11/2/24.
 //
 
 import UIKit
 
-class SaveSongsCollectionViewCell: UICollectionViewCell {
+class SaveSongsTableViewCell: UITableViewCell {
    
-   static let identifier = String(describing: SaveSongsCollectionViewCell.self)
+   static let identifier = String(describing: SaveSongsTableViewCell.self)
    
    private let indexLabel = UILabel().then {
       $0.textColor = .gray800
@@ -28,12 +28,12 @@ class SaveSongsCollectionViewCell: UICollectionViewCell {
       $0.font = .systemFont(ofSize: 14, weight: .regular)
    }
    
-   override init(frame: CGRect) {
-      super.init(frame: .zero)
+   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+       super.init(style: style, reuseIdentifier: reuseIdentifier)
    }
    
    required init?(coder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
+       fatalError("init(coder:) has not been implemented")
    }
    
    override func layoutSubviews() {
