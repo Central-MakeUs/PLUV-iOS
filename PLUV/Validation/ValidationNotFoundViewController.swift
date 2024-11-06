@@ -42,7 +42,7 @@ class ValidationNotFoundViewController: UIViewController {
       $0.contentInset = UIEdgeInsets(top: 1.2, left: 0, bottom: 0, right: 0)
       $0.sectionFooterHeight = 1.2
    }
-   private var moveView = MoveView()
+   private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
    
    override func viewDidLoad() {

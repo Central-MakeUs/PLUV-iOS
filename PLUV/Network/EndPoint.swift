@@ -14,7 +14,7 @@ enum EndPoint {
     case feedIdMusic(String)
     case feedIdSave(String)
     
-    case recent
+    case historyMe
     
     case loginApple
     case loginAppleAdd
@@ -58,8 +58,8 @@ extension EndPoint {
         case .feedIdSave(let id):
             return EndPoint.makeEndPoint("/feed/\(id)/save")
             
-        case .recent:
-            return EndPoint.makeEndPoint("/history")
+        case .historyMe:
+            return EndPoint.makeEndPoint("/history/me")
          
         case .loginApple:
             return EndPoint.makeEndPoint("/login/apple")

@@ -112,7 +112,6 @@ class HomeViewController: UIViewController {
       super.viewDidLoad()
       
       setUI()
-      setFeedAPI()
    }
    
    override func viewWillAppear(_ animated: Bool) {
@@ -279,43 +278,6 @@ extension HomeViewController {
    /// 테스트
    private func setTestAppleMusic() {
       MusicKitManager.shared.fetchMusic("알레프")
-   }
-   
-   private func setData() {
-      self.recentPlayListCollectionView.rx.setDelegate(self)
-         .disposed(by: disposeBag)
-      
-      /// CollectionView에 들어갈 Cell에 정보 제공
-      self.viewModel.feedItems
-         .observe(on: MainScheduler.instance)
-         .bind(to: self.recentPlayListCollectionView.rx.items(cellIdentifier: RecentCollectionViewCell.identifier, cellType: RecentCollectionViewCell.self)) { index, item, cell in
-            cell.prepare(feed: item)
-         }
-         .disposed(by: disposeBag)
-      
-      /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
-      self.recentPlayListCollectionView.rx.modelSelected(Feed.self)
-         .subscribe(onNext: { [weak self] feedItem in
-            self?.viewModel.selectFeedItem = Observable.just(feedItem)
-            
-         })
-         .disposed(by: disposeBag)
-   }
-   
-   private func setFeedAPI() {
-      let url = EndPoint.feed.path
-      
-      APIService().get(of: APIResponse<[Feed]>.self, url: url) { response in
-         switch response.code {
-         case 200:
-            let limitedData = Array(response.data.prefix(5))
-            self.viewModel.feedItems = Observable.just(limitedData)
-            self.setData()
-            self.view.layoutIfNeeded()
-         default:
-            AlertController(message: response.msg).show()
-         }
-      }
    }
 }
 

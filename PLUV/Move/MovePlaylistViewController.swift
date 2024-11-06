@@ -231,7 +231,7 @@ class MovePlaylistViewController: UIViewController {
     }
     
     private func searchAPI() {
-        if sourcePlatform == .AppleMusic && destinationPlatform == .Spotify {
+        if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic && destinationPlatform == .Spotify {
             /// 권한이 부여된 경우에만 넘겨야함!!!
             Task {
                 await self.searchAppleToSpotifyAPI(musics: self.viewModel.musicItems)

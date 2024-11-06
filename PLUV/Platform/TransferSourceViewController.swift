@@ -45,7 +45,7 @@ class TransferSourceViewController: UIViewController {
       $0.tag = 2
    }
    
-   private var moveView = MoveView()
+   private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
    
    override func viewDidLoad() {
@@ -128,12 +128,12 @@ extension TransferSourceViewController {
          make.height.equalTo(184)
       }
       
+      moveView = MoveView(view: self)
       self.view.addSubview(moveView)
       moveView.snp.makeConstraints { make in
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(101)
       }
-      moveView.setBackButtonTarget(target: self)
       
       moveView.backButton.isEnabled = false
       moveView.trasferButton.isEnabled = false

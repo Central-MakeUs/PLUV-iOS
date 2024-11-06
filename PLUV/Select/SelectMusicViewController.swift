@@ -78,7 +78,7 @@ class SelectMusicViewController: UIViewController {
       $0.register(SelectMusicTableViewCell.self, forCellReuseIdentifier: SelectMusicTableViewCell.identifier)
    }
    
-   private var moveView = MoveView()
+   private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
    
    init(playlistItem: Playlist, source: PlatformRepresentable, destination: MusicPlatform) {
@@ -231,12 +231,12 @@ class SelectMusicViewController: UIViewController {
       }
       //selectMusicTableView.isScrollEnabled = false
       
+      moveView = MoveView(view: self)
       self.view.addSubview(moveView)
       moveView.snp.makeConstraints { make in
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(101)
       }
-      moveView.setBackButtonTarget(target: self)
       
       self.view.addSubview(loadingView)
       loadingView.snp.makeConstraints { make in

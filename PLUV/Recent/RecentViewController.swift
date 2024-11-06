@@ -12,7 +12,7 @@ import RxCocoa
 
 class RecentViewController: UIViewController {
    
-   let viewModel = RecentViewModel()
+   let viewModel = MeViewModel()
    
    private let navigationbarView = NavigationBarView(title: "최근 옮긴 항목")
    private let recentTableViewCell = UITableView().then {
@@ -25,7 +25,7 @@ class RecentViewController: UIViewController {
       super.viewDidLoad()
       
       setUI()
-      setRecentAPI()
+      setMeAPI()
    }
    
    private func setUI() {
@@ -53,17 +53,17 @@ class RecentViewController: UIViewController {
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
-      self.viewModel.recentItems
+      self.viewModel.MeItems
          .observe(on: MainScheduler.instance)
          .bind(to: self.recentTableViewCell.rx.items(cellIdentifier: RecentDetailTableViewCell.identifier, cellType: RecentDetailTableViewCell.self)) { index, item, cell in
-            cell.prepare(recent: item)
+            cell.prepare(me: item)
          }
          .disposed(by: disposeBag)
       
       /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
-      self.recentTableViewCell.rx.modelSelected(Recent.self)
+      self.recentTableViewCell.rx.modelSelected(Me.self)
          .subscribe(onNext: { [weak self] recentItem in
-            self?.viewModel.selectRecentItem = Observable.just(recentItem)
+            self?.viewModel.selectMeItem = Observable.just(recentItem)
             let recentDetailVC = RecentDetailViewController()
             recentDetailVC.recentId = recentItem.id
             self?.navigationController?.pushViewController(recentDetailVC, animated: true)
@@ -71,13 +71,14 @@ class RecentViewController: UIViewController {
          .disposed(by: disposeBag)
    }
    
-   private func setRecentAPI() {
-      let url = EndPoint.recent.path
+   private func setMeAPI() {
+      let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+      let url = EndPoint.historyMe.path
       
-      APIService().get(of: APIResponse<[Recent]>.self, url: url) { response in
+      APIService().getWithAccessToken(of: APIResponse<[Me]>.self, url: url, AccessToken: loginToken) { response in
          switch response.code {
          case 200:
-            self.viewModel.recentItems = Observable.just(response.data)
+            self.viewModel.MeItems = Observable.just(response.data)
             self.setData()
             self.view.layoutIfNeeded()
          default:

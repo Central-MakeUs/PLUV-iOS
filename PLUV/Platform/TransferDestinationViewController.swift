@@ -44,7 +44,7 @@ class TransferDestinationViewController: UIViewController {
       $0.register(TransferTableViewCell.self, forCellReuseIdentifier: TransferTableViewCell.identifier)
    }
    
-   private var moveView = MoveView()
+   private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
    
    override func viewDidLoad() {
@@ -124,6 +124,7 @@ extension TransferDestinationViewController {
          make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
       }
       
+      moveView = MoveView(view: self)
       self.view.addSubview(moveView)
       moveView.snp.makeConstraints { make in
          make.leading.trailing.bottom.equalToSuperview()

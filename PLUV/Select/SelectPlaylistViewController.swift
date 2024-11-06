@@ -53,7 +53,7 @@ class SelectPlaylistViewController: UIViewController {
       return cv
    }()
    
-   private var moveView = MoveView()
+   private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
    
    init(source: PlatformRepresentable, destination: MusicPlatform) {
@@ -132,6 +132,7 @@ class SelectPlaylistViewController: UIViewController {
       playlistCollectionView.showsVerticalScrollIndicator = false
       playlistCollectionView.allowsMultipleSelection = false
       
+      moveView = MoveView(view: self)
       self.view.addSubview(moveView)
       moveView.snp.makeConstraints { make in
          make.leading.trailing.bottom.equalToSuperview()
@@ -260,56 +261,11 @@ class SelectPlaylistViewController: UIViewController {
                   }.show()
                }
             }
-            .disposed(by: disposeBag)
-        
-        /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
-        self.playlistCollectionView.rx.modelSelected(Playlist.self)
-            .subscribe(onNext: { [weak self] playlistItem in
-                self?.moveView.trasferButton.isEnabled = true
-                self?.viewModel.playlistItem = playlistItem
-            })
-            .disposed(by: disposeBag)
-        
-        /*
-        self.playlistCollectionView.rx.itemSelected
-            .subscribe { [weak self] indexPath in
-                guard let cell  = self?.playlistCollectionView.cellForItem(at: indexPath) as? TransferPlaylistCollectionViewCell else { return }
-                self?.selectedPlaylistIndex = Observable.just(indexPath.row)
-                cell.selected(selectedIndex: indexPath.row)
-            }
-            .disposed(by: disposeBag)
-        
-        self.selectedPlaylistIndex
-            .subscribe(onNext: { index in
-                guard let cell  = self.playlistCollectionView.cellForItem(at: IndexPath(index: index)) as? TransferPlaylistCollectionViewCell else { return }
-                cell.selected(selectedIndex: index)
-            })
-            .disposed(by: disposeBag)
-        */
-    }
-    
-    private func setPlaylistAPI() {
-        if sourcePlatform == .AppleMusic {
-            MPMediaLibrary.requestAuthorization { status in
-                switch status {
-                case .authorized:
-                    /// 권한이 부여된 경우
-                    print("Apple Music authorization granted")
-                    Task {
-                        await self.setApplePlaylistAPI()
-                    }
-                default:
-                    DispatchQueue.main.async {
-                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있어요") {
-                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-                        }.show()
-                    }
-                }
-            }
-        } else if sourcePlatform == .Spotify {
-            setSpotifyPlaylistAPI()
-        }
-    }
+         }
+      } else if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .Spotify {
+         setSpotifyPlaylistAPI()
+      }
+   }
     
     private func setSpotifyPlaylistAPI() {
         let url = EndPoint.playlistSpotifyRead.path

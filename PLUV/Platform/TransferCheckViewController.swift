@@ -31,7 +31,7 @@ class TransferCheckViewController: UIViewController {
    private let dotView = DotView()
    private lazy var selectDestinationPlatformView = PlatformView(platform: destinationPlatform)
    
-   private var moveView = MoveView()
+   private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
    
    /// spotify 관련 properties
@@ -179,6 +179,7 @@ class TransferCheckViewController: UIViewController {
          make.height.equalTo(109)
       }
       
+      moveView = MoveView(view: self)
       self.view.addSubview(moveView)
       moveView.snp.makeConstraints { make in
          make.leading.trailing.bottom.equalToSuperview()
