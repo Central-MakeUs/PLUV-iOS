@@ -58,8 +58,16 @@ final class MoveView: UIView {
         self.layer.shadowOpacity = 1
         self.layer.shadowOffset = CGSize(width: 0, height: -2)
     }
-   
-   func setBackButtonTarget(target: UIViewController) {
-      backButton.addTarget(target, action: #selector(target.popViewController), for: .touchUpInside)
-   }
+    
+    func changeName(left: String, right: String) {
+        self.backButton.removeTarget(self, action: #selector(clickBackButton), for: .touchUpInside)
+        self.backButton.setTitle(left, for: .normal)
+        self.trasferButton.setTitle(right, for: .normal)
+    }
+    
+    @objc func clickBackButton() {
+        if backButton.isEnabled {
+            view.navigationController?.popViewController(animated: true)
+        }
+    }
 }

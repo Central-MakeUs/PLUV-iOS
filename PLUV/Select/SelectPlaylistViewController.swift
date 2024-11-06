@@ -260,53 +260,108 @@ class SelectPlaylistViewController: UIViewController {
                   }.show()
                }
             }
-         }
-      } else if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .Spotify {
-         setSpotifyPlaylistAPI()
-      }
-   }
-   
-   private func setSpotifyPlaylistAPI() {
-      let url = EndPoint.playlistSpotifyRead.path
-      let params = ["accessToken" : TokenManager.shared.spotifyAccessToken]
-      
-      APIService().post(of: [Playlist].self, url: url, parameters: params) { response in
-         self.viewModel.playlistItems = Observable.just(response)
-         self.setData()
-         self.loadingView.removeFromSuperview()
-         self.view.layoutIfNeeded()
-      }
-   }
-   
-   private func setApplePlaylistAPI() async {
-      /*
-       deprecated
-       
-       let controller = SKCloudServiceController()
-       controller.requestUserToken(forDeveloperToken: "") { userToken, error in
-       print("music user token : \(String(describing: userToken))")
-       }
-       */
-      
-      do {
-         let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
-         print(developerToken, "developerToken")
-         let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
-         print(userToken, "userToken")
+            .disposed(by: disposeBag)
+        
+        /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
+        self.playlistCollectionView.rx.modelSelected(Playlist.self)
+            .subscribe(onNext: { [weak self] playlistItem in
+                self?.moveView.trasferButton.isEnabled = true
+                self?.viewModel.playlistItem = playlistItem
+            })
+            .disposed(by: disposeBag)
+        
+        /*
+        self.playlistCollectionView.rx.itemSelected
+            .subscribe { [weak self] indexPath in
+                guard let cell  = self?.playlistCollectionView.cellForItem(at: indexPath) as? TransferPlaylistCollectionViewCell else { return }
+                self?.selectedPlaylistIndex = Observable.just(indexPath.row)
+                cell.selected(selectedIndex: indexPath.row)
+            }
+            .disposed(by: disposeBag)
+        
+        self.selectedPlaylistIndex
+            .subscribe(onNext: { index in
+                guard let cell  = self.playlistCollectionView.cellForItem(at: IndexPath(index: index)) as? TransferPlaylistCollectionViewCell else { return }
+                cell.selected(selectedIndex: index)
+            })
+            .disposed(by: disposeBag)
+        */
+    }
+    
+    private func setPlaylistAPI() {
+        if sourcePlatform == .AppleMusic {
+            MPMediaLibrary.requestAuthorization { status in
+                switch status {
+                case .authorized:
+                    /// 권한이 부여된 경우
+                    print("Apple Music authorization granted")
+                    Task {
+                        await self.setApplePlaylistAPI()
+                    }
+                default:
+                    DispatchQueue.main.async {
+                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있어요") {
+                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        }.show()
+                    }
+                }
+            }
+        } else if sourcePlatform == .Spotify {
+            setSpotifyPlaylistAPI()
+        }
+    }
+    
+    private func setSpotifyPlaylistAPI() {
+        let url = EndPoint.playlistSpotifyRead.path
+        let params = ["accessToken" : TokenManager.shared.spotifyAccessToken]
+        
+        APIService().post(of: APIResponse<[Playlist]>.self, url: url, parameters: params) { response in
+            switch response.code {
+            case 200:
+                self.viewModel.playlistItems = Observable.just(response.data)
+                self.setData()
+                self.loadingView.removeFromSuperview()
+                self.view.layoutIfNeeded()
+            default:
+                AlertController(message: response.msg).show()
+            }
+        }
+    }
+    
+    private func setApplePlaylistAPI() async {
+        /*
+         deprecated
          
-         let url = EndPoint.playlistAppleRead.path
-         let params = ["musicUserToken" : userToken]
-         
-         APIService().post(of: [Playlist].self, url: url, parameters: params) { response in
-            self.viewModel.playlistItems = Observable.just(response)
-            self.setData()
-            self.loadingView.removeFromSuperview()
-            self.view.layoutIfNeeded()
+         let controller = SKCloudServiceController()
+         controller.requestUserToken(forDeveloperToken: "") { userToken, error in
+         print("music user token : \(String(describing: userToken))")
          }
-      } catch {
-         print("ERROR : setApplePlaylistAPI")
-      }
-   }
+         */
+        
+        do {
+            let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+            print(developerToken, "developerToken")
+            let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+            print(userToken, "userToken")
+            
+            let url = EndPoint.playlistAppleRead.path
+            let params = ["musicUserToken" : userToken]
+            
+            APIService().post(of: APIResponse<[Playlist]>.self, url: url, parameters: params) { response in
+                switch response.code {
+                case 200:
+                    self.viewModel.playlistItems = Observable.just(response.data)
+                    self.setData()
+                    self.loadingView.removeFromSuperview()
+                    self.view.layoutIfNeeded()
+                default:
+                    AlertController(message: response.msg).show()
+                }
+            }
+        } catch {
+            print("ERROR : setApplePlaylistAPI")
+        }
+    }
 }
 
 @available(iOS 14.0, *)

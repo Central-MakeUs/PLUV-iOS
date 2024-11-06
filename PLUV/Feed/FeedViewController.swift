@@ -44,6 +44,9 @@ class FeedViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        /// 탭 바 표시하기
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -92,8 +95,10 @@ class FeedViewController: UIViewController {
         /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
         self.feedCollectionView.rx.modelSelected(Feed.self)
             .subscribe(onNext: { [weak self] feedItem in
-                self?.viewModel.selectFeedItem = Observable.just(feedItem)
-                
+                guard let self = self else { return }
+                self.viewModel.selectFeedItem = feedItem
+                let feedDetailVC = FeedDetailViewController(viewModel: self.viewModel)
+                self.navigationController?.pushViewController(feedDetailVC, animated: true)
             })
             .disposed(by: disposeBag)
     }
