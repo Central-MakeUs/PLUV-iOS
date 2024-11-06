@@ -15,9 +15,7 @@ class SaveDetailViewController: UIViewController {
    private let scrollView = UIScrollView()
    private let contentView = UIView()
    
-   private let backButton = UIButton().then {
-      $0.setImage(UIImage(named: "backbutton_icon"), for: .normal)
-   }
+   private let navigationbarView = NavigationBarView(title: "")
    private let thumbnailImageView = UIImageView().then {
        $0.clipsToBounds = true
    }
@@ -81,18 +79,17 @@ class SaveDetailViewController: UIViewController {
          make.height.equalTo(1100)
       }
       
-      self.contentView.addSubview(backButton)
-      backButton.snp.makeConstraints { make in
-         make.top.equalToSuperview().inset(58)
-         make.leading.equalToSuperview().inset(18)
-         make.width.equalTo(24)
-         make.height.equalTo(24)
+      self.contentView.addSubview(navigationbarView)
+      navigationbarView.snp.makeConstraints { make in
+         make.top.equalToSuperview().inset(47)
+         make.leading.trailing.equalToSuperview()
+         make.height.equalTo(46)
       }
-      backButton.addTarget(self, action: #selector(clickBackButton), for: .touchUpInside)
+      navigationbarView.setBackButtonTarget(target: self)
       
       self.contentView.addSubview(thumbnailImageView)
       thumbnailImageView.snp.makeConstraints { make in
-         make.top.equalTo(backButton.snp.bottom).offset(11)
+         make.top.equalTo(navigationbarView.snp.bottom)
          make.leading.trailing.equalToSuperview()
          make.height.equalTo(390)
       }
@@ -152,10 +149,6 @@ class SaveDetailViewController: UIViewController {
           make.leading.trailing.bottom.equalToSuperview()
           make.height.equalTo(102)
       }
-   }
-
-   @objc private func clickBackButton() {
-       self.navigationController?.popViewController(animated: true)
    }
 }
 

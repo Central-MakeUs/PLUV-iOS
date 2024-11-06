@@ -20,6 +20,7 @@ class ValidationNotFoundViewController: UIViewController {
    private let backButton = UIButton().then {
       $0.setImage(UIImage(named: "xbutton_icon"), for: .normal)
    }
+   private let progressView = CustomProgressView()
    private let notFoundTitleLabel1 = UILabel().then {
       $0.text = "애플 뮤직에서\n찾을 수 없는 음악이에요"
       $0.font = .systemFont(ofSize: 24, weight: .semibold)
@@ -31,12 +32,17 @@ class ValidationNotFoundViewController: UIViewController {
       $0.textColor = .gray700
       $0.font = .systemFont(ofSize: 14)
    }
+   private let backgroundLabel = UILabel().then {
+      $0.backgroundColor = .gray200
+   }
    private let notFoundMusicTableView = UITableView().then {
       $0.separatorStyle = .none
       $0.register(ValidationNotFoundTableViewCell.self, forCellReuseIdentifier: ValidationNotFoundTableViewCell.identifier)
       $0.backgroundColor = .gray200
+      $0.contentInset = UIEdgeInsets(top: 1.2, left: 0, bottom: 0, right: 0)
+      $0.sectionFooterHeight = 1.2
    }
-   private var moveView = MoveView(view: UIViewController())
+   private var moveView = MoveView()
    private let disposeBag = DisposeBag()
    
    override func viewDidLoad() {
@@ -48,11 +54,12 @@ class ValidationNotFoundViewController: UIViewController {
    private func setUI() {
       self.view.backgroundColor = .white
       self.navigationItem.setHidesBackButton(true, animated: false)
+      self.navigationController?.setNavigationBarHidden(true, animated: false)
       
       self.view.addSubview(notFoundTitleView)
       notFoundTitleView.snp.makeConstraints { make in
          make.leading.top.trailing.equalToSuperview()
-         make.height.equalTo(203)
+         make.height.equalTo(213)
       }
       
       self.notFoundTitleView.addSubview(sourceToDestinationLabel)
@@ -64,16 +71,24 @@ class ValidationNotFoundViewController: UIViewController {
       
       self.notFoundTitleView.addSubview(backButton)
       backButton.snp.makeConstraints { make in
-         make.top.equalToSuperview().inset(47)
-         make.trailing.equalToSuperview().inset(14)
-         make.height.equalTo(46)
-         make.width.equalTo(46)
+         make.top.equalToSuperview().inset(53)
+         make.trailing.equalToSuperview().inset(20)
+         make.height.equalTo(34)
+         make.width.equalTo(34)
       }
       backButton.addTarget(self, action: #selector(clickXButton), for: .touchUpInside)
       
+      self.notFoundTitleView.addSubview(progressView)
+      progressView.snp.makeConstraints { make in
+         make.top.equalTo(backButton.snp.bottom).offset(6)
+         make.trailing.leading.equalToSuperview()
+         make.height.equalTo(4)
+      }
+      progressView.updateProgress(to: 0.875)
+      
       self.notFoundTitleView.addSubview(notFoundTitleLabel1)
       notFoundTitleLabel1.snp.makeConstraints { make in
-         make.top.equalTo(sourceToDestinationLabel.snp.bottom).offset(28)
+         make.top.equalTo(progressView.snp.bottom).offset(24)
          make.leading.equalToSuperview().inset(24)
       }
       
@@ -90,18 +105,25 @@ class ValidationNotFoundViewController: UIViewController {
          make.height.equalTo(38)
       }
       
+      self.notFoundSongView.addSubview(backgroundLabel)
+      backgroundLabel.snp.makeConstraints { make in
+         make.top.equalTo(songCountLabel.snp.bottom)
+         make.leading.trailing.equalToSuperview()
+         make.height.equalTo(1.2)
+      }
+      
       self.notFoundSongView.addSubview(notFoundMusicTableView)
       notFoundMusicTableView.snp.makeConstraints { make in
          make.top.equalTo(songCountLabel.snp.bottom)
          make.leading.trailing.bottom.equalToSuperview()
       }
       
-      moveView = MoveView(view: self)
       self.view.addSubview(moveView)
       moveView.snp.makeConstraints { make in
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(102)
       }
+      moveView.setBackButtonTarget(target: self)
    }
    
    @objc private func clickXButton() {

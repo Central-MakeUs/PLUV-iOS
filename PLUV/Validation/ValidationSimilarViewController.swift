@@ -24,6 +24,7 @@ class ValidationSimilarViewController: UIViewController {
    private let backButton = UIButton().then {
       $0.setImage(UIImage(named: "xbutton_icon"), for: .normal)
    }
+   private let progressView = CustomProgressView()
    private let similarTitleLabel1 = UILabel().then {
       $0.text = "가장 유사한 항목을 옮길까요?"
       $0.font = .systemFont(ofSize: 24, weight: .semibold)
@@ -43,9 +44,13 @@ class ValidationSimilarViewController: UIViewController {
    private let similarMusicTableView = UITableView().then {
       $0.separatorStyle = .none
       $0.register(ValidationSimilarTableViewCell.self, forCellReuseIdentifier: ValidationSimilarTableViewCell.identifier)
+      $0.register(SimilarSongsTableViewCell.self, forCellReuseIdentifier: SimilarSongsTableViewCell.identifier)
+      $0.register(MoreButtonTableViewCell.self, forCellReuseIdentifier: MoreButtonTableViewCell.identifier)
       $0.backgroundColor = .gray200
+      $0.contentInset = UIEdgeInsets(top: 1.2, left: 0, bottom: 0, right: 0)
+      $0.sectionFooterHeight = 1.2
    }
-   private var moveView = MoveView(view: UIViewController())
+   private var moveView = MoveView()
    private let disposeBag = DisposeBag()
    
    override func viewDidLoad() {
@@ -77,7 +82,7 @@ class ValidationSimilarViewController: UIViewController {
       self.contentView.addSubview(similarTitleView)
       similarTitleView.snp.makeConstraints { make in
          make.leading.top.trailing.equalToSuperview()
-         make.height.equalTo(203)
+         make.height.equalTo(213)
       }
       
       self.similarTitleView.addSubview(sourceToDestinationLabel)
@@ -89,23 +94,31 @@ class ValidationSimilarViewController: UIViewController {
       
       self.similarTitleView.addSubview(backButton)
       backButton.snp.makeConstraints { make in
-         make.top.equalToSuperview().inset(47)
-         make.trailing.equalToSuperview().inset(14)
-         make.height.equalTo(46)
-         make.width.equalTo(46)
+         make.top.equalToSuperview().inset(53)
+         make.trailing.equalToSuperview().inset(20)
+         make.height.equalTo(34)
+         make.width.equalTo(34)
       }
       backButton.addTarget(self, action: #selector(clickXButton), for: .touchUpInside)
       
+      self.similarTitleView.addSubview(progressView)
+      progressView.snp.makeConstraints { make in
+         make.top.equalTo(backButton.snp.bottom).offset(6)
+         make.trailing.leading.equalToSuperview()
+         make.height.equalTo(4)
+      }
+      progressView.updateProgress(to: 0.75)
+      
       self.similarTitleView.addSubview(similarTitleLabel1)
       similarTitleLabel1.snp.makeConstraints { make in
-         make.top.equalTo(sourceToDestinationLabel.snp.bottom).offset(28)
+         make.top.equalTo(progressView.snp.bottom).offset(24)
          make.leading.equalToSuperview().inset(24)
       }
       
       self.similarTitleView.addSubview(similarTitleLabel2)
       similarTitleLabel2.snp.makeConstraints { make in
          make.top.equalTo(similarTitleLabel1.snp.bottom).offset(8)
-         make.leading.trailing.equalToSuperview().inset(24)
+         make.leading.equalToSuperview().inset(24)
       }
       
       self.contentView.addSubview(similarSongView)
@@ -127,12 +140,12 @@ class ValidationSimilarViewController: UIViewController {
          make.leading.trailing.bottom.equalToSuperview()
       }
       
-      moveView = MoveView(view: self)
       self.view.addSubview(moveView)
       moveView.snp.makeConstraints { make in
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(102)
       }
+      moveView.setBackButtonTarget(target: self)
    }
    
    @objc private func clickXButton() {
@@ -147,7 +160,18 @@ class ValidationSimilarViewController: UIViewController {
 }
 
 extension ValidationSimilarViewController: UITableViewDelegate {
+   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+      return 3
+   }
+   
    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-      return 194
+      switch indexPath.row % 3 {
+      case 0:
+         return 66
+      case 1:
+         return 58
+      default:
+         return 66
+      }
    }
 }

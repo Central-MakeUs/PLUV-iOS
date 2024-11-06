@@ -10,8 +10,9 @@ import UIKit
 class LoadPluvTableViewCell: UITableViewCell {
    
    static let identifier = String(describing: LoadPluvTableViewCell.self)
+   var selectPlatform: String = LoadPluv.FromRecent.name
    private let loadPluvContentView = UIView()
-   let loadPluvImageView = UIImageView()
+   private let loadPluvImageView = UIImageView()
    private let loadPluvTitleLabel = UILabel().then {
       $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 20, weight: .medium)

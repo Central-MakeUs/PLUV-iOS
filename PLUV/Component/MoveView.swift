@@ -12,10 +12,8 @@ final class MoveView: UIView {
     var lineView = UIView()
     var backButton = WhiteButton()
     var trasferButton = BlackButton()
-    var view: UIViewController
     
-    init(view: UIViewController) {
-        self.view = view
+    init() {
         super.init(frame: .zero)
         setUI()
     }
@@ -36,7 +34,6 @@ final class MoveView: UIView {
         
         self.addSubview(backButton)
         self.backButton.setTitle("이전", for: .normal)
-        self.backButton.addTarget(self, action: #selector(clickBackButton), for: .touchUpInside)
         backButton.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(11)
             make.leading.equalToSuperview().offset(24)
@@ -61,10 +58,8 @@ final class MoveView: UIView {
         self.layer.shadowOpacity = 1
         self.layer.shadowOffset = CGSize(width: 0, height: -2)
     }
-    
-    @objc func clickBackButton() {
-        if backButton.isEnabled {
-            view.navigationController?.popViewController(animated: true)
-        }
-    }
+   
+   func setBackButtonTarget(target: UIViewController) {
+      backButton.addTarget(target, action: #selector(target.popViewController), for: .touchUpInside)
+   }
 }

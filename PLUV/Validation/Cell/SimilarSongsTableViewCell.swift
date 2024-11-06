@@ -1,16 +1,19 @@
 //
-//  ValidationNotFoundTableViewCell.swift
+//  SimilarSongsTableViewCell.swift
 //  PLUV
 //
-//  Created by jaegu park on 11/1/24.
+//  Created by jaegu park on 11/6/24.
 //
 
 import UIKit
 
-class ValidationNotFoundTableViewCell: UITableViewCell {
+class SimilarSongsTableViewCell: UITableViewCell {
    
-   static let identifier = String(describing: ValidationNotFoundTableViewCell.self)
-   
+   static let identifier = String(describing: SimilarSongsTableViewCell.self)
+
+   private let barView = UIView().then {
+      $0.backgroundColor = .gray200
+   }
    private let thumbnailImageView = UIImageView().then {
       $0.layer.cornerRadius = 8
       $0.clipsToBounds = true
@@ -22,6 +25,9 @@ class ValidationNotFoundTableViewCell: UITableViewCell {
    private let singerLabel = UILabel().then {
       $0.textColor = .gray600
       $0.font = .systemFont(ofSize: 14, weight: .regular)
+   }
+   private let checkIcon = UIImageView().then {
+      $0.image = UIImage(named: "check_image")
    }
    
    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -37,9 +43,17 @@ class ValidationNotFoundTableViewCell: UITableViewCell {
    }
    
    private func setUI() {
+      self.contentView.addSubview(barView)
+      barView.snp.makeConstraints { make in
+         make.leading.equalToSuperview().offset(24)
+         make.centerY.equalToSuperview()
+         make.width.equalTo(4)
+         make.height.equalTo(36)
+      }
+      
       self.contentView.addSubview(thumbnailImageView)
       thumbnailImageView.snp.makeConstraints { make in
-         make.leading.equalToSuperview().offset(24)
+         make.leading.equalTo(barView.snp.trailing).offset(8)
          make.centerY.equalToSuperview()
          make.width.height.equalTo(50)
       }
@@ -56,6 +70,13 @@ class ValidationNotFoundTableViewCell: UITableViewCell {
          make.top.equalTo(songTitleLabel.snp.bottom).offset(6)
          make.leading.equalTo(thumbnailImageView.snp.trailing).offset(12)
          make.height.equalTo(14)
+      }
+      
+      self.contentView.addSubview(checkIcon)
+      checkIcon.snp.makeConstraints { make in
+         make.trailing.equalToSuperview().offset(24)
+         make.centerY.equalToSuperview()
+         make.height.width.equalTo(16)
       }
    }
 }

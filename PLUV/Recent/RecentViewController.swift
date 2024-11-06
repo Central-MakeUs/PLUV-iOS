@@ -14,6 +14,7 @@ class RecentViewController: UIViewController {
    
    let viewModel = FeedViewModel()
    
+   private let navigationbarView = NavigationBarView(title: "최근 옮긴 항목")
    private let recentTableViewCell = UITableView().then {
       $0.separatorStyle = .none
       $0.register(RecentDetailTableViewCell.self, forCellReuseIdentifier: RecentDetailTableViewCell.identifier)
@@ -23,41 +24,28 @@ class RecentViewController: UIViewController {
    override func viewDidLoad() {
       super.viewDidLoad()
       
-      setNavigationBar()
       setUI()
       setFeedAPI()
-   }
-   
-   private func setNavigationBar() {
-      /// NavigationBar의 back 버튼 이미지 변경
-      let backImage = UIImage(named: "backbutton_icon")?.withRenderingMode(.alwaysOriginal)
-      let resizedBackImage = backImage?.withRenderingMode(.alwaysOriginal).resize(to: CGSize(width: 24, height: 24))
-      let backButton = UIBarButtonItem(image: resizedBackImage, style: .plain, target: self, action: #selector(clickBackButton))
-      backButton.tintColor = .gray800
-      navigationItem.leftBarButtonItem = backButton
-      
-      /// 커스터마이즈된 제목 뷰 추가
-      let titleLabel = UILabel()
-      titleLabel.text = "최근 옮긴 항목"
-      titleLabel.textColor = UIColor.gray800
-      titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-      titleLabel.sizeToFit()
-      navigationItem.titleView = titleLabel
    }
    
    private func setUI() {
       self.view.backgroundColor = .white
       self.navigationItem.setHidesBackButton(true, animated: false)
+      self.navigationController?.setNavigationBarHidden(true, animated: false)
+      
+      self.view.addSubview(navigationbarView)
+      navigationbarView.snp.makeConstraints { make in
+         make.top.equalToSuperview().inset(47)
+         make.leading.trailing.equalToSuperview()
+         make.height.equalTo(46)
+      }
+      navigationbarView.setBackButtonTarget(target: self)
       
       self.view.addSubview(recentTableViewCell)
       recentTableViewCell.snp.makeConstraints { make in
-         make.top.equalTo(view.safeAreaLayoutGuide)
+         make.top.equalTo(navigationbarView.snp.bottom)
          make.leading.trailing.bottom.equalToSuperview()
       }
-   }
-   
-   @objc private func clickBackButton() {
-       self.navigationController?.popViewController(animated: true)
    }
    
    private func setData() {
@@ -76,7 +64,8 @@ class RecentViewController: UIViewController {
       self.recentTableViewCell.rx.modelSelected(Feed.self)
          .subscribe(onNext: { [weak self] feedItem in
             self?.viewModel.selectFeedItem = Observable.just(feedItem)
-            
+            let recentDetailVC = RecentDetailViewController()
+            self?.navigationController?.pushViewController(recentDetailVC, animated: true)
          })
          .disposed(by: disposeBag)
    }

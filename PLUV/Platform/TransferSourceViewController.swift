@@ -16,6 +16,10 @@ class TransferSourceViewController: UIViewController {
    private let fromList = Observable.just(LoadPluv.allCases)
    
    private let sourceTitleView = UIView()
+   private let backButton = UIButton().then {
+      $0.setImage(UIImage(named: "xbutton_icon"), for: .normal)
+   }
+   private let progressView = CustomProgressView()
    private let sourceTitleLabel = UILabel().then {
       $0.text = "어디에서\n플레이리스트를 불러올까요?"
       $0.numberOfLines = 0
@@ -41,7 +45,7 @@ class TransferSourceViewController: UIViewController {
       $0.tag = 2
    }
    
-   private var moveView = MoveView(view: UIViewController())
+   private var moveView = MoveView()
    private let disposeBag = DisposeBag()
    
    override func viewDidLoad() {
@@ -64,17 +68,36 @@ extension TransferSourceViewController {
    private func setUI() {
       self.view.backgroundColor = .white
       self.navigationItem.setHidesBackButton(true, animated: false)
+      self.navigationController?.setNavigationBarHidden(true, animated: false)
       
       self.view.addSubview(sourceTitleView)
       sourceTitleView.snp.makeConstraints { make in
-         make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-         make.height.equalTo(124)
+         make.top.leading.trailing.equalToSuperview()
+         make.height.equalTo(213)
       }
+      
+      self.sourceTitleView.addSubview(backButton)
+      backButton.snp.makeConstraints { make in
+         make.top.equalToSuperview().inset(53)
+         make.trailing.equalToSuperview().inset(20)
+         make.height.equalTo(34)
+         make.width.equalTo(34)
+      }
+      backButton.addTarget(self, action: #selector(clickXButton), for: .touchUpInside)
+      
+      self.sourceTitleView.addSubview(progressView)
+      progressView.snp.makeConstraints { make in
+         make.top.equalTo(backButton.snp.bottom).offset(6)
+         make.trailing.leading.equalToSuperview()
+         make.height.equalTo(4)
+      }
+      progressView.updateProgress(to: 0.125)
       
       self.sourceTitleView.addSubview(sourceTitleLabel)
       sourceTitleLabel.snp.makeConstraints { make in
-         make.leading.trailing.equalToSuperview().inset(24)
-         make.top.bottom.equalToSuperview().inset(28)
+         make.top.equalTo(progressView.snp.bottom).offset(24)
+         make.leading.equalToSuperview().inset(24)
+         make.height.equalTo(68)
       }
       
       self.view.addSubview(sourceTableView)
@@ -105,19 +128,17 @@ extension TransferSourceViewController {
          make.height.equalTo(184)
       }
       
-      moveView = MoveView(view: self)
       self.view.addSubview(moveView)
       moveView.snp.makeConstraints { make in
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(101)
       }
+      moveView.setBackButtonTarget(target: self)
       
       moveView.backButton.isEnabled = false
       moveView.trasferButton.isEnabled = false
       
       // sourceTableView.isScrollEnabled = false
-      
-      setXButton()
    }
    
    private func setSourceData() {
@@ -162,6 +183,15 @@ extension TransferSourceViewController {
          })
          .disposed(by: disposeBag)
       
+      self.loadPlubTableView.rx.modelSelected(LoadPluv.self)
+         .observe(on: MainScheduler.instance)
+         .subscribe(onNext: { [weak self] platform in
+            let transferDestinationVC = TransferDestinationViewController()
+            transferDestinationVC.fromPlatform = platform
+            self?.navigationController?.pushViewController(transferDestinationVC, animated: true)
+         })
+         .disposed(by: disposeBag)
+      
       self.fromList
          .observe(on: MainScheduler.instance)
          .bind(to: self.loadPlubTableView.rx.items) { tableView, row, item in
@@ -170,11 +200,6 @@ extension TransferSourceViewController {
             return cell
          }
          .disposed(by: self.disposeBag)
-   }
-   
-   private func setXButton() {
-      let rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(clickXButton))
-      self.navigationItem.rightBarButtonItem = rightBarButtonItem
    }
    
    @objc private func clickXButton() {
