@@ -96,6 +96,8 @@
 		C7BF67A62CDB3B3D003C9EE2 /* MoreButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BF67A52CDB3B3D003C9EE2 /* MoreButtonTableViewCell.swift */; };
 		C7BF67A82CDB8109003C9EE2 /* SuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BF67A72CDB8109003C9EE2 /* SuccessViewModel.swift */; };
 		C7BF67AA2CDB8114003C9EE2 /* FailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BF67A92CDB8114003C9EE2 /* FailViewModel.swift */; };
+		C7BF67AC2CDB8175003C9EE2 /* SaveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BF67AB2CDB8175003C9EE2 /* SaveViewModel.swift */; };
+		C7BF67AE2CDB90CA003C9EE2 /* SaveDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BF67AD2CDB90CA003C9EE2 /* SaveDetailViewModel.swift */; };
 		C7C806FE2CCCD7F600245FEA /* RecentTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C806FD2CCCD7F600245FEA /* RecentTabViewController.swift */; };
 		C7EB31622CD4ED5700DA439A /* ValidationNotFoundTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EB31612CD4ED5700DA439A /* ValidationNotFoundTableViewCell.swift */; };
 		C7EEA4F22CC3A59F00FBAA4D /* RecentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EEA4F12CC3A59F00FBAA4D /* RecentCollectionViewCell.swift */; };
@@ -229,6 +231,8 @@
 		C7BF67A52CDB3B3D003C9EE2 /* MoreButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreButtonTableViewCell.swift; sourceTree = "<group>"; };
 		C7BF67A72CDB8109003C9EE2 /* SuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewModel.swift; sourceTree = "<group>"; };
 		C7BF67A92CDB8114003C9EE2 /* FailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailViewModel.swift; sourceTree = "<group>"; };
+		C7BF67AB2CDB8175003C9EE2 /* SaveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveViewModel.swift; sourceTree = "<group>"; };
+		C7BF67AD2CDB90CA003C9EE2 /* SaveDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDetailViewModel.swift; sourceTree = "<group>"; };
 		C7C806FD2CCCD7F600245FEA /* RecentTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTabViewController.swift; sourceTree = "<group>"; };
 		C7EB31612CD4ED5700DA439A /* ValidationNotFoundTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationNotFoundTableViewCell.swift; sourceTree = "<group>"; };
 		C7EEA4F12CC3A59F00FBAA4D /* RecentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -577,6 +581,8 @@
 				C79AAC622CD4CE5B000B5FAD /* Cell */,
 				C75CD8962CCABDBF00B2291D /* SaveViewController.swift */,
 				C75CD89C2CCAC95400B2291D /* SaveDetailViewController.swift */,
+				C7BF67AB2CDB8175003C9EE2 /* SaveViewModel.swift */,
+				C7BF67AD2CDB90CA003C9EE2 /* SaveDetailViewModel.swift */,
 			);
 			path = Save;
 			sourceTree = "<group>";
@@ -913,10 +919,12 @@
 				6889F5162C6CE56F001F5FC2 /* SelectMusicViewController.swift in Sources */,
 				68F6FABB2C50D288001128FF /* UIColor+Extension.swift in Sources */,
 				68DC4C882C6B7146006D8E97 /* AlertViewController.swift in Sources */,
+				C7BF67AE2CDB90CA003C9EE2 /* SaveDetailViewModel.swift in Sources */,
 				6889F5392C7258E8001F5FC2 /* ActionBottomView.swift in Sources */,
 				C79AAC642CD4CE8E000B5FAD /* ValidationSimilarTableViewCell.swift in Sources */,
 				6859C90E2C6125C400E03179 /* PlatformView.swift in Sources */,
 				68DC4C792C6B6F48006D8E97 /* UIViewController+Extension.swift in Sources */,
+				C7BF67AC2CDB8175003C9EE2 /* SaveViewModel.swift in Sources */,
 				68F6FAB62C4A9D9A001128FF /* TransferCheckViewController.swift in Sources */,
 				6889F5122C6CD194001F5FC2 /* SelectPlaylistViewModel.swift in Sources */,
 				68DB037D2C7CF3DF00FBD014 /* ValidationNotFoundViewController.swift in Sources */,

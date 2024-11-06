@@ -17,6 +17,8 @@ class RecentDetailViewController: UIViewController {
    private let scrollView = UIScrollView()
    private let contentView = UIView()
    
+   var recentId: Int?
+   
    private let navigationbarView = NavigationBarView(title: "")
    private let thumbnailImageView = UIImageView().then {
       $0.clipsToBounds = true

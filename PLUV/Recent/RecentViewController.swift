@@ -12,7 +12,7 @@ import RxCocoa
 
 class RecentViewController: UIViewController {
    
-   let viewModel = FeedViewModel()
+   let viewModel = RecentViewModel()
    
    private let navigationbarView = NavigationBarView(title: "최근 옮긴 항목")
    private let recentTableViewCell = UITableView().then {
@@ -25,7 +25,7 @@ class RecentViewController: UIViewController {
       super.viewDidLoad()
       
       setUI()
-      setFeedAPI()
+      setRecentAPI()
    }
    
    private func setUI() {
@@ -53,30 +53,31 @@ class RecentViewController: UIViewController {
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
-      self.viewModel.feedItems
+      self.viewModel.recentItems
          .observe(on: MainScheduler.instance)
          .bind(to: self.recentTableViewCell.rx.items(cellIdentifier: RecentDetailTableViewCell.identifier, cellType: RecentDetailTableViewCell.self)) { index, item, cell in
-            cell.prepare(feed: item)
+            cell.prepare(recent: item)
          }
          .disposed(by: disposeBag)
       
       /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
-      self.recentTableViewCell.rx.modelSelected(Feed.self)
-         .subscribe(onNext: { [weak self] feedItem in
-            self?.viewModel.selectFeedItem = Observable.just(feedItem)
+      self.recentTableViewCell.rx.modelSelected(Recent.self)
+         .subscribe(onNext: { [weak self] recentItem in
+            self?.viewModel.selectRecentItem = Observable.just(recentItem)
             let recentDetailVC = RecentDetailViewController()
+            recentDetailVC.recentId = recentItem.id
             self?.navigationController?.pushViewController(recentDetailVC, animated: true)
          })
          .disposed(by: disposeBag)
    }
    
-   private func setFeedAPI() {
-      let url = EndPoint.feed.path
+   private func setRecentAPI() {
+      let url = EndPoint.recent.path
       
-      APIService().get(of: APIResponse<[Feed]>.self, url: url) { response in
+      APIService().get(of: APIResponse<[Recent]>.self, url: url) { response in
          switch response.code {
          case 200:
-            self.viewModel.feedItems = Observable.just(response.data)
+            self.viewModel.recentItems = Observable.just(response.data)
             self.setData()
             self.view.layoutIfNeeded()
          default:

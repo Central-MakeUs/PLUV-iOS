@@ -12,8 +12,12 @@ import RxCocoa
 
 class SaveDetailViewController: UIViewController {
    
+   let viewModel = SaveDetailViewModel()
+   
    private let scrollView = UIScrollView()
    private let contentView = UIView()
+   
+   var saveId: Int = 0
    
    private let navigationbarView = NavigationBarView(title: "")
    private let thumbnailImageView = UIImageView().then {
@@ -148,6 +152,41 @@ class SaveDetailViewController: UIViewController {
       saveMoveView.snp.makeConstraints { make in
           make.leading.trailing.bottom.equalToSuperview()
           make.height.equalTo(102)
+      }
+   }
+   
+   private func setData() {
+      self.saveSongsTableViewCell.rx.setDelegate(self)
+         .disposed(by: disposeBag)
+      
+      /// CollectionView에 들어갈 Cell에 정보 제공
+      self.viewModel.saveDetailItems
+         .observe(on: MainScheduler.instance)
+         .bind(to: self.saveSongsTableViewCell.rx.items(cellIdentifier: SaveSongsTableViewCell.identifier, cellType: SaveSongsTableViewCell.self)) { index, item, cell in
+            cell.prepare(music: item)
+         }
+         .disposed(by: disposeBag)
+      
+      /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
+      self.saveSongsTableViewCell.rx.modelSelected(Music.self)
+         .subscribe(onNext: { [weak self] feedItem in
+            self?.viewModel.selectSaveDetailItem = Observable.just(feedItem)
+         })
+         .disposed(by: disposeBag)
+   }
+   
+   private func setFeedAPI() {
+      let url = EndPoint.feed.path + "/\(saveId)/music"
+      
+      APIService().get(of: APIResponse<[Music]>.self, url: url) { response in
+         switch response.code {
+         case 200:
+            self.viewModel.saveDetailItems = Observable.just(response.data)
+            self.setData()
+            self.view.layoutIfNeeded()
+         default:
+            AlertController(message: response.msg).show()
+         }
       }
    }
 }

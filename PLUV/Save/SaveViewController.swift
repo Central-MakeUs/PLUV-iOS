@@ -12,7 +12,7 @@ import RxCocoa
 
 class SaveViewController: UIViewController {
    
-   let viewModel = FeedViewModel()
+   let viewModel = SaveViewModel()
    
    private let navigationbarView = NavigationBarView(title: "저장한 플레이리스트")
    private let saveDetailTableViewCell = UITableView().then {
@@ -25,6 +25,7 @@ class SaveViewController: UIViewController {
       super.viewDidLoad()
    
       setUI()
+      setFeedAPI()
    }
    
    private func setUI() {
@@ -52,7 +53,7 @@ class SaveViewController: UIViewController {
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
-      self.viewModel.feedItems
+      self.viewModel.saveItems
          .observe(on: MainScheduler.instance)
          .bind(to: self.saveDetailTableViewCell.rx.items(cellIdentifier: SaveDetailTableViewCell.identifier, cellType: SaveDetailTableViewCell.self)) { index, item, cell in
             cell.prepare(feed: item)
@@ -62,20 +63,22 @@ class SaveViewController: UIViewController {
       /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
       self.saveDetailTableViewCell.rx.modelSelected(Feed.self)
          .subscribe(onNext: { [weak self] feedItem in
-            self?.viewModel.selectFeedItem = Observable.just(feedItem)
+            self?.viewModel.selectSaveItem = Observable.just(feedItem)
             let saveDetailVC = SaveDetailViewController()
+            saveDetailVC.saveId = feedItem.id
             self?.navigationController?.pushViewController(saveDetailVC, animated: true)
          })
          .disposed(by: disposeBag)
    }
    
    private func setFeedAPI() {
-      let url = EndPoint.feed.path
+      let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+      let url = EndPoint.feed.path + "/save"
       
-      APIService().get(of: APIResponse<[Feed]>.self, url: url) { response in
+      APIService().getWithAccessToken(of: APIResponse<[Feed]>.self, url: url, AccessToken: loginToken) { response in
          switch response.code {
          case 200:
-            self.viewModel.feedItems = Observable.just(response.data)
+            self.viewModel.saveItems = Observable.just(response.data)
             self.setData()
             self.view.layoutIfNeeded()
          default:

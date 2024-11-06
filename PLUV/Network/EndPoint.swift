@@ -9,7 +9,7 @@ import Foundation
 
 enum EndPoint {
    case feed
-   case history
+   case recent
    
    case loginApple
    case loginAppleAdd
@@ -44,7 +44,7 @@ extension EndPoint {
       switch self {
       case .feed:
          return EndPoint.makeEndPoint("/feed")
-      case .history:
+      case .recent:
          return EndPoint.makeEndPoint("/history")
          
       case .loginApple:

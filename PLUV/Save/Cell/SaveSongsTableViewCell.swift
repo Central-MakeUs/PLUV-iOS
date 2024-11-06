@@ -71,4 +71,11 @@ class SaveSongsTableViewCell: UITableViewCell {
          make.height.equalTo(14)
       }
    }
+   
+   func prepare(music: Music) {
+      let thumbNailUrl = URL(string: music.imageURL)
+      self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
+      self.nameLabel.text = music.title
+      self.artistLabel.text = music.artistNames
+   }
 }

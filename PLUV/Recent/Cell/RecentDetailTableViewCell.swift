@@ -92,11 +92,11 @@ class RecentDetailTableViewCell: UITableViewCell {
       }
    }
    
-   func prepare(feed: Feed) {
-      let thumbNailUrl = URL(string: feed.thumbNailURL)
+   func prepare(recent: Recent) {
+      let thumbNailUrl = URL(string: recent.imageURL)
       self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
-      self.playlistTitleLabel.text = feed.title
-      self.totalCountLabel.text = "총 \(feed.totalSongCount ?? 0)곡"
-      self.dateLabel.text = feed.transferredAt
+      self.playlistTitleLabel.text = recent.title
+      self.totalCountLabel.text = "총 \(recent.transferredSongCount ?? 0)곡"
+      self.dateLabel.text = recent.transferredAt
    }
 }
