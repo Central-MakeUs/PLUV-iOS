@@ -27,10 +27,10 @@ class RecentTabViewController: TabmanViewController {
       setupTabMan()
    }
    
-   
    private func setUI() {
       self.view.backgroundColor = .white
       self.navigationItem.setHidesBackButton(true, animated: false)
+      self.navigationController?.setNavigationBarHidden(true, animated: false)
       
       self.view.addSubview(tabView)
       tabView.snp.makeConstraints { make in

@@ -1,17 +1,17 @@
 //
-//  SaveSongsTableViewCell.swift
+//  RecentFailTableViewCell.swift
 //  PLUV
 //
-//  Created by jaegu park on 11/2/24.
+//  Created by jaegu park on 11/7/24.
 //
 
 import UIKit
 
-class SaveSongsTableViewCell: UITableViewCell {
-   
-   static let identifier = String(describing: SaveSongsTableViewCell.self)
-   
-   let indexLabel = UILabel().then {
+class RecentFailTableViewCell: UITableViewCell {
+
+   static let identifier = String(describing: RecentFailTableViewCell.self)
+
+   private let indexLabel = UILabel().then {
       $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 14, weight: .medium)
    }

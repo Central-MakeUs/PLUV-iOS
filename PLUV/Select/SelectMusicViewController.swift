@@ -237,6 +237,7 @@ class SelectMusicViewController: UIViewController {
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(101)
       }
+      moveView.setBackButtonTarget(target: self)
       
       self.view.addSubview(loadingView)
       loadingView.snp.makeConstraints { make in

@@ -25,7 +25,7 @@ class SaveViewController: UIViewController {
       super.viewDidLoad()
    
       setUI()
-      setFeedAPI()
+      setSaveAPI()
    }
    
    private func setUI() {
@@ -71,9 +71,9 @@ class SaveViewController: UIViewController {
          .disposed(by: disposeBag)
    }
    
-   private func setFeedAPI() {
+   private func setSaveAPI() {
       let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
-      let url = EndPoint.feed.path + "/save"
+      let url = EndPoint.feedSave.path
       
       APIService().getWithAccessToken(of: APIResponse<[Feed]>.self, url: url, AccessToken: loginToken) { response in
          switch response.code {

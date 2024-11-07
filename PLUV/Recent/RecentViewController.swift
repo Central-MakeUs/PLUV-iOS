@@ -64,8 +64,8 @@ class RecentViewController: UIViewController {
       self.recentTableViewCell.rx.modelSelected(Me.self)
          .subscribe(onNext: { [weak self] recentItem in
             self?.viewModel.selectMeItem = Observable.just(recentItem)
+            UserDefaults.standard.set(recentItem.id, forKey: "recentId")
             let recentDetailVC = RecentDetailViewController()
-            recentDetailVC.recentId = recentItem.id
             self?.navigationController?.pushViewController(recentDetailVC, animated: true)
          })
          .disposed(by: disposeBag)

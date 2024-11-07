@@ -9,10 +9,12 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Alamofire
 
 class SaveDetailViewController: UIViewController {
    
-   let viewModel = SaveDetailViewModel()
+   var saveData: FeedInfo!
+   let saveDetailViewModel = SaveDetailViewModel()
    
    private let scrollView = UIScrollView()
    private let contentView = UIView()
@@ -21,7 +23,7 @@ class SaveDetailViewController: UIViewController {
    
    private let navigationbarView = NavigationBarView(title: "")
    private let thumbnailImageView = UIImageView().then {
-       $0.clipsToBounds = true
+      $0.clipsToBounds = true
    }
    private let menuImageView = UIImageView().then {
       $0.image = UIImage(named: "menu_image")
@@ -56,12 +58,14 @@ class SaveDetailViewController: UIViewController {
    private var saveMoveView = SaveMoveView(view: UIViewController())
    
    private let disposeBag = DisposeBag()
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-       setUI()
-    }
+   
+   override func viewDidLoad() {
+      super.viewDidLoad()
+      
+      setUI()
+//      setSaveData()
+//      setSaveMusicAPI()
+   }
    
    private func setUI() {
       self.view.backgroundColor = .white
@@ -150,39 +154,63 @@ class SaveDetailViewController: UIViewController {
       saveMoveView = SaveMoveView(view: self)
       self.view.addSubview(saveMoveView)
       saveMoveView.snp.makeConstraints { make in
-          make.leading.trailing.bottom.equalToSuperview()
-          make.height.equalTo(102)
+         make.leading.trailing.bottom.equalToSuperview()
+         make.height.equalTo(102)
       }
    }
    
-   private func setData() {
+   private func setSaveData() {
+      let url = EndPoint.feedId("\(saveId)").path
+      
+      AF.request(url, method: .get).responseData { response in
+         switch response.result {
+         case .success(let data):
+            do {
+               let decodedData = try JSONDecoder().decode(FeedInfo.self, from: data)
+               self.saveData = decodedData
+               let thumbNailUrl = URL(string: self.saveData.imageURL)
+               self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
+               self.playlistTitleLabel.text = self.saveData.title
+               self.totalCountLabel.text = "총 \(String(describing: self.saveData.songCount))곡"
+               self.dateLabel.text = self.saveData.createdAt
+               self.creatorLabel.text = "공유한 사람: \(String(describing: self.saveData.creatorName))"
+            } catch {
+               print("error: ", error)
+            }
+         case .failure(let error):
+            print("Error: \(error)")
+         }
+      }
+   }
+   
+   private func setDetailData() {
       self.saveSongsTableViewCell.rx.setDelegate(self)
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
-      self.viewModel.saveDetailItems
+      self.saveDetailViewModel.saveDetailItems
          .observe(on: MainScheduler.instance)
          .bind(to: self.saveSongsTableViewCell.rx.items(cellIdentifier: SaveSongsTableViewCell.identifier, cellType: SaveSongsTableViewCell.self)) { index, item, cell in
-            cell.prepare(music: item)
+            cell.prepare(music: item, index: index)
          }
          .disposed(by: disposeBag)
       
       /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
       self.saveSongsTableViewCell.rx.modelSelected(Music.self)
-         .subscribe(onNext: { [weak self] feedItem in
-            self?.viewModel.selectSaveDetailItem = Observable.just(feedItem)
+         .subscribe(onNext: { [weak self] saveItem in
+            self?.saveDetailViewModel.selectSaveDetailItem = Observable.just(saveItem)
          })
          .disposed(by: disposeBag)
    }
    
-   private func setFeedAPI() {
-      let url = EndPoint.feed.path + "/\(saveId)/music"
+   private func setSaveMusicAPI() {
+      let url = EndPoint.feedIdMusic("\(saveId)").path
       
       APIService().get(of: APIResponse<[Music]>.self, url: url) { response in
          switch response.code {
          case 200:
-            self.viewModel.saveDetailItems = Observable.just(response.data)
-            self.setData()
+            self.saveDetailViewModel.saveDetailItems = Observable.just(response.data)
+            self.setDetailData()
             self.view.layoutIfNeeded()
          default:
             AlertController(message: response.msg).show()

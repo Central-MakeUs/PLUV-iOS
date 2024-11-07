@@ -140,6 +140,7 @@ class ValidationSimilarViewController: UIViewController {
          make.leading.trailing.bottom.equalToSuperview()
       }
       
+      moveView = MoveView(view: self)
       self.view.addSubview(moveView)
       moveView.snp.makeConstraints { make in
          make.leading.trailing.bottom.equalToSuperview()

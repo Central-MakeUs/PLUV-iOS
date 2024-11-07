@@ -1,21 +1,21 @@
 //
-//  Me.swift
+//  History.swift
 //  PLUV
 //
-//  Created by jaegu park on 10/21/24.
+//  Created by jaegu park on 11/7/24.
 //
 
 import Foundation
 
-struct Me: Codable {
+struct HistoryInfo: Codable {
    let id: Int
    let transferredAt: String
-   let transferredSongCount: Int?
+   let totalSongCount: Int
    let title: String
    let imageURL: String
    
    enum CodingKeys: String, CodingKey {
-      case id, transferredAt, transferredSongCount, title
+      case id, transferredAt, totalSongCount, title
       case imageURL = "imageURL"
    }
 }

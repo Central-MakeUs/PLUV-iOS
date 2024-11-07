@@ -11,13 +11,16 @@ import RxSwift
 import RxCocoa
 import Tabman
 import Pageboy
+import Alamofire
 
 class RecentDetailViewController: UIViewController {
+   
+   var recentData: HistoryInfo!
    
    private let scrollView = UIScrollView()
    private let contentView = UIView()
    
-   var recentId: Int?
+   let recentId = UserDefaults.standard.integer(forKey: "recentId")
    
    private let navigationbarView = NavigationBarView(title: "")
    private let thumbnailImageView = UIImageView().then {
@@ -69,6 +72,7 @@ class RecentDetailViewController: UIViewController {
       super.viewDidLoad()
       
       setUI()
+      setRecentData()
    }
    
    private func setUI() {
@@ -164,6 +168,34 @@ class RecentDetailViewController: UIViewController {
          make.leading.trailing.equalToSuperview().inset(24)
          make.top.equalToSuperview().offset(10)
          make.height.equalTo(58)
+      }
+   }
+   
+   private func setRecentData() {
+      let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+      let url = EndPoint.historyId("\(recentId)").path
+      
+      let headers: HTTPHeaders = [
+          "Authorization": "Bearer \(loginToken)",
+      ]
+      
+      AF.request(url, method: .get, headers: headers).responseData { response in
+         switch response.result {
+         case .success(let data):
+            do {
+               let decodedData = try JSONDecoder().decode(HistoryInfo.self, from: data)
+               self.recentData = decodedData
+               let thumbNailUrl = URL(string: self.recentData.imageURL)
+               self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
+               self.playlistTitleLabel.text = self.recentData.title
+               self.totalCountLabel.text = "총 \(String(describing: self.recentData.totalSongCount))곡"
+//               self.dateLabel.text = self.recentData.createdAt
+            } catch {
+               print("error: ", error)
+            }
+         case .failure(let error):
+            print("Error: \(error)")
+         }
       }
    }
 }
