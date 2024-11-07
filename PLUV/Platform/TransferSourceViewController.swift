@@ -134,7 +134,6 @@ extension TransferSourceViewController {
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(101)
       }
-      
       moveView.backButton.isEnabled = false
       moveView.trasferButton.isEnabled = false
       
