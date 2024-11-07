@@ -15,7 +15,7 @@ final class PlatformView: UIView {
         $0.font = .systemFont(ofSize: 14)
     }
     
-    init(platform: MusicPlatform) {
+    init(platform: PlatformRepresentable) {
         super.init(frame: .zero)
         setUI(platform)
     }
@@ -24,7 +24,7 @@ final class PlatformView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setUI(_ platform: MusicPlatform) {
+    func setUI(_ platform: PlatformRepresentable) {
         self.backgroundColor = .clear
         
         self.addSubview(platformImageView)

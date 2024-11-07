@@ -106,6 +106,7 @@ PODS:
     - nanopb/encode (= 2.30909.1)
   - nanopb/decode (2.30909.1)
   - nanopb/encode (2.30909.1)
+  - Pageboy (4.2.0)
   - PromisesObjC (2.3.1)
   - PromisesSwift (2.3.1):
     - PromisesObjC (= 2.3.1)
@@ -117,6 +118,8 @@ PODS:
   - RxSwift (6.6.0)
   - SnapKit (5.6.0)
   - SwiftyJSON (5.0.2)
+  - Tabman (3.2.0):
+    - Pageboy (~> 4.2.0)
   - Then (3.0.0)
 
 DEPENDENCIES:
@@ -128,6 +131,7 @@ DEPENDENCIES:
   - RxSwift
   - SnapKit
   - SwiftyJSON
+  - Tabman (~> 3.0)
   - Then
 
 SPEC REPOS:
@@ -146,6 +150,7 @@ SPEC REPOS:
     - GoogleUtilities
     - Kingfisher
     - nanopb
+    - Pageboy
     - PromisesObjC
     - PromisesSwift
     - RxCocoa
@@ -153,6 +158,7 @@ SPEC REPOS:
     - RxSwift
     - SnapKit
     - SwiftyJSON
+    - Tabman
     - Then
 
 SPEC CHECKSUMS:
@@ -170,6 +176,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
   Kingfisher: bc5abe80a8e0144537ef1dd5a0b2621b04f7f439
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
+  Pageboy: 7f7886f61c76633df635861bf7839caf2cabdb3e
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   PromisesSwift: 28dca69a9c40779916ac2d6985a0192a5cb4a265
   RxCocoa: 44a80de90e25b739b5aeaae3c8c371a32e3343cc
@@ -177,8 +184,9 @@ SPEC CHECKSUMS:
   RxSwift: a4b44f7d24599f674deebd1818eab82e58410632
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   SwiftyJSON: f5b1bf1cd8dd53cd25887ac0eabcfd92301c6a5a
+  Tabman: 49f9181a2bfe5c29d002864dac2de8e0b7ea9180
   Then: 844265ae87834bbe1147d91d5d41a404da2ec27d
 
-PODFILE CHECKSUM: 69f6c5e2afc4ffb3741d85a29bd93fe4c020e21d
+PODFILE CHECKSUM: 57f2a563d0e0b725b9be738e36ae3f527fbc3d04
 
 COCOAPODS: 1.15.2

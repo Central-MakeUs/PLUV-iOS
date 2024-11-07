@@ -13,7 +13,7 @@ class MovePlaylistViewController: UIViewController {
     
     let viewModel = MovePlaylistViewModel()
     
-    private var sourcePlatform: MusicPlatform = .AppleMusic
+    private var sourcePlatform: PlatformRepresentable?
     private var destinationPlatform: MusicPlatform = .Spotify
     
     private let circleLoadingIndicator: ProgressView = {
@@ -69,7 +69,7 @@ class MovePlaylistViewController: UIViewController {
     
     private let stopView = ActionBottomView(actionName: "작업 중단하기")
     
-    init(playlistItem: Playlist, musicItems: [Music], source: MusicPlatform, destination: MusicPlatform) {
+    init(playlistItem: Playlist, musicItems: [Music], source: PlatformRepresentable, destination: MusicPlatform) {
         super.init(nibName: nil, bundle: nil)
         self.viewModel.playlistItem = playlistItem
         self.viewModel.musicItems = musicItems
@@ -212,7 +212,7 @@ class MovePlaylistViewController: UIViewController {
         sourceImageView.kf.setImage(with: thumbnailURL)
         destinationImageView.image = UIImage(named: destinationPlatform.iconSelect)
         playlistTitleLabel.text = self.viewModel.playlistItem.name
-        platformLabel.text = sourcePlatform.name + " > " + destinationPlatform.name
+        platformLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
     }
     
     private func setXButton() {
@@ -231,12 +231,12 @@ class MovePlaylistViewController: UIViewController {
     }
     
     private func searchAPI() {
-        if sourcePlatform == .AppleMusic && destinationPlatform == .Spotify {
+        if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic && destinationPlatform == .Spotify {
             /// 권한이 부여된 경우에만 넘겨야함!!!
             Task {
                 await self.searchAppleToSpotifyAPI(musics: self.viewModel.musicItems)
             }
-        } else if sourcePlatform == .Spotify && destinationPlatform == .AppleMusic {
+        } else if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .Spotify && destinationPlatform == .AppleMusic {
             MPMediaLibrary.requestAuthorization { status in
                 switch status {
                 case .authorized:

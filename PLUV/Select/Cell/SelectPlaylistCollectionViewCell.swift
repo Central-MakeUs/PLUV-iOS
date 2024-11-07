@@ -84,9 +84,9 @@ final class SelectPlaylistCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func prepare(playlist: Playlist, platform: MusicPlatform) {
+    func prepare(playlist: Playlist, platform: PlatformRepresentable) {
         self.dateLabel.isHidden = true
-        if platform == .AppleMusic {
+        if let musicPlatform = platform as? MusicPlatform, musicPlatform == .AppleMusic {
             self.songCountLabel.isHidden = true
         }
         

@@ -18,6 +18,7 @@ target 'PLUV' do
 
   pod 'Alamofire'
   pod 'SnapKit'
+  pod 'Tabman', '~> 3.0'
 
   post_install do |installer|
     installer.pods_project.build_configurations.each do |config|
