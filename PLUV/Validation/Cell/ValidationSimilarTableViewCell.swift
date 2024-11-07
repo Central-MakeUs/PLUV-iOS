@@ -12,6 +12,7 @@ class ValidationSimilarTableViewCell: UITableViewCell {
    static let identifier = String(describing: ValidationSimilarTableViewCell.self)
    
    private let thumbnailImageView = UIImageView().then {
+      $0.image = UIImage(named: "applemusic_icon")
       $0.layer.cornerRadius = 8
       $0.clipsToBounds = true
    }
@@ -34,24 +35,23 @@ class ValidationSimilarTableViewCell: UITableViewCell {
       $0.textColor = .white
    }
    private let songTitleLabel = UILabel().then {
+      $0.text = "원곡"
       $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 16, weight: .medium)
    }
    private let singerLabel = UILabel().then {
+      $0.text = "원곡"
       $0.textColor = .gray600
       $0.font = .systemFont(ofSize: 14, weight: .regular)
    }
    
    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
       super.init(style: style, reuseIdentifier: reuseIdentifier)
+      setUI()
    }
-   
+
    required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
-   }
-   
-   override func layoutSubviews() {
-      setUI()
    }
    
    private func setUI() {

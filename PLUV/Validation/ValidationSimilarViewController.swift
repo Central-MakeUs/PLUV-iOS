@@ -57,6 +57,9 @@ class ValidationSimilarViewController: UIViewController {
       super.viewDidLoad()
       
       setUI()
+      
+      similarMusicTableView.delegate = self
+      similarMusicTableView.dataSource = self
    }
    
    private func setUI() {
@@ -159,10 +162,32 @@ class ValidationSimilarViewController: UIViewController {
    }
 }
 
-extension ValidationSimilarViewController: UITableViewDelegate {
+extension ValidationSimilarViewController: UITableViewDelegate, UITableViewDataSource {
    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return 3
+      return 9
    }
+   
+   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+          switch indexPath.row % 3 { // 셀을 3개의 유형으로 나눠서 사용
+          case 0:
+              guard let cell = tableView.dequeueReusableCell(withIdentifier: ValidationSimilarTableViewCell.identifier, for: indexPath) as? ValidationSimilarTableViewCell else {
+                  return UITableViewCell()
+              }
+              return cell
+              
+          case 1:
+              guard let cell = tableView.dequeueReusableCell(withIdentifier: SimilarSongsTableViewCell.identifier, for: indexPath) as? SimilarSongsTableViewCell else {
+                  return UITableViewCell()
+              }
+              return cell
+              
+          default:
+              guard let cell = tableView.dequeueReusableCell(withIdentifier: MoreButtonTableViewCell.identifier, for: indexPath) as? MoreButtonTableViewCell else {
+                  return UITableViewCell()
+              }
+              return cell
+          }
+      }
    
    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
       switch indexPath.row % 3 {
