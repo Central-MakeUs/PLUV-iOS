@@ -185,7 +185,6 @@ class TransferCheckViewController: UIViewController {
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(101)
       }
-      moveView.setBackButtonTarget(target: self)
       
       moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
    }

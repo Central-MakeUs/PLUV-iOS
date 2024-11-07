@@ -139,7 +139,6 @@ class SelectPlaylistViewController: UIViewController {
          make.height.equalTo(101)
          make.top.equalTo(playlistCollectionView.snp.bottom)
       }
-      moveView.setBackButtonTarget(target: self)
       
       moveView.trasferButton.isEnabled = false
       moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)

@@ -130,7 +130,6 @@ extension TransferDestinationViewController {
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(101)
       }
-      moveView.setBackButtonTarget(target: self)
       
       moveView.trasferButton.isEnabled = false
    }

@@ -36,6 +36,7 @@ final class MoveView: UIView {
       
       self.addSubview(backButton)
       self.backButton.setTitle("이전", for: .normal)
+      self.backButton.addTarget(self, action: #selector(clickBackButton), for: .touchUpInside)
       backButton.snp.makeConstraints { make in
          make.top.equalToSuperview().offset(11)
          make.leading.equalToSuperview().offset(24)
@@ -59,10 +60,6 @@ final class MoveView: UIView {
       self.layer.shadowColor = UIColor.shadow.cgColor
       self.layer.shadowOpacity = 1
       self.layer.shadowOffset = CGSize(width: 0, height: -2)
-   }
-   
-   func setBackButtonTarget(target: UIViewController) {
-      backButton.addTarget(target, action: #selector(target.popViewController), for: .touchUpInside)
    }
    
    func changeName(left: String, right: String) {

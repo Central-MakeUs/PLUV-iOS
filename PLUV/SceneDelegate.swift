@@ -61,7 +61,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var LoginVC = UINavigationController(rootViewController: SaveDetailViewController())
+    var LoginVC = UINavigationController(rootViewController: LoginViewController())
     lazy var SpotifyVC = TransferCheckViewController()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {

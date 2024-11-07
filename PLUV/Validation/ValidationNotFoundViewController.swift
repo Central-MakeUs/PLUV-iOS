@@ -124,7 +124,6 @@ class ValidationNotFoundViewController: UIViewController {
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(102)
       }
-      moveView.setBackButtonTarget(target: self)
    }
    
    @objc private func clickXButton() {
