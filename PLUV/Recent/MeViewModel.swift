@@ -10,6 +10,8 @@ import RxSwift
 import RxCocoa
 
 final class MeViewModel {
-    var selectMeItem: Observable<Me>?
-    var MeItems: Observable<[Me]> = Observable.just([])
+   let selectedIndexPath = BehaviorRelay<IndexPath?>(value: nil)
+   var selectMeItem: Observable<Me>?
+   var MeItems: Observable<[Me]> = Observable.just([])
+   var MeItem: Me = Me(id: 0, transferredAt: "", transferredSongCount: nil, title: "", imageURL: "")
 }

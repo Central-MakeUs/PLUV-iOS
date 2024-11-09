@@ -15,6 +15,8 @@ import MediaPlayer
 class SelectPlaylistViewController: UIViewController {
    
    let viewModel = SelectPlaylistViewModel()
+   let meViewModel = MeViewModel()
+   let saveViewModel = SaveViewModel()
    
    private var sourcePlatform: PlatformRepresentable?
    private var destinationPlatform: MusicPlatform = .Spotify
@@ -160,47 +162,128 @@ class SelectPlaylistViewController: UIViewController {
    }
    
    @objc private func clickTransferButton() {
-      let selectMusicVC = SelectMusicViewController(playlistItem: self.viewModel.playlistItem, source: sourcePlatform!, destination: destinationPlatform)
-      self.navigationController?.pushViewController(selectMusicVC, animated: true)
+      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic && musicPlatform == .Spotify {
+         let selectMusicVC = SelectMusicViewController(playlistItem: self.viewModel.playlistItem, source: sourcePlatform!, destination: destinationPlatform)
+         self.navigationController?.pushViewController(selectMusicVC, animated: true)
+      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+         
+      } else {
+         
+      }
+      
    }
    
    private func setCellSelected() {
       // 셀 선택 시
-      self.playlistCollectionView.rx.itemSelected
-         .subscribe(onNext: { [weak self] indexPath in
-            guard let self = self else { return }
-            
-            // 현재 선택된 셀을 ViewModel에 업데이트
-            self.viewModel.selectedIndexPath.accept(indexPath)
-         })
-         .disposed(by: disposeBag)
-      
-      // 셀 선택 해제 시
-      self.playlistCollectionView.rx.itemDeselected
-         .subscribe(onNext: { [weak self] indexPath in
-            guard let self = self else { return }
-            
-            // 선택 해제된 셀의 인덱스를 ViewModel에 업데이트
-            self.viewModel.selectedIndexPath.accept(nil)
-         })
-         .disposed(by: disposeBag)
-      
-      // 선택된 셀이 변경될 때마다 컬렉션 뷰 업데이트
-      viewModel.selectedIndexPath
-         .subscribe(onNext: { [weak self] selectedIndexPath in
-            guard let self = self else { return }
-            
-            self.playlistCollectionView.visibleCells.forEach { cell in
-               guard let indexPath = self.playlistCollectionView.indexPath(for: cell) else { return }
-               let isSelected = (indexPath == selectedIndexPath)
+      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic && musicPlatform == .Spotify {
+         self.playlistCollectionView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+               guard let self = self else { return }
                
-               // 선택 상태에 따라 셀 업데이트
-               if let customCell = cell as? SelectPlaylistCollectionViewCell {
-                  customCell.updateSelectionUI(isSelected: isSelected)
+               // 현재 선택된 셀을 ViewModel에 업데이트
+               viewModel.selectedIndexPath.accept(indexPath)
+            })
+            .disposed(by: disposeBag)
+         
+         // 셀 선택 해제 시
+         self.playlistCollectionView.rx.itemDeselected
+            .subscribe(onNext: { [weak self] indexPath in
+               guard let self = self else { return }
+               
+               // 선택 해제된 셀의 인덱스를 ViewModel에 업데이트
+               viewModel.selectedIndexPath.accept(nil)
+            })
+            .disposed(by: disposeBag)
+         
+         // 선택된 셀이 변경될 때마다 컬렉션 뷰 업데이트
+         viewModel.selectedIndexPath
+            .subscribe(onNext: { [weak self] selectedIndexPath in
+               guard let self = self else { return }
+               
+               self.playlistCollectionView.visibleCells.forEach { cell in
+                  guard let indexPath = self.playlistCollectionView.indexPath(for: cell) else { return }
+                  let isSelected = (indexPath == selectedIndexPath)
+                  
+                  // 선택 상태에 따라 셀 업데이트
+                  if let customCell = cell as? SelectPlaylistCollectionViewCell {
+                     customCell.updateSelectionUI(isSelected: isSelected)
+                  }
                }
-            }
-         })
-         .disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
+      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+         self.playlistCollectionView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+               guard let self = self else { return }
+               
+               // 현재 선택된 셀을 ViewModel에 업데이트
+               self.meViewModel.selectedIndexPath.accept(indexPath)
+            })
+            .disposed(by: disposeBag)
+         
+         // 셀 선택 해제 시
+         self.playlistCollectionView.rx.itemDeselected
+            .subscribe(onNext: { [weak self] indexPath in
+               guard let self = self else { return }
+               
+               // 선택 해제된 셀의 인덱스를 ViewModel에 업데이트
+               self.meViewModel.selectedIndexPath.accept(nil)
+            })
+            .disposed(by: disposeBag)
+         
+         // 선택된 셀이 변경될 때마다 컬렉션 뷰 업데이트
+         meViewModel.selectedIndexPath
+            .subscribe(onNext: { [weak self] selectedIndexPath in
+               guard let self = self else { return }
+               
+               self.playlistCollectionView.visibleCells.forEach { cell in
+                  guard let indexPath = self.playlistCollectionView.indexPath(for: cell) else { return }
+                  let isSelected = (indexPath == selectedIndexPath)
+                  
+                  // 선택 상태에 따라 셀 업데이트
+                  if let customCell = cell as? SelectPlaylistCollectionViewCell {
+                     customCell.updateSelectionUI(isSelected: isSelected)
+                  }
+               }
+            })
+            .disposed(by: disposeBag)
+      } else {
+         self.playlistCollectionView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+               guard let self = self else { return }
+               
+               // 현재 선택된 셀을 ViewModel에 업데이트
+               self.saveViewModel.selectedIndexPath.accept(indexPath)
+            })
+            .disposed(by: disposeBag)
+         
+         // 셀 선택 해제 시
+         self.playlistCollectionView.rx.itemDeselected
+            .subscribe(onNext: { [weak self] indexPath in
+               guard let self = self else { return }
+               
+               // 선택 해제된 셀의 인덱스를 ViewModel에 업데이트
+               self.saveViewModel.selectedIndexPath.accept(nil)
+            })
+            .disposed(by: disposeBag)
+         
+         // 선택된 셀이 변경될 때마다 컬렉션 뷰 업데이트
+         saveViewModel.selectedIndexPath
+            .subscribe(onNext: { [weak self] selectedIndexPath in
+               guard let self = self else { return }
+               
+               self.playlistCollectionView.visibleCells.forEach { cell in
+                  guard let indexPath = self.playlistCollectionView.indexPath(for: cell) else { return }
+                  let isSelected = (indexPath == selectedIndexPath)
+                  
+                  // 선택 상태에 따라 셀 업데이트
+                  if let customCell = cell as? SelectPlaylistCollectionViewCell {
+                     customCell.updateSelectionUI(isSelected: isSelected)
+                  }
+               }
+            })
+            .disposed(by: disposeBag)
+      }
    }
    
    private func setData() {
@@ -243,6 +326,50 @@ class SelectPlaylistViewController: UIViewController {
        */
    }
    
+   private func setMeData() {
+      playlistCollectionView.delegate = nil
+      
+      self.playlistCollectionView.rx.setDelegate(self)
+         .disposed(by: disposeBag)
+      
+      /// CollectionView에 들어갈 Cell에 정보 제공
+      self.meViewModel.MeItems
+         .observe(on: MainScheduler.instance)
+         .bind(to: self.playlistCollectionView.rx.items(cellIdentifier: SelectPlaylistCollectionViewCell.identifier, cellType: SelectPlaylistCollectionViewCell.self)) { index, item, cell in
+            cell.mePrepare(me: item, platform: self.sourcePlatform!)
+         }
+         .disposed(by: disposeBag)
+      
+      /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
+      self.playlistCollectionView.rx.modelSelected(Me.self)
+         .subscribe(onNext: { [weak self] playlistItem in
+            self?.moveView.trasferButton.isEnabled = true
+         })
+         .disposed(by: disposeBag)
+   }
+   
+   private func setSaveData() {
+      playlistCollectionView.delegate = nil
+      
+      self.playlistCollectionView.rx.setDelegate(self)
+         .disposed(by: disposeBag)
+      
+      /// CollectionView에 들어갈 Cell에 정보 제공
+      self.saveViewModel.saveItems
+         .observe(on: MainScheduler.instance)
+         .bind(to: self.playlistCollectionView.rx.items(cellIdentifier: SelectPlaylistCollectionViewCell.identifier, cellType: SelectPlaylistCollectionViewCell.self)) { index, item, cell in
+            cell.savePrepare(feed: item, platform: self.sourcePlatform!)
+         }
+         .disposed(by: disposeBag)
+      
+      /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
+      self.playlistCollectionView.rx.modelSelected(Feed.self)
+         .subscribe(onNext: { [weak self] playlistItem in
+            self?.moveView.trasferButton.isEnabled = true
+         })
+         .disposed(by: disposeBag)
+   }
+   
    private func setPlaylistAPI() {
       if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic {
          MPMediaLibrary.requestAuthorization { status in
@@ -263,60 +390,96 @@ class SelectPlaylistViewController: UIViewController {
          }
       } else if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .Spotify {
          setSpotifyPlaylistAPI()
+      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+         setMeAPI()
+      } else {
+         setSaveAPI()
       }
    }
-    
-    private func setSpotifyPlaylistAPI() {
-        let url = EndPoint.playlistSpotifyRead.path
-        let params = ["accessToken" : TokenManager.shared.spotifyAccessToken]
-        
-        APIService().post(of: APIResponse<[Playlist]>.self, url: url, parameters: params) { response in
+   
+   private func setSpotifyPlaylistAPI() {
+      let url = EndPoint.playlistSpotifyRead.path
+      let params = ["accessToken" : TokenManager.shared.spotifyAccessToken]
+      
+      APIService().post(of: APIResponse<[Playlist]>.self, url: url, parameters: params) { response in
+         switch response.code {
+         case 200:
+            self.viewModel.playlistItems = Observable.just(response.data)
+            self.setData()
+            self.loadingView.removeFromSuperview()
+            self.view.layoutIfNeeded()
+         default:
+            AlertController(message: response.msg).show()
+         }
+      }
+   }
+   
+   private func setApplePlaylistAPI() async {
+      /*
+       deprecated
+       
+       let controller = SKCloudServiceController()
+       controller.requestUserToken(forDeveloperToken: "") { userToken, error in
+       print("music user token : \(String(describing: userToken))")
+       }
+       */
+      
+      do {
+         let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+         print(developerToken, "developerToken")
+         let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+         print(userToken, "userToken")
+         
+         let url = EndPoint.playlistAppleRead.path
+         let params = ["musicUserToken" : userToken]
+         
+         APIService().post(of: APIResponse<[Playlist]>.self, url: url, parameters: params) { response in
             switch response.code {
             case 200:
-                self.viewModel.playlistItems = Observable.just(response.data)
-                self.setData()
-                self.loadingView.removeFromSuperview()
-                self.view.layoutIfNeeded()
+               self.viewModel.playlistItems = Observable.just(response.data)
+               self.setData()
+               self.loadingView.removeFromSuperview()
+               self.view.layoutIfNeeded()
             default:
-                AlertController(message: response.msg).show()
+               AlertController(message: response.msg).show()
             }
-        }
-    }
-    
-    private func setApplePlaylistAPI() async {
-        /*
-         deprecated
-         
-         let controller = SKCloudServiceController()
-         controller.requestUserToken(forDeveloperToken: "") { userToken, error in
-         print("music user token : \(String(describing: userToken))")
          }
-         */
-        
-        do {
-            let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
-            print(developerToken, "developerToken")
-            let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
-            print(userToken, "userToken")
-            
-            let url = EndPoint.playlistAppleRead.path
-            let params = ["musicUserToken" : userToken]
-            
-            APIService().post(of: APIResponse<[Playlist]>.self, url: url, parameters: params) { response in
-                switch response.code {
-                case 200:
-                    self.viewModel.playlistItems = Observable.just(response.data)
-                    self.setData()
-                    self.loadingView.removeFromSuperview()
-                    self.view.layoutIfNeeded()
-                default:
-                    AlertController(message: response.msg).show()
-                }
-            }
-        } catch {
-            print("ERROR : setApplePlaylistAPI")
-        }
-    }
+      } catch {
+         print("ERROR : setApplePlaylistAPI")
+      }
+   }
+   
+   private func setMeAPI() {
+      let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+      let url = EndPoint.historyMe.path
+      
+      APIService().getWithAccessToken(of: APIResponse<[Me]>.self, url: url, AccessToken: loginToken) { response in
+         switch response.code {
+         case 200:
+            self.meViewModel.MeItems = Observable.just(response.data)
+            self.setMeData()
+            self.view.layoutIfNeeded()
+         default:
+            AlertController(message: response.msg).show()
+         }
+      }
+   }
+   
+   private func setSaveAPI() {
+      let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+      let url = EndPoint.feedSave.path
+      
+      APIService().getWithAccessToken(of: APIResponse<[Feed]>.self, url: url, AccessToken: loginToken) { response in
+         switch response.code {
+         case 200:
+            self.saveViewModel.saveItems = Observable.just(response.data)
+            self.setSaveData()
+            self.view.layoutIfNeeded()
+         default:
+            AlertController(message: response.msg).show()
+         }
+      }
+   }
 }
 
 @available(iOS 14.0, *)
