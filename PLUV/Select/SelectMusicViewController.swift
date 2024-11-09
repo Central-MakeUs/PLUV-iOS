@@ -13,11 +13,14 @@ import MusicKit
 
 class SelectMusicViewController: UIViewController {
    
-   let viewModel = SelectMusicViewModel()
+   var viewModel = SelectMusicViewModel()
+   var meViewModel = SelectMeViewModel()
+   var saveViewModel = SelectSaveViewModel()
+   
    let loadingView = LoadingView(loadingState: .LoadMusic)
    
-   private var sourcePlatform: PlatformRepresentable?
-   private var destinationPlatform: MusicPlatform = .Spotify
+   var sourcePlatform: PlatformRepresentable?
+   var destinationPlatform: MusicPlatform = .Spotify
    
    private let scrollView = UIScrollView()
    private let contentView = UIView()
@@ -80,17 +83,6 @@ class SelectMusicViewController: UIViewController {
    
    private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
-   
-   init(playlistItem: Playlist, source: PlatformRepresentable, destination: MusicPlatform) {
-      super.init(nibName: nil, bundle: nil)
-      self.viewModel.playlistItem = playlistItem
-      self.sourcePlatform = source
-      self.destinationPlatform = destination
-   }
-   
-   required init?(coder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
-   }
    
    override func viewDidLoad() {
       super.viewDidLoad()
@@ -268,51 +260,130 @@ class SelectMusicViewController: UIViewController {
    }
    
    @objc private func clickSelectAllButton() {
-      /// 모든 셀을 선택할지 해제할지 결정
-      let allSelected = viewModel.selectedMusic.value.count == viewModel.musicItem.value.count
-      
-      if allSelected {
-         /// 모두 선택 해제
-         viewModel.selectedMusic.accept([])
+      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic || musicPlatform == .Spotify {
+         /// 모든 셀을 선택할지 해제할지 결정
+         let allSelected = viewModel.selectedMusic.value.count == viewModel.musicItem.value.count
+         
+         if allSelected {
+            /// 모두 선택 해제
+            viewModel.selectedMusic.accept([])
+         } else {
+            /// 모두 선택
+            viewModel.selectedMusic.accept(viewModel.musicItem.value)
+         }
+         self.selectMusicTableView.reloadData()
+      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+         let allSelected = meViewModel.selectedMusic.value.count == meViewModel.musicItem.value.count
+         
+         if allSelected {
+            /// 모두 선택 해제
+            meViewModel.selectedMusic.accept([])
+         } else {
+            /// 모두 선택
+            meViewModel.selectedMusic.accept(meViewModel.musicItem.value)
+         }
+         self.selectMusicTableView.reloadData()
       } else {
-         /// 모두 선택
-         viewModel.selectedMusic.accept(viewModel.musicItem.value)
+         let allSelected = saveViewModel.selectedMusic.value.count == saveViewModel.musicItem.value.count
+         
+         if allSelected {
+            /// 모두 선택 해제
+            saveViewModel.selectedMusic.accept([])
+         } else {
+            /// 모두 선택
+            saveViewModel.selectedMusic.accept(saveViewModel.musicItem.value)
+         }
+         self.selectMusicTableView.reloadData()
       }
-      
-      self.selectMusicTableView.reloadData()
    }
    
    private func bindtrasferButton() {
       moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
       
-      /// selectedMusic의 변화를 관찰하여 trasferButton의 활성화 상태를 업데이트
-      self.viewModel.selectedMusic
-         .map { !$0.isEmpty } /// 선택된 음악이 있으면 true, 없으면 false
-         .bind(to: moveView.trasferButton.rx.isEnabled)
-         .disposed(by: disposeBag)
+      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic || musicPlatform == .Spotify {
+         /// selectedMusic의 변화를 관찰하여 trasferButton의 활성화 상태를 업데이트
+         self.viewModel.selectedMusic
+            .map { !$0.isEmpty } /// 선택된 음악이 있으면 true, 없으면 false
+            .bind(to: moveView.trasferButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+         self.meViewModel.selectedMusic
+            .map { !$0.isEmpty } /// 선택된 음악이 있으면 true, 없으면 false
+            .bind(to: moveView.trasferButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+      } else {
+         self.saveViewModel.selectedMusic
+            .map { !$0.isEmpty } /// 선택된 음악이 있으면 true, 없으면 false
+            .bind(to: moveView.trasferButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+      }
    }
    
    @objc private func clickTransferButton() {
-      self.viewModel.selectedMusic
-         .map { musicArray in
-            let movePlaylistVC = MovePlaylistViewController(playlistItem: self.viewModel.playlistItem, musicItems: musicArray, source: self.sourcePlatform!, destination: self.destinationPlatform)
-            self.navigationController?.pushViewController(movePlaylistVC, animated: true)
-         }
-         .subscribe { musicArray in
-            print(musicArray)
-         }
-         .disposed(by: disposeBag)
+      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic || musicPlatform == .Spotify {
+         self.viewModel.selectedMusic
+            .map { musicArray in
+               let movePlaylistVC = MovePlaylistViewController(playlistItem: self.viewModel.playlistItem, musicItems: musicArray, source: self.sourcePlatform!, destination: self.destinationPlatform)
+               self.navigationController?.pushViewController(movePlaylistVC, animated: true)
+            }
+            .subscribe { musicArray in
+               print(musicArray)
+            }
+            .disposed(by: disposeBag)
+      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+         self.meViewModel.selectedMusic
+            .map { musicArray in
+               let movePlaylistVC = MovePlaylistViewController(playlistItem: self.viewModel.playlistItem, musicItems: musicArray, source: self.sourcePlatform!, destination: self.destinationPlatform)
+               self.navigationController?.pushViewController(movePlaylistVC, animated: true)
+            }
+            .subscribe { musicArray in
+               print(musicArray)
+            }
+            .disposed(by: disposeBag)
+      } else {
+         self.saveViewModel.selectedMusic
+            .map { musicArray in
+               let movePlaylistVC = MovePlaylistViewController(playlistItem: self.viewModel.playlistItem, musicItems: musicArray, source: self.sourcePlatform!, destination: self.destinationPlatform)
+               self.navigationController?.pushViewController(movePlaylistVC, animated: true)
+            }
+            .subscribe { musicArray in
+               print(musicArray)
+            }
+            .disposed(by: disposeBag)
+      }
    }
    
    private func setPlaylistData() {
-      let thumbnailURL = URL(string: self.viewModel.playlistItem.thumbnailURL)
-      playlistThumnailImageView.kf.setImage(with: thumbnailURL)
-      sourceToDestinationLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
-      sourcePlatformLabel.text = sourcePlatform!.name
-      playlistNameLabel.text = self.viewModel.playlistItem.name
-      self.viewModel.musicItemCount { count in
-         self.playlistSongCountLabel.text = "총 \(count)곡"
-         self.songCountLabel.text = "\(count)곡"
+      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic || musicPlatform == .Spotify {
+         let thumbnailURL = URL(string: self.viewModel.playlistItem.thumbnailURL)
+         playlistThumnailImageView.kf.setImage(with: thumbnailURL)
+         sourceToDestinationLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
+         sourcePlatformLabel.text = sourcePlatform!.name
+         playlistNameLabel.text = self.viewModel.playlistItem.name
+         self.viewModel.musicItemCount { count in
+            self.playlistSongCountLabel.text = "총 \(count)곡"
+            self.songCountLabel.text = "\(count)곡"
+         }
+      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+         let thumbnailURL = URL(string: self.meViewModel.meItem.imageURL)
+         playlistThumnailImageView.kf.setImage(with: thumbnailURL)
+         sourceToDestinationLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
+         sourcePlatformLabel.text = sourcePlatform!.name
+         playlistNameLabel.text = self.meViewModel.meItem.title
+         self.meViewModel.musicItemCount { count in
+            self.playlistSongCountLabel.text = "총 \(count)곡"
+            self.songCountLabel.text = "\(count)곡"
+         }
+      } else {
+         let thumbnailURL = URL(string: self.saveViewModel.saveItem.thumbNailURL)
+         playlistThumnailImageView.kf.setImage(with: thumbnailURL)
+         sourceToDestinationLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
+         sourcePlatformLabel.text = sourcePlatform!.name
+         playlistNameLabel.text = self.saveViewModel.saveItem.title
+         self.saveViewModel.musicItemCount { count in
+            self.playlistSongCountLabel.text = "총 \(count)곡"
+            self.songCountLabel.text = "\(count)곡"
+         }
       }
    }
    
@@ -409,6 +480,14 @@ class SelectMusicViewController: UIViewController {
             AlertController(message: response.msg).show()
          }
       }
+   }
+   
+   private func setMeMusicListAPI() {
+      let recentId = meViewModel.meItem.id
+   }
+   
+   private func setSaveMusicListAPI() {
+      let saveId = saveViewModel.saveItem.id
    }
 }
 

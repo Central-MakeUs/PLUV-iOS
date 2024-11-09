@@ -162,20 +162,30 @@ class SelectPlaylistViewController: UIViewController {
    }
    
    @objc private func clickTransferButton() {
-      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic && musicPlatform == .Spotify {
-         let selectMusicVC = SelectMusicViewController(playlistItem: self.viewModel.playlistItem, source: sourcePlatform!, destination: destinationPlatform)
+      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic || musicPlatform == .Spotify {
+         let selectMusicVC = SelectMusicViewController()
+         selectMusicVC.viewModel.playlistItem = viewModel.playlistItem
+         selectMusicVC.sourcePlatform = sourcePlatform
+         selectMusicVC.destinationPlatform = destinationPlatform
          self.navigationController?.pushViewController(selectMusicVC, animated: true)
       } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
-         
+         let selectMusicVC = SelectMusicViewController()
+         selectMusicVC.meViewModel.meItem = meViewModel.meItem
+         selectMusicVC.sourcePlatform = sourcePlatform
+         selectMusicVC.destinationPlatform = destinationPlatform
+         self.navigationController?.pushViewController(selectMusicVC, animated: true)
       } else {
-         
+         let selectMusicVC = SelectMusicViewController()
+         selectMusicVC.saveViewModel.saveItem = saveViewModel.saveItem
+         selectMusicVC.sourcePlatform = sourcePlatform
+         selectMusicVC.destinationPlatform = destinationPlatform
+         self.navigationController?.pushViewController(selectMusicVC, animated: true)
       }
-      
    }
    
    private func setCellSelected() {
       // 셀 선택 시
-      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic && musicPlatform == .Spotify {
+      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic || musicPlatform == .Spotify {
          self.playlistCollectionView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
                guard let self = self else { return }
@@ -333,7 +343,7 @@ class SelectPlaylistViewController: UIViewController {
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
-      self.meViewModel.MeItems
+      self.meViewModel.meItems
          .observe(on: MainScheduler.instance)
          .bind(to: self.playlistCollectionView.rx.items(cellIdentifier: SelectPlaylistCollectionViewCell.identifier, cellType: SelectPlaylistCollectionViewCell.self)) { index, item, cell in
             cell.mePrepare(me: item, platform: self.sourcePlatform!)
@@ -342,8 +352,9 @@ class SelectPlaylistViewController: UIViewController {
       
       /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
       self.playlistCollectionView.rx.modelSelected(Me.self)
-         .subscribe(onNext: { [weak self] playlistItem in
+         .subscribe(onNext: { [weak self] meItem in
             self?.moveView.trasferButton.isEnabled = true
+            self?.meViewModel.meItem = meItem
          })
          .disposed(by: disposeBag)
    }
@@ -364,8 +375,9 @@ class SelectPlaylistViewController: UIViewController {
       
       /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
       self.playlistCollectionView.rx.modelSelected(Feed.self)
-         .subscribe(onNext: { [weak self] playlistItem in
+         .subscribe(onNext: { [weak self] saveItem in
             self?.moveView.trasferButton.isEnabled = true
+            self?.saveViewModel.saveItem = saveItem
          })
          .disposed(by: disposeBag)
    }
@@ -456,7 +468,7 @@ class SelectPlaylistViewController: UIViewController {
       APIService().getWithAccessToken(of: APIResponse<[Me]>.self, url: url, AccessToken: loginToken) { response in
          switch response.code {
          case 200:
-            self.meViewModel.MeItems = Observable.just(response.data)
+            self.meViewModel.meItems = Observable.just(response.data)
             self.setMeData()
             self.view.layoutIfNeeded()
          default:

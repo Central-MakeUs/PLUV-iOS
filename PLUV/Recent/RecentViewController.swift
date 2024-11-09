@@ -53,7 +53,7 @@ class RecentViewController: UIViewController {
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
-      self.viewModel.MeItems
+      self.viewModel.meItems
          .observe(on: MainScheduler.instance)
          .bind(to: self.recentTableViewCell.rx.items(cellIdentifier: RecentDetailTableViewCell.identifier, cellType: RecentDetailTableViewCell.self)) { index, item, cell in
             cell.prepare(me: item)
@@ -78,7 +78,7 @@ class RecentViewController: UIViewController {
       APIService().getWithAccessToken(of: APIResponse<[Me]>.self, url: url, AccessToken: loginToken) { response in
          switch response.code {
          case 200:
-            self.viewModel.MeItems = Observable.just(response.data)
+            self.viewModel.meItems = Observable.just(response.data)
             self.setData()
             self.view.layoutIfNeeded()
          default:
