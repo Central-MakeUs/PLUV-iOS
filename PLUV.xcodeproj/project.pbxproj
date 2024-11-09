@@ -88,6 +88,8 @@
 		C75CD8972CCABDBF00B2291D /* SaveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75CD8962CCABDBF00B2291D /* SaveViewController.swift */; };
 		C75CD89D2CCAC95400B2291D /* SaveDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75CD89C2CCAC95400B2291D /* SaveDetailViewController.swift */; };
 		C7809C132CCE3EEE00A50EB1 /* SaveMoveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7809C122CCE3EEE00A50EB1 /* SaveMoveView.swift */; };
+		C7852EC82CDFC744007A5D1C /* MoveMeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7852EC72CDFC744007A5D1C /* MoveMeViewModel.swift */; };
+		C7852ECA2CDFC74D007A5D1C /* MoveSaveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7852EC92CDFC74D007A5D1C /* MoveSaveViewModel.swift */; };
 		C78A87F92CD0ADE1008154F2 /* LoadPluvTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78A87F82CD0ADE1008154F2 /* LoadPluvTableViewCell.swift */; };
 		C79AAC642CD4CE8E000B5FAD /* ValidationSimilarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79AAC632CD4CE8E000B5FAD /* ValidationSimilarTableViewCell.swift */; };
 		C79E7DBC2CC85C0A00FF75F3 /* RecentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E7DBB2CC85C0A00FF75F3 /* RecentDetailViewController.swift */; };
@@ -232,6 +234,8 @@
 		C75CD8962CCABDBF00B2291D /* SaveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveViewController.swift; sourceTree = "<group>"; };
 		C75CD89C2CCAC95400B2291D /* SaveDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDetailViewController.swift; sourceTree = "<group>"; };
 		C7809C122CCE3EEE00A50EB1 /* SaveMoveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveMoveView.swift; sourceTree = "<group>"; };
+		C7852EC72CDFC744007A5D1C /* MoveMeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveMeViewModel.swift; sourceTree = "<group>"; };
+		C7852EC92CDFC74D007A5D1C /* MoveSaveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSaveViewModel.swift; sourceTree = "<group>"; };
 		C78A87F82CD0ADE1008154F2 /* LoadPluvTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadPluvTableViewCell.swift; sourceTree = "<group>"; };
 		C79AAC632CD4CE8E000B5FAD /* ValidationSimilarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationSimilarTableViewCell.swift; sourceTree = "<group>"; };
 		C79E7DBB2CC85C0A00FF75F3 /* RecentDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentDetailViewController.swift; sourceTree = "<group>"; };
@@ -356,6 +360,8 @@
 			children = (
 				6889F5292C723BE9001F5FC2 /* MovePlaylistViewController.swift */,
 				680A78542C73C2D700F28510 /* MovePlaylistViewModel.swift */,
+				C7852EC72CDFC744007A5D1C /* MoveMeViewModel.swift */,
+				C7852EC92CDFC74D007A5D1C /* MoveSaveViewModel.swift */,
 			);
 			path = Move;
 			sourceTree = "<group>";
@@ -909,6 +915,7 @@
 				6889F5342C724B58001F5FC2 /* RotationAnimation.swift in Sources */,
 				68830FAA2C81D8CF00995785 /* WebViewController.swift in Sources */,
 				C7EB31622CD4ED5700DA439A /* ValidationNotFoundTableViewCell.swift in Sources */,
+				C7852ECA2CDFC74D007A5D1C /* MoveSaveViewModel.swift in Sources */,
 				C7EEA4F42CC3A5AE00FBAA4D /* SaveCollectionViewCell.swift in Sources */,
 				68830FB52C8273DA00995785 /* FeedDetailViewController.swift in Sources */,
 				C75CD89D2CCAC95400B2291D /* SaveDetailViewController.swift in Sources */,
@@ -995,6 +1002,7 @@
 				C7AD30C02CC6787100D8007D /* RecentViewController.swift in Sources */,
 				C70642262CDCA7BF00DFD771 /* FailViewModel.swift in Sources */,
 				C7EEA4F22CC3A59F00FBAA4D /* RecentCollectionViewCell.swift in Sources */,
+				C7852EC82CDFC744007A5D1C /* MoveMeViewModel.swift in Sources */,
 				C720AC662CD7313A007071BD /* PurpleProgressView.swift in Sources */,
 				68DC4C822C6B70C2006D8E97 /* APIService.swift in Sources */,
 				C7BEDFE62CC6C744001F678E /* MeViewModel.swift in Sources */,

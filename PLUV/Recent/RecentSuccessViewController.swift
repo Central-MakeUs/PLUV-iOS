@@ -65,15 +65,15 @@ class RecentSuccessViewController: UIViewController {
       let url = EndPoint.historySuccess("\(recentId)").path
       
       APIService().getWithAccessToken(of: APIResponse<[Music]>.self, url: url, AccessToken: loginToken) { response in
-           switch response.code {
-           case 200:
-              self.successViewModel.successItems = Observable.just(response.data)
-               self.setData()
-               self.view.layoutIfNeeded()
-           default:
-               AlertController(message: response.msg).show()
-           }
-       }
+         switch response.code {
+         case 200:
+            self.successViewModel.successItems = Observable.just(response.data)
+            self.setData()
+            self.view.layoutIfNeeded()
+         default:
+            AlertController(message: response.msg).show()
+         }
+      }
    }
 }
 

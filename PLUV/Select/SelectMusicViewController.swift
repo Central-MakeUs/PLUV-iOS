@@ -429,6 +429,90 @@ class SelectMusicViewController: UIViewController {
          .disposed(by: disposeBag)
    }
    
+   private func setMeData() {
+      self.selectMusicTableView.rx.setDelegate(self)
+         .disposed(by: disposeBag)
+      
+      /// 아이템 선택 시 스타일 제거
+      self.selectMusicTableView.rx.itemSelected
+         .subscribe(onNext: { [weak self] indexPath in
+            self?.selectMusicTableView.deselectRow(at: indexPath, animated: true)
+         })
+         .disposed(by: disposeBag)
+      
+      /// 모든 cell 선택된 상태로 세팅
+      self.meViewModel.selectedMusic.accept(meViewModel.musicItem.value)
+      
+      /// TableView에 들어갈 Cell에 정보 제공
+      self.meViewModel.musicItem
+         .observe(on: MainScheduler.instance)
+         .bind(to: self.selectMusicTableView.rx.items(cellIdentifier: SelectMusicTableViewCell.identifier, cellType: SelectMusicTableViewCell.self)) { row, music, cell in
+            cell.prepare(music: music)
+            
+            /// 현재 음악이 선택된 상태인지 확인하고 UI 업데이트
+            let isSelected = self.meViewModel.selectedMusic.value.contains(where: { $0.title == music.title && $0.artistNames == music.artistNames })
+            cell.updateSelectionUI(isSelected: isSelected)
+         }
+         .disposed(by: disposeBag)
+      
+      /// 셀 선택 처리
+      self.selectMusicTableView.rx.modelSelected(Music.self)
+         .subscribe(onNext: { [weak self] music in
+            self?.meViewModel.musicSelect(music: music)
+            self?.selectMusicTableView.reloadData()
+         })
+         .disposed(by: disposeBag)
+      
+      /// 선택한 음악의 변화를 관찰하고 이에 따라 UI를 업데이트
+      self.meViewModel.selectedMusic
+         .subscribe(onNext: { [weak self] selectedMusic in
+            self?.selectMusicTableView.reloadData()
+         })
+         .disposed(by: disposeBag)
+   }
+   
+   private func setSaveData() {
+      self.selectMusicTableView.rx.setDelegate(self)
+         .disposed(by: disposeBag)
+      
+      /// 아이템 선택 시 스타일 제거
+      self.selectMusicTableView.rx.itemSelected
+         .subscribe(onNext: { [weak self] indexPath in
+            self?.selectMusicTableView.deselectRow(at: indexPath, animated: true)
+         })
+         .disposed(by: disposeBag)
+      
+      /// 모든 cell 선택된 상태로 세팅
+      self.saveViewModel.selectedMusic.accept(saveViewModel.musicItem.value)
+      
+      /// TableView에 들어갈 Cell에 정보 제공
+      self.saveViewModel.musicItem
+         .observe(on: MainScheduler.instance)
+         .bind(to: self.selectMusicTableView.rx.items(cellIdentifier: SelectMusicTableViewCell.identifier, cellType: SelectMusicTableViewCell.self)) { row, music, cell in
+            cell.prepare(music: music)
+            
+            /// 현재 음악이 선택된 상태인지 확인하고 UI 업데이트
+            let isSelected = self.saveViewModel.selectedMusic.value.contains(where: { $0.title == music.title && $0.artistNames == music.artistNames })
+            cell.updateSelectionUI(isSelected: isSelected)
+         }
+         .disposed(by: disposeBag)
+      
+      /// 셀 선택 처리
+      self.selectMusicTableView.rx.modelSelected(Music.self)
+         .subscribe(onNext: { [weak self] music in
+            self?.saveViewModel.musicSelect(music: music)
+            self?.selectMusicTableView.reloadData()
+         })
+         .disposed(by: disposeBag)
+      
+      /// 선택한 음악의 변화를 관찰하고 이에 따라 UI를 업데이트
+      self.saveViewModel.selectedMusic
+         .subscribe(onNext: { [weak self] selectedMusic in
+            self?.selectMusicTableView.reloadData()
+         })
+         .disposed(by: disposeBag)
+   }
+   
    private func setMusicListAPI() {
       if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic {
          Task {
@@ -436,6 +520,10 @@ class SelectMusicViewController: UIViewController {
          }
       } else if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .Spotify {
          setSpotifyMusicListAPI()
+      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+         setMeMusicListAPI()
+      } else {
+         setSaveMusicListAPI()
       }
    }
    
@@ -484,10 +572,39 @@ class SelectMusicViewController: UIViewController {
    
    private func setMeMusicListAPI() {
       let recentId = meViewModel.meItem.id
+      let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+      let url = EndPoint.historySuccess("\(recentId)").path
+      
+      APIService().getWithAccessToken(of: APIResponse<[Music]>.self, url: url, AccessToken: loginToken) { response in
+         switch response.code {
+         case 200:
+            self.meViewModel.musicItem.accept(response.data)
+            self.setMeData()
+            self.setPlaylistData()
+            self.loadingView.removeFromSuperview()
+            self.view.layoutIfNeeded()
+         default:
+            AlertController(message: response.msg).show()
+         }
+      }
    }
    
    private func setSaveMusicListAPI() {
       let saveId = saveViewModel.saveItem.id
+      let url = EndPoint.feedIdMusic("\(saveId)").path
+      
+      APIService().get(of: APIResponse<[Music]>.self, url: url) { response in
+         switch response.code {
+         case 200:
+            self.saveViewModel.musicItem.accept(response.data)
+            self.setSaveData()
+            self.setPlaylistData()
+            self.loadingView.removeFromSuperview()
+            self.view.layoutIfNeeded()
+         default:
+            AlertController(message: response.msg).show()
+         }
+      }
    }
 }
 
