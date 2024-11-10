@@ -54,6 +54,11 @@ class SelectPlaylistViewController: UIViewController {
       
       return cv
    }()
+   private var noSongImageView = UIImageView().then {
+      $0.image = UIImage(named: "nosong_image")
+      $0.alpha = 0
+      $0.contentMode = .scaleAspectFill
+   }
    
    private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
@@ -149,15 +154,26 @@ class SelectPlaylistViewController: UIViewController {
       loadingView.snp.makeConstraints { make in
          make.edges.equalToSuperview()
       }
+      
+      self.view.addSubview(noSongImageView)
+      noSongImageView.snp.makeConstraints { make in
+         make.centerX.centerY.equalToSuperview()
+         make.height.equalTo(138)
+         make.width.equalTo(143)
+      }
    }
    
    @objc private func clickXButton() {
-      if let navigationController = self.navigationController {
-         let viewControllers = navigationController.viewControllers
-         if viewControllers.count > 4 {
-            let previousViewController = viewControllers[viewControllers.count - 5]
-            navigationController.popToViewController(previousViewController, animated: true)
-         }
+      let moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 5)
+      
+      self.view.addSubview(moveStopView)
+      moveStopView.alpha = 0
+      moveStopView.snp.makeConstraints { make in
+         make.edges.equalToSuperview()
+      }
+      
+      UIView.animate(withDuration: 0.3) {
+         moveStopView.alpha = 1
       }
    }
    
@@ -416,8 +432,12 @@ class SelectPlaylistViewController: UIViewController {
       APIService().post(of: APIResponse<[Playlist]>.self, url: url, parameters: params) { response in
          switch response.code {
          case 200:
-            self.viewModel.playlistItems = Observable.just(response.data)
-            self.setData()
+            if response.data.isEmpty {
+               self.noSongImageView.alpha = 1
+            } else {
+               self.viewModel.playlistItems = Observable.just(response.data)
+               self.setData()
+            }
             self.loadingView.removeFromSuperview()
             self.view.layoutIfNeeded()
          default:
@@ -448,8 +468,12 @@ class SelectPlaylistViewController: UIViewController {
          APIService().post(of: APIResponse<[Playlist]>.self, url: url, parameters: params) { response in
             switch response.code {
             case 200:
-               self.viewModel.playlistItems = Observable.just(response.data)
-               self.setData()
+               if response.data.isEmpty {
+                  self.noSongImageView.alpha = 1
+               } else {
+                  self.viewModel.playlistItems = Observable.just(response.data)
+                  self.setData()
+               }
                self.loadingView.removeFromSuperview()
                self.view.layoutIfNeeded()
             default:
@@ -468,8 +492,13 @@ class SelectPlaylistViewController: UIViewController {
       APIService().getWithAccessToken(of: APIResponse<[Me]>.self, url: url, AccessToken: loginToken) { response in
          switch response.code {
          case 200:
-            self.meViewModel.meItems = Observable.just(response.data)
-            self.setMeData()
+            if response.data.isEmpty {
+               self.noSongImageView.alpha = 1
+            } else {
+               self.meViewModel.meItems = Observable.just(response.data)
+               self.setMeData()
+            }
+            self.loadingView.removeFromSuperview()
             self.view.layoutIfNeeded()
          default:
             AlertController(message: response.msg).show()
@@ -484,8 +513,13 @@ class SelectPlaylistViewController: UIViewController {
       APIService().getWithAccessToken(of: APIResponse<[Feed]>.self, url: url, AccessToken: loginToken) { response in
          switch response.code {
          case 200:
-            self.saveViewModel.saveItems = Observable.just(response.data)
-            self.setSaveData()
+            if response.data.isEmpty {
+               self.noSongImageView.alpha = 1
+            } else {
+               self.saveViewModel.saveItems = Observable.just(response.data)
+               self.setSaveData()
+            }
+            self.loadingView.removeFromSuperview()
             self.view.layoutIfNeeded()
          default:
             AlertController(message: response.msg).show()

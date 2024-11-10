@@ -92,6 +92,7 @@
 		C7852EC82CDFC744007A5D1C /* MoveMeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7852EC72CDFC744007A5D1C /* MoveMeViewModel.swift */; };
 		C7852ECA2CDFC74D007A5D1C /* MoveSaveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7852EC92CDFC74D007A5D1C /* MoveSaveViewModel.swift */; };
 		C78A87F92CD0ADE1008154F2 /* LoadPluvTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78A87F82CD0ADE1008154F2 /* LoadPluvTableViewCell.swift */; };
+		C799AA892CE114EE00584FAA /* ValidationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C799AA882CE114EE00584FAA /* ValidationView.swift */; };
 		C79AAC642CD4CE8E000B5FAD /* ValidationSimilarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79AAC632CD4CE8E000B5FAD /* ValidationSimilarTableViewCell.swift */; };
 		C79E7DBC2CC85C0A00FF75F3 /* RecentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E7DBB2CC85C0A00FF75F3 /* RecentDetailViewController.swift */; };
 		C79E7DBE2CC87B7B00FF75F3 /* RecentSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E7DBD2CC87B7B00FF75F3 /* RecentSuccessViewController.swift */; };
@@ -239,6 +240,7 @@
 		C7852EC72CDFC744007A5D1C /* MoveMeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveMeViewModel.swift; sourceTree = "<group>"; };
 		C7852EC92CDFC74D007A5D1C /* MoveSaveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSaveViewModel.swift; sourceTree = "<group>"; };
 		C78A87F82CD0ADE1008154F2 /* LoadPluvTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadPluvTableViewCell.swift; sourceTree = "<group>"; };
+		C799AA882CE114EE00584FAA /* ValidationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationView.swift; sourceTree = "<group>"; };
 		C79AAC632CD4CE8E000B5FAD /* ValidationSimilarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationSimilarTableViewCell.swift; sourceTree = "<group>"; };
 		C79E7DBB2CC85C0A00FF75F3 /* RecentDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentDetailViewController.swift; sourceTree = "<group>"; };
 		C79E7DBD2CC87B7B00FF75F3 /* RecentSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSuccessViewController.swift; sourceTree = "<group>"; };
@@ -565,6 +567,7 @@
 				68F6FAAF2C4A8ECF001128FF /* MoveView.swift */,
 				C7809C122CCE3EEE00A50EB1 /* SaveMoveView.swift */,
 				C72798F92CE0729E00BEB357 /* MoveStopView.swift */,
+				C799AA882CE114EE00584FAA /* ValidationView.swift */,
 				6889F5382C7258E8001F5FC2 /* ActionBottomView.swift */,
 				68F6FAB12C4A9CCA001128FF /* WhiteButton.swift */,
 				68F6FAB72C4A9F27001128FF /* BlackButton.swift */,
@@ -987,6 +990,7 @@
 				68DB037B2C7CF3C900FBD014 /* ValidationSimilarViewController.swift in Sources */,
 				6859C9102C612ACE00E03179 /* DotView.swift in Sources */,
 				68DC4C802C6B70AE006D8E97 /* EndPoint.swift in Sources */,
+				C799AA892CE114EE00584FAA /* ValidationView.swift in Sources */,
 				6889F51A2C6D49E3001F5FC2 /* Music.swift in Sources */,
 				680A78532C73A4B100F28510 /* TokenManager.swift in Sources */,
 				C79E7DBE2CC87B7B00FF75F3 /* RecentSuccessViewController.swift in Sources */,

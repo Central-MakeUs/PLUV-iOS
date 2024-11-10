@@ -178,12 +178,16 @@ extension TransferDestinationViewController {
    }
    
    @objc private func clickXButton() {
-      if let navigationController = self.navigationController {
-         let viewControllers = navigationController.viewControllers
-         if viewControllers.count > 2 {
-            let previousViewController = viewControllers[viewControllers.count - 3]
-            navigationController.popToViewController(previousViewController, animated: true)
-         }
+      let moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 3)
+      
+      self.view.addSubview(moveStopView)
+      moveStopView.alpha = 0
+      moveStopView.snp.makeConstraints { make in
+         make.edges.equalToSuperview()
+      }
+      
+      UIView.animate(withDuration: 0.3) {
+         moveStopView.alpha = 1
       }
    }
 }

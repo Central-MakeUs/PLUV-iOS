@@ -202,7 +202,7 @@ extension TransferSourceViewController {
    }
    
    @objc private func clickXButton() {
-      let moveStopView = MoveStopView(title: "옮기기를 중단할까요?", target: self, num: 2)
+      let moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 2)
       
       self.view.addSubview(moveStopView)
       moveStopView.alpha = 0

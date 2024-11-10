@@ -223,12 +223,16 @@ class MovePlaylistViewController: UIViewController {
    }
    
    @objc private func clickXButton() {
-      if let navigationController = self.navigationController {
-         let viewControllers = navigationController.viewControllers
-         if viewControllers.count > 6 {
-            let previousViewController = viewControllers[viewControllers.count - 7]
-            navigationController.popToViewController(previousViewController, animated: true)
-         }
+      let moveStopView = MoveStopView(title: "옮기기를 중단할까요?", target: self, num: 7)
+      
+      self.view.addSubview(moveStopView)
+      moveStopView.alpha = 0
+      moveStopView.snp.makeConstraints { make in
+         make.edges.equalToSuperview()
+      }
+      
+      UIView.animate(withDuration: 0.3) {
+         moveStopView.alpha = 1
       }
    }
    

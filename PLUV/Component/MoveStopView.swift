@@ -76,6 +76,7 @@ final class MoveStopView: UIView {
       self.stopLabel.snp.makeConstraints { make in
          make.centerX.equalToSuperview()
          make.top.equalTo(titleLabel.snp.bottom).offset(33)
+         make.leading.trailing.equalToSuperview().inset(22)
          make.height.equalTo(48)
       }
       
