@@ -615,6 +615,114 @@ class SelectMusicViewController: UIViewController {
          }
       }
    }
+   
+   private func setSearchView() {
+      self.view.addSubview(searchLoadingView)
+      loadingView.snp.makeConstraints { make in
+         make.edges.equalToSuperview()
+      }
+   }
+   
+   private func searchAppleToSpotifyAPI(musics: [Music]) async {
+      self.setSearchView()
+      do {
+         let jsonData = try JSONEncoder().encode(musics)
+         let jsonString = String(data: jsonData, encoding: .utf8) ?? ""
+         let musicParams = jsonString.replacingOccurrences(of: "\\", with: "").replacingOccurrences(of: "artistNames", with: "artistName")
+         
+         if let parameterJsonData = musicParams.data(using: .utf8) {
+            do {
+               if let parameterJsonArray = try JSONSerialization.jsonObject(with: parameterJsonData, options: []) as? [[String: Any]] {
+                  
+                  let url = EndPoint.musicSpotifySearch.path
+                  let params = ["destinationAccessToken" : TokenManager.shared.spotifyAccessToken,
+                                "musics" : parameterJsonArray] as [String : Any]
+                  
+                  APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
+                     switch response.code {
+                     case 200:
+                        var idArr: [String] = []
+                        let searchArr: [Search] = response.data
+                        for search in searchArr {
+                           if search.isEqual == true {
+                              idArr.append(search.destinationMusics.first!.id!)
+                           } else {
+                              idArr.append(search.destinationMusics.first!.id!)
+                           }
+                        }
+                        self.searchLoadingView.removeFromSuperview()
+                        print(response.data, "애플에 있는 것 스포티파이에서 검색")
+//                        self.addAppleToSpotify(musicIdsArr: idArr)
+                     default:
+                        AlertController(message: response.msg).show()
+                     }
+                  }
+               }
+            } catch {
+               print("JSON 변환 실패: \(error.localizedDescription)")
+            }
+         }
+      } catch {
+         print(error)
+      }
+   }
+   
+   private func searchSpotifyToAppleAPI(musics: [Music]) async {
+      self.setSearchView()
+      do {
+         let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+         let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+         
+         let jsonData = try JSONEncoder().encode(musics)
+         let jsonString = String(data: jsonData, encoding: .utf8) ?? ""
+         let musicParams = jsonString.replacingOccurrences(of: "\\", with: "").replacingOccurrences(of: "artistNames", with: "artistName")
+         
+         if let parameterJsonData = musicParams.data(using: .utf8) {
+            do {
+               if let parameterJsonArray = try JSONSerialization.jsonObject(with: parameterJsonData, options: []) as? [[String: Any]] {
+                  
+                  let url = EndPoint.musicAppleSearch.path
+                  let params = ["destinationAccessToken" : userToken,
+                                "musics" : parameterJsonArray] as [String : Any]
+                  print(params, "파람 확인")
+                  APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
+                     switch response.code {
+                     case 200:
+                        var completeArr: [String] = []
+                        var successArr: [SearchMusic] = []
+                        var successSimilarArr: [SearchMusic] = []
+                        var failArr: [SearchMusic] = []
+                        let searchArr: [Search] = response.data
+                        for i in 0..<searchArr.count {
+                           if searchArr[i].isEqual == true && searchArr[i].isFound == true {
+                              completeArr.append(searchArr[i].destinationMusics.first!.id!)
+                           } else if searchArr[i].isEqual == false && searchArr[i].isFound == true {
+                              successArr.append(searchArr[i].sourceMusic)
+                              for j in 0..<searchArr[i].destinationMusics.count {
+                                 successSimilarArr.append(searchArr[i].destinationMusics[j])
+                              }
+                           } else {
+                              failArr.append(searchArr[i].sourceMusic)
+                           }
+                        }
+                        self.searchLoadingView.removeFromSuperview()
+                        print(response.data, "스포티파이에 있는 것 애플에서 검색")
+                        Task {
+//                           await self.addSpotifyToApple(musicIdsArr: idArr)
+                        }
+                     default:
+                        AlertController(message: response.msg).show()
+                     }
+                  }
+               }
+            } catch {
+               print("JSON 변환 실패: \(error.localizedDescription)")
+            }
+         }
+      } catch {
+         print(error)
+      }
+   }
 }
 
 extension SelectMusicViewController: UITableViewDelegate {
