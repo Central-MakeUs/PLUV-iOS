@@ -114,7 +114,7 @@ class TransferCheckViewController: UIViewController {
       self.checkTitleView.addSubview(backButton)
       backButton.snp.makeConstraints { make in
          make.top.equalToSuperview().inset(53)
-         make.trailing.equalToSuperview().inset(20)
+         make.trailing.equalToSuperview().inset(16)
          make.height.equalTo(34)
          make.width.equalTo(34)
       }

@@ -10,20 +10,21 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-class FeedDetailViewController: UIViewController {
+protocol SaveMoveViewDelegate: AnyObject {
+   func setFeedSaveAPI()
+}
+
+class FeedDetailViewController: UIViewController, SaveMoveViewDelegate {
    
    private var viewModel = FeedViewModel()
    
    private let scrollView = UIScrollView()
    private let contentView = UIView()
    
-   private let feedDetailImageView = UIImageView()
+   private let navigationbarView = NavigationBarView(title: "")
    
+   private let feedDetailImageView = UIImageView()
    private let feedDetailTitleView = UIView()
-   private let separateLine = UIView().then {
-      $0.backgroundColor = .gray200
-   }
-   private let feedDetailContentView = UIView()
    private let playlistTitleImageView = UIImageView().then {
       $0.image = UIImage(named: "menu_image")
    }
@@ -40,14 +41,18 @@ class FeedDetailViewController: UIViewController {
       $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 16, weight: .medium)
    }
+   private let separateLine = UIView().then {
+      $0.backgroundColor = .gray200
+   }
    
-   private let feedDetailTableView = UITableView().then {
+   private var feedDetailTableView = UITableView().then {
       $0.separatorStyle = .none
       $0.register(FeedDetailTableViewCell.self, forCellReuseIdentifier: FeedDetailTableViewCell.identifier)
    }
-   private var feedDetailTableViewHeightConstraint: NSLayoutConstraint!
    
-   private var saveView = MoveView(view: UIViewController())
+   private var feedDetailTableViewHeightConstraint: Constraint?
+   
+   private var saveMoveView = SaveMoveView(view: UIViewController())
    
    private let disposeBag = DisposeBag()
    
@@ -64,42 +69,45 @@ class FeedDetailViewController: UIViewController {
       super.viewDidLoad()
       
       setUI()
-      setNavigationBar()
       setPlaylistData()
       setFeedDetailMusicItemAPI()
    }
    
-   override func viewWillAppear(_ animated: Bool) {
-      super.viewWillAppear(animated)
-      /// 탭 바 숨기기
-      self.tabBarController?.tabBar.isHidden = true
-   }
-   
-   override func viewDidLayoutSubviews() {
-      super.viewDidLayoutSubviews()
-      setTableViewHeight() /// 레이아웃이 갱신될 때마다 테이블 뷰 높이 갱신
-   }
+//   override func viewDidLayoutSubviews() {
+//      super.viewDidLayoutSubviews()
+//      setTableViewHeight() /// 레이아웃이 갱신될 때마다 테이블 뷰 높이 갱신
+//   }
    
    private func setUI() {
       self.view.backgroundColor = .white
       self.navigationItem.setHidesBackButton(true, animated: false)
+      self.navigationController?.setNavigationBarHidden(true, animated: false)
       
       scrollView.showsVerticalScrollIndicator = false
       
       self.view.addSubview(scrollView)
       scrollView.snp.makeConstraints { make in
-         make.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+         make.top.bottom.leading.trailing.equalToSuperview()
       }
       
       self.scrollView.addSubview(contentView)
       contentView.snp.makeConstraints { make in
-         make.edges.equalTo(scrollView) /// scrollView 안에서 contentView의 모든 가장자리를 맞춤
-         make.width.equalTo(scrollView) /// 가로 고정
+         make.edges.equalToSuperview()
+         make.width.equalTo(scrollView)
+      }
+      
+      navigationbarView.delegate = self
+      self.view.addSubview(navigationbarView)
+      navigationbarView.snp.makeConstraints { make in
+         make.top.equalToSuperview()
+         make.leading.trailing.equalToSuperview()
+         make.height.equalTo(93)
       }
       
       self.contentView.addSubview(feedDetailImageView)
       feedDetailImageView.snp.makeConstraints { make in
-         make.top.leading.trailing.equalTo(contentView)
+         make.top.equalToSuperview().offset(46)
+         make.leading.trailing.equalTo(contentView)
          make.height.equalTo(feedDetailImageView.snp.width) /// 정사각형 비율
       }
       
@@ -110,9 +118,31 @@ class FeedDetailViewController: UIViewController {
          make.height.equalTo(132)
       }
       
-      self.feedDetailTitleView.addSubview(feedDetailContentView)
-      feedDetailContentView.snp.makeConstraints { make in
-         make.top.leading.trailing.bottom.equalToSuperview().inset(24)
+      self.feedDetailTitleView.addSubview(playlistTitleImageView)
+      playlistTitleImageView.snp.makeConstraints { make in
+         make.top.leading.equalToSuperview().inset(24)
+         make.width.height.equalTo(20)
+      }
+      
+      self.feedDetailTitleView.addSubview(playlistTitleLabel)
+      playlistTitleLabel.snp.makeConstraints { make in
+         make.top.equalToSuperview().inset(24)
+         make.leading.equalTo(playlistTitleImageView.snp.trailing).offset(8)
+         make.height.equalTo(24)
+         make.trailing.equalToSuperview().inset(24)
+      }
+      
+      self.feedDetailTitleView.addSubview(songCountAndDateLabel)
+      songCountAndDateLabel.snp.makeConstraints { make in
+         make.top.equalTo(playlistTitleLabel.snp.bottom).offset(20)
+         make.leading.trailing.equalToSuperview().inset(24)
+         make.height.equalTo(14)
+      }
+      
+      self.feedDetailTitleView.addSubview(sharePersonNameLabel)
+      sharePersonNameLabel.snp.makeConstraints { make in
+         make.top.equalTo(songCountAndDateLabel.snp.bottom).offset(10)
+         make.leading.trailing.bottom.equalToSuperview().inset(24)
       }
       
       self.feedDetailTitleView.addSubview(separateLine)
@@ -121,71 +151,30 @@ class FeedDetailViewController: UIViewController {
          make.height.equalTo(1)
       }
       
-      self.feedDetailContentView.addSubview(playlistTitleImageView)
-      playlistTitleImageView.snp.makeConstraints { make in
-         make.leading.equalToSuperview()
-         make.width.height.equalTo(20)
-      }
-      
-      self.feedDetailContentView.addSubview(playlistTitleLabel)
-      playlistTitleLabel.snp.makeConstraints { make in
-         make.top.equalToSuperview()
-         make.centerY.equalTo(playlistTitleImageView.snp.centerY)
-         make.leading.equalTo(playlistTitleImageView.snp.trailing).offset(8)
-         make.height.equalTo(24)
-         make.trailing.equalToSuperview()
-      }
-      
-      self.feedDetailContentView.addSubview(songCountAndDateLabel)
-      songCountAndDateLabel.snp.makeConstraints { make in
-         make.top.equalTo(playlistTitleLabel.snp.bottom).offset(20)
-         make.leading.trailing.equalToSuperview()
-         make.height.equalTo(14)
-      }
-      
-      self.feedDetailContentView.addSubview(sharePersonNameLabel)
-      sharePersonNameLabel.snp.makeConstraints { make in
-         make.top.equalTo(songCountAndDateLabel.snp.bottom).offset(10)
-         make.leading.trailing.bottom.equalToSuperview()
-      }
-      
       self.contentView.addSubview(feedDetailTableView)
       feedDetailTableView.snp.makeConstraints { make in
          make.top.equalTo(feedDetailTitleView.snp.bottom).offset(10)
-         make.leading.trailing.equalTo(contentView)
-         /// 높이 제약은 따로 설정하지 않고, 테이블 뷰의 contentSize에 맞춰 동적으로 설정
-      }
-      
-      /// 테이블 뷰 높이 제약 추가
-      feedDetailTableViewHeightConstraint = feedDetailTableView.heightAnchor.constraint(equalToConstant: 0)
-      
-      /// ContentView의 마지막 요소와 ScrollView의 bottom을 맞추기 위한 제약 설정
-      feedDetailTableView.snp.makeConstraints { make in
-         make.bottom.equalTo(contentView.snp.bottom) /// 테이블 뷰의 아래쪽을 contentView의 아래쪽에 맞춤
+         make.leading.trailing.bottom.equalToSuperview()
+         feedDetailTableViewHeightConstraint = make.height.equalTo(0).constraint
       }
       
       feedDetailTableView.isScrollEnabled = false /// 테이블 뷰 스크롤 비활성화
       
-      saveView = MoveView(view: self)
-      self.view.addSubview(saveView)
-      saveView.snp.makeConstraints { make in
+      saveMoveView = SaveMoveView(view: self)
+      self.view.addSubview(saveMoveView)
+      saveMoveView.snp.makeConstraints { make in
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(101)
       }
-      
-      saveView.changeName(left: "저장", right: "플레이리스트 옮기기")
    }
    
    private func setTableViewHeight() {
-      feedDetailTableView.layoutIfNeeded() /// 테이블 뷰 레이아웃 갱신
-      let contentHeight = feedDetailTableView.contentSize.height + 101 /// 테이블 뷰 전체 셀 높이
-      feedDetailTableViewHeightConstraint.constant = contentHeight /// 높이 제약 업데이트
+      let contentHeight = feedDetailTableView.contentSize.height
+      feedDetailTableViewHeightConstraint?.update(offset: contentHeight + 300)
       
       /// 이미지 높이 + 테이블 뷰 높이를 합산하여 스크롤뷰의 contentSize 설정
-      let totalHeight = feedDetailImageView.frame.height + feedDetailTitleView.frame.height + 10 + contentHeight
+      let totalHeight = feedDetailImageView.frame.height + feedDetailTitleView.frame.height + 10 + contentHeight + 101
       scrollView.contentSize = CGSize(width: view.frame.width, height: totalHeight)
-      
-      /// 레이아웃 재설정
       scrollView.layoutIfNeeded()
    }
    
@@ -213,7 +202,6 @@ class FeedDetailViewController: UIViewController {
          case 200:
             self.viewModel.selectFeedMusicItem.accept(response.data)
             self.setData()
-            self.view.layoutIfNeeded()
          default:
             AlertController(message: response.msg).show()
          }
@@ -227,8 +215,8 @@ class FeedDetailViewController: UIViewController {
       /// TableView에 들어갈 Cell에 정보 제공
       self.viewModel.selectFeedMusicItem
          .observe(on: MainScheduler.instance)
-         .bind(to: self.feedDetailTableView.rx.items(cellIdentifier: FeedDetailTableViewCell.identifier, cellType: FeedDetailTableViewCell.self)) { row, music, cell in
-            cell.prepare(music: music)
+         .bind(to: self.feedDetailTableView.rx.items(cellIdentifier: FeedDetailTableViewCell.identifier, cellType: FeedDetailTableViewCell.self)) { index, music, cell in
+            cell.prepare(music: music, index: index)
          }
          .disposed(by: disposeBag)
       
@@ -240,19 +228,11 @@ class FeedDetailViewController: UIViewController {
       }
    }
    
-   private func setNavigationBar() {
-      /// NavigationBar의 back 버튼 이미지 변경
-      let backImage = UIImage(named: "backbutton_icon")?.withRenderingMode(.alwaysOriginal)
-      let resizedBackImage = backImage?.withRenderingMode(.alwaysOriginal).resize(to: CGSize(width: 24, height: 24))
-      let backButton = UIBarButtonItem(image: resizedBackImage, style: .plain, target: self, action: #selector(clickBackButton))
-      backButton.tintColor = .gray800
-      navigationItem.leftBarButtonItem = backButton
-   }
-   
-   @objc private func clickBackButton() {
-      self.navigationController?.popViewController(animated: true)
+   func setFeedSaveAPI() {
+      
    }
 }
+
 
 extension FeedDetailViewController: UITableViewDelegate {
    

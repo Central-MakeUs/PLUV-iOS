@@ -17,7 +17,6 @@ final class ValidationView: UIView {
       $0.contentMode = .scaleAspectFill
    }
    var titleLabel = UILabel().then {
-      $0.text = "옮기기를 중단할까요?"
       $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 20, weight: .medium)
    }

@@ -12,6 +12,12 @@ import SnapKit
 
 class ValidationNotFoundViewController: UIViewController {
    
+   var completeArr: [String] = []
+   var failArr: [SearchMusic] = []
+   
+   var sourcePlatform: PlatformRepresentable?
+   var destinationPlatform: MusicPlatform = .Spotify
+   
    private let notFoundTitleView = UIView()
    private let sourceToDestinationLabel = UILabel().then {
       $0.font = .systemFont(ofSize: 14, weight: .regular)
@@ -124,6 +130,7 @@ class ValidationNotFoundViewController: UIViewController {
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(102)
       }
+      moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
    }
    
    @objc private func clickXButton() {
@@ -134,6 +141,11 @@ class ValidationNotFoundViewController: UIViewController {
             navigationController.popToViewController(previousViewController, animated: true)
          }
       }
+   }
+   
+   @objc private func clickTransferButton() {
+      let movePlaylistVC = MovePlaylistViewController(musicArr: completeArr, source: sourcePlatform!, destination: destinationPlatform)
+      self.navigationController?.pushViewController(movePlaylistVC, animated: true)
    }
 }
 

@@ -33,13 +33,13 @@ class RecentViewController: UIViewController {
       self.navigationItem.setHidesBackButton(true, animated: false)
       self.navigationController?.setNavigationBarHidden(true, animated: false)
       
+      navigationbarView.delegate = self
       self.view.addSubview(navigationbarView)
       navigationbarView.snp.makeConstraints { make in
          make.top.equalToSuperview().inset(47)
          make.leading.trailing.equalToSuperview()
          make.height.equalTo(46)
       }
-      navigationbarView.setBackButtonTarget(target: self)
       
       self.view.addSubview(recentTableViewCell)
       recentTableViewCell.snp.makeConstraints { make in
@@ -63,10 +63,11 @@ class RecentViewController: UIViewController {
       /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
       self.recentTableViewCell.rx.modelSelected(Me.self)
          .subscribe(onNext: { [weak self] recentItem in
-            self?.viewModel.selectMeItem = Observable.just(recentItem)
+            guard let self = self else { return }
+            self.viewModel.selectMeItem = recentItem
             UserDefaults.standard.set(recentItem.id, forKey: "recentId")
             let recentDetailVC = RecentDetailViewController()
-            self?.navigationController?.pushViewController(recentDetailVC, animated: true)
+            self.navigationController?.pushViewController(recentDetailVC, animated: true)
          })
          .disposed(by: disposeBag)
    }

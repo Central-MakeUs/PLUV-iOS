@@ -11,9 +11,11 @@ import MediaPlayer
 
 class MovePlaylistViewController: UIViewController {
    
-   let viewModel = MovePlaylistViewModel()
-   let meViewModel = MoveMeViewModel()
-   let saveViewModel = MoveSaveViewModel()
+   var viewModel = MovePlaylistViewModel()
+   var meViewModel = MoveMeViewModel()
+   var saveViewModel = MoveSaveViewModel()
+   
+   var completeArr: [String] = []
    
    private var sourcePlatform: PlatformRepresentable?
    private var destinationPlatform: MusicPlatform = .Spotify
@@ -71,10 +73,10 @@ class MovePlaylistViewController: UIViewController {
    
    private let stopView = ActionBottomView(actionName: "작업 중단하기")
    
-   init(playlistItem: Playlist, musicItems: [Music], source: PlatformRepresentable, destination: MusicPlatform) {
+   init(/*playlistItem: Playlist,*/ musicArr: [String], source: PlatformRepresentable, destination: MusicPlatform) {
       super.init(nibName: nil, bundle: nil)
-      self.viewModel.playlistItem = playlistItem
-      self.viewModel.musicItems = musicItems
+//      self.viewModel.playlistItem = playlistItem
+      self.completeArr = musicArr
       self.sourcePlatform = source
       self.destinationPlatform = destination
    }

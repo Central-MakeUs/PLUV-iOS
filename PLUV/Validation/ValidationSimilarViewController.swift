@@ -12,6 +12,18 @@ import SnapKit
 
 class ValidationSimilarViewController: UIViewController {
    
+   var viewModel = MovePlaylistViewModel()
+   var meViewModel = MoveMeViewModel()
+   var saveViewModel = MoveSaveViewModel()
+   
+   var completeArr: [String] = []
+   var successArr: [SearchMusic] = []
+   var successSimilarArr: [SearchMusic] = []
+   var failArr: [SearchMusic] = []
+   
+   var sourcePlatform: PlatformRepresentable?
+   var destinationPlatform: MusicPlatform = .Spotify
+   
    private let scrollView = UIScrollView()
    private let contentView = UIView()
    
@@ -52,6 +64,14 @@ class ValidationSimilarViewController: UIViewController {
    }
    private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
+   
+   init(completeArr: [String], successArr: [SearchMusic], successSimilarArr: [SearchMusic], failArr: [SearchMusic]) {
+      super.init(nibName: nil, bundle: nil)
+   }
+   
+   required init?(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+   }
    
    override func viewDidLoad() {
       super.viewDidLoad()
@@ -149,6 +169,7 @@ class ValidationSimilarViewController: UIViewController {
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(102)
       }
+      moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
    }
    
    @objc private func clickXButton() {
@@ -159,6 +180,12 @@ class ValidationSimilarViewController: UIViewController {
             navigationController.popToViewController(previousViewController, animated: true)
          }
       }
+   }
+   
+   @objc private func clickTransferButton() {
+      let validationNotFoundVC = ValidationNotFoundViewController()
+      validationNotFoundVC.failArr = failArr
+      self.navigationController?.pushViewController(validationNotFoundVC, animated: true)
    }
 }
 

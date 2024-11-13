@@ -26,6 +26,7 @@ final class MoveStopView: UIView {
    }
    var stopLabel = UILabel().then {
       $0.textColor = .red
+      $0.textAlignment = .center
       $0.font = .systemFont(ofSize: 16, weight: .medium)
    }
    var okButton = UIButton().then {
@@ -74,7 +75,6 @@ final class MoveStopView: UIView {
       
       self.mainView.addSubview(stopLabel)
       self.stopLabel.snp.makeConstraints { make in
-         make.centerX.equalToSuperview()
          make.top.equalTo(titleLabel.snp.bottom).offset(33)
          make.leading.trailing.equalToSuperview().inset(22)
          make.height.equalTo(48)

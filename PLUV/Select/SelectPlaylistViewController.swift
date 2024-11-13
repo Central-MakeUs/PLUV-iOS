@@ -15,8 +15,8 @@ import MediaPlayer
 class SelectPlaylistViewController: UIViewController {
    
    let viewModel = SelectPlaylistViewModel()
-   let meViewModel = MeViewModel()
-   let saveViewModel = SaveViewModel()
+   let meViewModel = SelectMePlaylistViewModel()
+   let saveViewModel = SelectSavePlaylistViewModel()
    
    private var sourcePlatform: PlatformRepresentable?
    private var destinationPlatform: MusicPlatform = .Spotify
@@ -186,13 +186,13 @@ class SelectPlaylistViewController: UIViewController {
          self.navigationController?.pushViewController(selectMusicVC, animated: true)
       } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
          let selectMusicVC = SelectMusicViewController()
-         selectMusicVC.meViewModel.meItem = meViewModel.meItem
+         selectMusicVC.meViewModel.meItem = meViewModel.mePlaylistItem
          selectMusicVC.sourcePlatform = sourcePlatform
          selectMusicVC.destinationPlatform = destinationPlatform
          self.navigationController?.pushViewController(selectMusicVC, animated: true)
       } else {
          let selectMusicVC = SelectMusicViewController()
-         selectMusicVC.saveViewModel.saveItem = saveViewModel.saveItem
+         selectMusicVC.saveViewModel.saveItem = saveViewModel.savePlaylistItem
          selectMusicVC.sourcePlatform = sourcePlatform
          selectMusicVC.destinationPlatform = destinationPlatform
          self.navigationController?.pushViewController(selectMusicVC, animated: true)
@@ -359,7 +359,7 @@ class SelectPlaylistViewController: UIViewController {
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
-      self.meViewModel.meItems
+      self.meViewModel.mePlaylistItems
          .observe(on: MainScheduler.instance)
          .bind(to: self.playlistCollectionView.rx.items(cellIdentifier: SelectPlaylistCollectionViewCell.identifier, cellType: SelectPlaylistCollectionViewCell.self)) { index, item, cell in
             cell.mePrepare(me: item, platform: self.sourcePlatform!)
@@ -370,7 +370,7 @@ class SelectPlaylistViewController: UIViewController {
       self.playlistCollectionView.rx.modelSelected(Me.self)
          .subscribe(onNext: { [weak self] meItem in
             self?.moveView.trasferButton.isEnabled = true
-            self?.meViewModel.meItem = meItem
+            self?.meViewModel.mePlaylistItem = meItem
          })
          .disposed(by: disposeBag)
    }
@@ -382,7 +382,7 @@ class SelectPlaylistViewController: UIViewController {
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
-      self.saveViewModel.saveItems
+      self.saveViewModel.savePlaylistItems
          .observe(on: MainScheduler.instance)
          .bind(to: self.playlistCollectionView.rx.items(cellIdentifier: SelectPlaylistCollectionViewCell.identifier, cellType: SelectPlaylistCollectionViewCell.self)) { index, item, cell in
             cell.savePrepare(feed: item, platform: self.sourcePlatform!)
@@ -393,7 +393,7 @@ class SelectPlaylistViewController: UIViewController {
       self.playlistCollectionView.rx.modelSelected(Feed.self)
          .subscribe(onNext: { [weak self] saveItem in
             self?.moveView.trasferButton.isEnabled = true
-            self?.saveViewModel.saveItem = saveItem
+            self?.saveViewModel.savePlaylistItem = saveItem
          })
          .disposed(by: disposeBag)
    }
@@ -495,7 +495,7 @@ class SelectPlaylistViewController: UIViewController {
             if response.data.isEmpty {
                self.noSongImageView.alpha = 1
             } else {
-               self.meViewModel.meItems = Observable.just(response.data)
+               self.meViewModel.mePlaylistItems = Observable.just(response.data)
                self.setMeData()
             }
             self.loadingView.removeFromSuperview()
@@ -516,7 +516,7 @@ class SelectPlaylistViewController: UIViewController {
             if response.data.isEmpty {
                self.noSongImageView.alpha = 1
             } else {
-               self.saveViewModel.saveItems = Observable.just(response.data)
+               self.saveViewModel.savePlaylistItems = Observable.just(response.data)
                self.setSaveData()
             }
             self.loadingView.removeFromSuperview()

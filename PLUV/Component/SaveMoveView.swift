@@ -10,6 +10,8 @@ import Then
 
 final class SaveMoveView: UIView {
    
+   weak var delegate: SaveMoveViewDelegate?
+   
    private let saveButton = UIButton().then {
       $0.setImage(UIImage(named: "savebutton_icon"), for: .normal)
    }
@@ -18,14 +20,7 @@ final class SaveMoveView: UIView {
       $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 16, weight: .medium)
    }
-   private let moveButton = UIButton().then {
-      $0.setTitle("플레이리스트 옮기기", for: .normal)
-      $0.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-      $0.setTitleColor(.white, for: .normal)
-      $0.backgroundColor = .black
-      $0.layer.cornerRadius = 10
-      $0.clipsToBounds = true
-   }
+   var trasferButton = BlackButton()
    var view: UIViewController
    
    private var isOriginalColor = true
@@ -60,9 +55,9 @@ final class SaveMoveView: UIView {
          make.height.equalTo(16)
       }
       
-      self.addSubview(moveButton)
-      self.moveButton.setTitle("플레이리스트 옮기기", for: .normal)
-      moveButton.snp.makeConstraints { make in
+      self.addSubview(trasferButton)
+      self.trasferButton.setTitle("플레이리스트 옮기기", for: .normal)
+      trasferButton.snp.makeConstraints { make in
          make.top.equalToSuperview().offset(10)
          make.leading.equalTo(saveLabel.snp.trailing).offset(35)
          make.trailing.equalToSuperview().inset(24)
@@ -85,5 +80,7 @@ final class SaveMoveView: UIView {
          saveButton.setImage(UIImage(named: "savebutton_icon2"), for: .normal)
       }
       isOriginalColor.toggle()
+      
+      delegate?.setFeedSaveAPI()
    }
 }

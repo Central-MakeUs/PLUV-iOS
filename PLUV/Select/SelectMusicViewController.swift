@@ -13,6 +13,12 @@ import MusicKit
 
 class SelectMusicViewController: UIViewController {
    
+   var completeArr: [String] = []
+   var successArr: [SearchMusic] = []
+   var successSimilarArr: [SearchMusic] = []
+   var failArr: [SearchMusic] = []
+   var searchArr: [Search] = []
+   
    var viewModel = SelectMusicViewModel()
    var meViewModel = SelectMeViewModel()
    var saveViewModel = SelectSaveViewModel()
@@ -95,6 +101,7 @@ class SelectMusicViewController: UIViewController {
    private func setUI() {
       self.view.backgroundColor = .white
       self.navigationItem.setHidesBackButton(true, animated: false)
+      self.navigationController?.setNavigationBarHidden(true, animated: false)
       
       self.view.addSubview(scrollView)
       scrollView.snp.makeConstraints { make in
@@ -324,36 +331,44 @@ class SelectMusicViewController: UIViewController {
       }
    }
    
-   private func searchLoading() {
-      
+   private func goNextStep() {
+      if self.searchArr.count == self.completeArr.count {
+         self.setValidationView(title: "플레이리스트의 모든 음악을 찾았어요!", image: "alert_image")
+         let movePlaylistVC = MovePlaylistViewController(musicArr: completeArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
+         movePlaylistVC.viewModel.playlistItem = viewModel.playlistItem
+         movePlaylistVC.meViewModel.meItem = meViewModel.meItem
+         movePlaylistVC.saveViewModel.saveItem = saveViewModel.saveItem
+         self.navigationController?.pushViewController(movePlaylistVC, animated: true)
+      } else {
+         self.setValidationView(title: "앗, 찾을 수 없는 곡이 몇 개 있네요!", image: "alert_image")
+         let validationSimilarVC = ValidationSimilarViewController(completeArr: completeArr, successArr: successArr, successSimilarArr: successSimilarArr, failArr: failArr)
+         validationSimilarVC.viewModel.playlistItem = viewModel.playlistItem
+         validationSimilarVC.meViewModel.meItem = meViewModel.meItem
+         validationSimilarVC.saveViewModel.saveItem = saveViewModel.saveItem
+         self.navigationController?.pushViewController(validationSimilarVC, animated: true)
+      }
    }
    
    @objc private func clickTransferButton() {
-      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic || musicPlatform == .Spotify {
+      if destinationPlatform == .Spotify {
          self.viewModel.selectedMusic
             .map { musicArray in
-               let movePlaylistVC = MovePlaylistViewController(playlistItem: self.viewModel.playlistItem, musicItems: musicArray, source: self.sourcePlatform!, destination: self.destinationPlatform)
-               self.navigationController?.pushViewController(movePlaylistVC, animated: true)
-            }
-            .subscribe { musicArray in
-               print(musicArray)
-            }
-            .disposed(by: disposeBag)
-      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
-         self.meViewModel.selectedMusic
-            .map { musicArray in
-               let movePlaylistVC = MovePlaylistViewController(playlistItem: self.viewModel.playlistItem, musicItems: musicArray, source: self.sourcePlatform!, destination: self.destinationPlatform)
-               self.navigationController?.pushViewController(movePlaylistVC, animated: true)
+               Task {
+                  await self.searchAppleToSpotifyAPI(musics: musicArray)
+                  self.goNextStep()
+               }
             }
             .subscribe { musicArray in
                print(musicArray)
             }
             .disposed(by: disposeBag)
       } else {
-         self.saveViewModel.selectedMusic
+         self.viewModel.selectedMusic
             .map { musicArray in
-               let movePlaylistVC = MovePlaylistViewController(playlistItem: self.viewModel.playlistItem, musicItems: musicArray, source: self.sourcePlatform!, destination: self.destinationPlatform)
-               self.navigationController?.pushViewController(movePlaylistVC, animated: true)
+               Task {
+                  await self.searchSpotifyToAppleAPI(musics: musicArray)
+                  self.goNextStep()
+               }
             }
             .subscribe { musicArray in
                print(musicArray)
@@ -617,9 +632,24 @@ class SelectMusicViewController: UIViewController {
    }
    
    private func setSearchView() {
+      let searchLoadingView = LoadingView(loadingState: .SearchMusic)
+      
       self.view.addSubview(searchLoadingView)
       loadingView.snp.makeConstraints { make in
          make.edges.equalToSuperview()
+      }
+   }
+   
+   private func setValidationView(title: String, image: String) {
+      let validationView = ValidationView(title: title, image: image)
+      
+      self.view.addSubview(validationView)
+      loadingView.snp.makeConstraints { make in
+         make.edges.equalToSuperview()
+      }
+      
+      DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+         validationView.removeFromSuperview()
       }
    }
    
@@ -641,18 +671,21 @@ class SelectMusicViewController: UIViewController {
                   APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
                      switch response.code {
                      case 200:
-                        var idArr: [String] = []
-                        let searchArr: [Search] = response.data
-                        for search in searchArr {
-                           if search.isEqual == true {
-                              idArr.append(search.destinationMusics.first!.id!)
+                        self.searchArr = response.data
+                        for i in 0..<self.searchArr.count {
+                           if self.searchArr[i].isEqual == true && self.searchArr[i].isFound == true {
+                              self.completeArr.append(self.searchArr[i].destinationMusics.first!.id!)
+                           } else if self.searchArr[i].isEqual == false && self.searchArr[i].isFound == true {
+                              self.successArr.append(self.searchArr[i].sourceMusic)
+                              for j in 0..<self.searchArr[i].destinationMusics.count {
+                                 self.successSimilarArr.append(self.searchArr[i].destinationMusics[j])
+                              }
                            } else {
-                              idArr.append(search.destinationMusics.first!.id!)
+                              self.failArr.append(self.searchArr[i].sourceMusic)
                            }
                         }
                         self.searchLoadingView.removeFromSuperview()
                         print(response.data, "애플에 있는 것 스포티파이에서 검색")
-//                        self.addAppleToSpotify(musicIdsArr: idArr)
                      default:
                         AlertController(message: response.msg).show()
                      }
@@ -688,28 +721,21 @@ class SelectMusicViewController: UIViewController {
                   APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
                      switch response.code {
                      case 200:
-                        var completeArr: [String] = []
-                        var successArr: [SearchMusic] = []
-                        var successSimilarArr: [SearchMusic] = []
-                        var failArr: [SearchMusic] = []
-                        let searchArr: [Search] = response.data
-                        for i in 0..<searchArr.count {
-                           if searchArr[i].isEqual == true && searchArr[i].isFound == true {
-                              completeArr.append(searchArr[i].destinationMusics.first!.id!)
-                           } else if searchArr[i].isEqual == false && searchArr[i].isFound == true {
-                              successArr.append(searchArr[i].sourceMusic)
-                              for j in 0..<searchArr[i].destinationMusics.count {
-                                 successSimilarArr.append(searchArr[i].destinationMusics[j])
+                        self.searchArr = response.data
+                        for i in 0..<self.searchArr.count {
+                           if self.searchArr[i].isEqual == true && self.searchArr[i].isFound == true {
+                              self.completeArr.append(self.searchArr[i].destinationMusics.first!.id!)
+                           } else if self.searchArr[i].isEqual == false && self.searchArr[i].isFound == true {
+                              self.successArr.append(self.searchArr[i].sourceMusic)
+                              for j in 0..<self.searchArr[i].destinationMusics.count {
+                                 self.successSimilarArr.append(self.searchArr[i].destinationMusics[j])
                               }
                            } else {
-                              failArr.append(searchArr[i].sourceMusic)
+                              self.failArr.append(self.searchArr[i].sourceMusic)
                            }
                         }
                         self.searchLoadingView.removeFromSuperview()
                         print(response.data, "스포티파이에 있는 것 애플에서 검색")
-                        Task {
-//                           await self.addSpotifyToApple(musicIdsArr: idArr)
-                        }
                      default:
                         AlertController(message: response.msg).show()
                      }
