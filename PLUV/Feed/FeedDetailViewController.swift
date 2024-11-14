@@ -166,6 +166,7 @@ class FeedDetailViewController: UIViewController, SaveMoveViewDelegate {
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(101)
       }
+      self.saveMoveView.delegate = self
    }
    
    private func setTableViewHeight() {
@@ -229,7 +230,33 @@ class FeedDetailViewController: UIViewController, SaveMoveViewDelegate {
    }
    
    func setFeedSaveAPI() {
+      guard let id = self.viewModel.selectFeedItem?.id else { return }
+      let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+      let url = EndPoint.feedIdSave(String(id)).path
       
+      APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: nil, AccessToken: loginToken) { response in
+         switch response.code {
+         case 200:
+            print("피드 저장이 정상적으로 처리되었습니다.")
+         default:
+            AlertController(message: response.msg).show()
+         }
+      }
+   }
+   
+   func deleteFeedSaveAPI() {
+      guard let id = self.viewModel.selectFeedItem?.id else { return }
+      let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+      let url = EndPoint.feedIdSave(String(id)).path
+      
+      APIService().deleteWithAccessToken(of: APIResponse<String>.self, url: url, parameters: nil, AccessToken: loginToken) { response in
+         switch response.code {
+         case 200:
+            print("피드 삭제가 정상적으로 처리되었습니다.")
+         default:
+            AlertController(message: response.msg).show()
+         }
+      }
    }
 }
 

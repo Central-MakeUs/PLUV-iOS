@@ -333,7 +333,7 @@ class SelectMusicViewController: UIViewController {
    
    private func goNextStep() {
       if self.searchArr.count == self.completeArr.count {
-         self.setValidationView(title: "플레이리스트의 모든 음악을 찾았어요!", image: "alert_image")
+         self.setValidationView(title: "플레이리스트의 모든 음악을 찾았어요!", image: "check_image")
          let movePlaylistVC = MovePlaylistViewController(musicArr: completeArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
          movePlaylistVC.viewModel.playlistItem = viewModel.playlistItem
          movePlaylistVC.meViewModel.meItem = meViewModel.meItem

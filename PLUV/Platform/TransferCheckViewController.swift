@@ -14,7 +14,7 @@ import SpotifyiOS
 class TransferCheckViewController: UIViewController {
    
    var sourcePlatform: PlatformRepresentable?
-   var destinationPlatform: MusicPlatform = .Spotify
+   var destinationPlatform: PlatformRepresentable?
    
    private let checkTitleView = UIView()
    private let backButton = UIButton().then {
@@ -29,7 +29,7 @@ class TransferCheckViewController: UIViewController {
    
    private var selectSourcePlatformView: PlatformView?
    private let dotView = DotView()
-   private lazy var selectDestinationPlatformView = PlatformView(platform: destinationPlatform)
+    private var selectDestinationPlatformView: PlatformView?
    
    private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
@@ -135,14 +135,14 @@ class TransferCheckViewController: UIViewController {
          make.height.equalTo(68)
       }
       
-      if destinationPlatform == .Spotify {
-         checkTitleLabel.text = "\(destinationPlatform.name)로\n플레이리스트를 옮길까요?"
+      if let musicPlatform = destinationPlatform as? MusicPlatform, musicPlatform == .Spotify {
+          checkTitleLabel.text = "\(destinationPlatform!.name)로\n플레이리스트를 옮길까요?"
       } else {
-         checkTitleLabel.text = "\(destinationPlatform.name)으로\n플레이리스트를 옮길까요?"
+          checkTitleLabel.text = "\(destinationPlatform!.name)으로\n플레이리스트를 옮길까요?"
       }
       
       let fullText = checkTitleLabel.text ?? ""
-      let changeText = destinationPlatform.name
+       let changeText = destinationPlatform!.name
       let attributedString = NSMutableAttributedString(string: fullText)
       
       if let range = fullText.range(of: changeText) {
@@ -172,12 +172,17 @@ class TransferCheckViewController: UIViewController {
          make.width.equalTo(6)
       }
       
-      self.view.addSubview(selectDestinationPlatformView)
-      selectDestinationPlatformView.snp.makeConstraints { make in
-         make.top.equalTo(dotView.snp.bottom).offset(23)
-         make.centerX.equalToSuperview()
-         make.height.equalTo(109)
-      }
+       if let platform = destinationPlatform {
+           selectDestinationPlatformView = PlatformView(platform: platform)
+           if let platformView = selectDestinationPlatformView {
+               self.view.addSubview(platformView)
+               platformView.snp.makeConstraints { make in
+                   make.top.equalTo(dotView.snp.bottom).offset(23)
+                   make.centerX.equalToSuperview()
+                   make.height.equalTo(109)
+               }
+           }
+       }
       
       moveView = MoveView(view: self)
       self.view.addSubview(moveView)
@@ -210,7 +215,7 @@ class TransferCheckViewController: UIViewController {
          connectSpotifySession()
       }
       
-      let selectPlaylistVC = SelectPlaylistViewController(source: sourcePlatform ?? MusicPlatform.AppleMusic, destination: destinationPlatform)
+       let selectPlaylistVC = SelectPlaylistViewController(source: sourcePlatform ?? MusicPlatform.AppleMusic, destination: destinationPlatform as! MusicPlatform)
       self.navigationController?.pushViewController(selectPlaylistVC, animated: true)
    }
 }
