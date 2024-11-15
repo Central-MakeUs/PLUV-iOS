@@ -115,13 +115,13 @@ class HomeViewController: UIViewController {
         
         setUI()
         setMeAPI()
-        setSaveAPI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         /// 탭 바 표시하기
         self.tabBarController?.tabBar.isHidden = false
+        setSaveAPI()
     }
 }
 
@@ -206,7 +206,6 @@ extension HomeViewController {
         recentListButton.addTarget(self, action: #selector(clickRecentListButton), for: .touchUpInside)
         
         self.recentListView.addSubview(recentPlayListCollectionView)
-        recentPlayListCollectionView.tag = 1
         recentPlayListCollectionView.snp.makeConstraints { make in
             make.top.equalTo(recentListLabel.snp.bottom).offset(24)
             make.leading.trailing.equalToSuperview()
@@ -236,7 +235,6 @@ extension HomeViewController {
         saveListButton.addTarget(self, action: #selector(clickSaveListButton), for: .touchUpInside)
         
         self.saveListView.addSubview(savePlayListCollectionView)
-        savePlayListCollectionView.tag = 2
         savePlayListCollectionView.snp.makeConstraints { make in
             make.top.equalTo(saveListLabel.snp.bottom).offset(24)
             make.leading.trailing.equalToSuperview()
@@ -289,8 +287,8 @@ extension HomeViewController {
     }
     
     private func setMeData() {
-        self.recentPlayListCollectionView.rx.setDelegate(self)
-            .disposed(by: disposeBag)
+        recentPlayListCollectionView.rx.setDelegate(self)
+                .disposed(by: disposeBag)
         
         /// CollectionView에 들어갈 Cell에 정보 제공
         self.meViewModel.meItems
@@ -298,14 +296,6 @@ extension HomeViewController {
             .bind(to: self.recentPlayListCollectionView.rx.items(cellIdentifier: RecentCollectionViewCell.identifier, cellType: RecentCollectionViewCell.self)) { index, item, cell in
                 cell.prepare(me: item)
             }
-            .disposed(by: disposeBag)
-        
-        /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
-        self.recentPlayListCollectionView.rx.modelSelected(Me.self)
-            .subscribe(onNext: { [weak self] recentItem in
-                guard let self = self else { return }
-                self.meViewModel.selectMeItem = recentItem
-            })
             .disposed(by: disposeBag)
     }
     
@@ -334,7 +324,10 @@ extension HomeViewController {
     }
     
     private func setSaveData() {
-        self.savePlayListCollectionView.rx.setDelegate(self)
+        savePlayListCollectionView.delegate = nil
+        savePlayListCollectionView.dataSource = nil
+        
+        savePlayListCollectionView.rx.setDelegate(self)
             .disposed(by: disposeBag)
         
         /// CollectionView에 들어갈 Cell에 정보 제공
@@ -343,14 +336,6 @@ extension HomeViewController {
             .bind(to: self.savePlayListCollectionView.rx.items(cellIdentifier: SaveCollectionViewCell.identifier, cellType: SaveCollectionViewCell.self)) { index, item, cell in
                 cell.prepare(feed: item)
             }
-            .disposed(by: disposeBag)
-        
-        /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
-        self.savePlayListCollectionView.rx.modelSelected(Feed.self)
-            .subscribe(onNext: { [weak self] saveItem in
-                guard let self = self else { return }
-                self.saveViewModel.selectSaveItem = saveItem
-            })
             .disposed(by: disposeBag)
     }
     
@@ -365,11 +350,9 @@ extension HomeViewController {
                     self.savePlayListCollectionView.isHidden = true
                     self.setSaveEmptyLabel()
                 } else {
-                    print(response.data)
                     self.savePlayListCollectionView.isHidden = false
                     self.saveEmptyLabel.removeFromSuperview()
-                    let limitedData = Array(response.data.prefix(5))
-                    self.saveViewModel.saveItems = Observable.just(limitedData)
+                    self.saveViewModel.saveItems = Observable.just(response.data)
                     self.setSaveData()
                     self.view.layoutIfNeeded()
                 }
@@ -384,8 +367,10 @@ extension HomeViewController {
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        if collectionView.tag == 1 {
+        if collectionView == recentPlayListCollectionView {
             return CGSize(width: 140, height: 140)
+        } else if collectionView == savePlayListCollectionView {
+            return CGSize(width: 100, height: 100)
         } else {
             return CGSize(width: 100, height: 100)
         }

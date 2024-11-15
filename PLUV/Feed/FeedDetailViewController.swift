@@ -11,12 +11,14 @@ import RxSwift
 import RxCocoa
 
 protocol SaveMoveViewDelegate: AnyObject {
-   func deleteFeedSaveAPI()
+    func setFeedSaveAPI()
+    func deleteFeedSaveAPI()
 }
 
 class FeedDetailViewController: UIViewController, SaveMoveViewDelegate {
    
    private var viewModel = FeedViewModel()
+    private var saveViewModel = SaveViewModel()
    
    private let scrollView = UIScrollView()
    private let contentView = UIView()
@@ -53,6 +55,8 @@ class FeedDetailViewController: UIViewController, SaveMoveViewDelegate {
    private var feedDetailTableViewHeightConstraint: Constraint?
    
    private var saveMoveView = SaveMoveView(view: UIViewController())
+    
+    private var saveCount: Int = 0
    
    private let disposeBag = DisposeBag()
    
@@ -71,6 +75,7 @@ class FeedDetailViewController: UIViewController, SaveMoveViewDelegate {
       setUI()
       setPlaylistData()
       setFeedDetailMusicItemAPI()
+       setSaveAPI()
    }
    
 //   override func viewDidLayoutSubviews() {
@@ -258,6 +263,38 @@ class FeedDetailViewController: UIViewController, SaveMoveViewDelegate {
          }
       }
    }
+    
+    private func setSaveAPI() {
+       let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+       let url = EndPoint.feedSave.path
+       
+       APIService().getWithAccessToken(of: APIResponse<[Feed]>.self, url: url, AccessToken: loginToken) { response in
+          switch response.code {
+          case 200:
+              self.saveViewModel.saveItems = Observable.just(response.data)
+              self.observeSaveItems()
+          default:
+             AlertController(message: response.msg).show()
+          }
+       }
+    }
+    
+    private func observeSaveItems() {
+        guard let saveId = self.viewModel.selectFeedItem?.id else { return }
+        saveViewModel.saveItems
+            .map { saves in
+                saves.map { $0.id } // Feed 배열에서 id 값만 추출
+            }
+            .subscribe(onNext: { ids in
+                // 특정 id가 배열에 포함되어 있는지 확인
+                if ids.contains(saveId) {
+                    self.saveMoveView.updateSaveButtonImage(isSaved: false)
+                } else {
+                    self.saveMoveView.updateSaveButtonImage(isSaved: true)
+                }
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 

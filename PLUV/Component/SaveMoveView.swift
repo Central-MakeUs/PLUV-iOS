@@ -23,7 +23,7 @@ final class SaveMoveView: UIView {
     var trasferButton = BlackButton()
     var view: UIViewController
     
-    private var isOriginalColor = true
+    private var isOriginalColor: Bool = true
     
     init(view: UIViewController) {
         self.view = view
@@ -76,12 +76,18 @@ final class SaveMoveView: UIView {
     
     @objc func saveButtonColor() {
         if isOriginalColor {
-            saveButton.setImage(UIImage(named: "savebutton_icon"), for: .normal)
-        } else {
             saveButton.setImage(UIImage(named: "savebutton_icon2"), for: .normal)
+            delegate?.setFeedSaveAPI()
+        } else {
+            saveButton.setImage(UIImage(named: "savebutton_icon"), for: .normal)
+            delegate?.deleteFeedSaveAPI()
         }
         isOriginalColor.toggle()
-        
-        delegate?.deleteFeedSaveAPI()
+    }
+    
+    func updateSaveButtonImage(isSaved: Bool) {
+        let imageName = isSaved ? "savebutton_icon" : "savebutton_icon2"
+        saveButton.setImage(UIImage(named: imageName), for: .normal)
+        isOriginalColor = isSaved
     }
 }
