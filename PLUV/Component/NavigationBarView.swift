@@ -60,7 +60,6 @@ final class NavigationBarView: UIView {
 
 extension UIViewController: NavigationBarViewDelegate {
     func didTapBackButton() {
-       print("아")
         navigationController?.popViewController(animated: true)
     }
 }

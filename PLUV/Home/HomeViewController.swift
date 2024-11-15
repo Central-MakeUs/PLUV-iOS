@@ -15,7 +15,7 @@ import RxCocoa
 
 class HomeViewController: UIViewController {
     
-    let feedViewModel = FeedViewModel()
+    let meViewModel = MeViewModel()
     let saveViewModel = SaveViewModel()
     
     private let scrollView = UIScrollView()
@@ -108,14 +108,13 @@ class HomeViewController: UIViewController {
         $0.textAlignment = .center
     }
     
-    var musicList: [Music] = []
-    
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setUI()
+        setMeAPI()
         setSaveAPI()
     }
     
@@ -271,6 +270,69 @@ extension HomeViewController {
         MusicKitManager.shared.fetchMusic("알레프")
     }
     
+    private func setMeEmptyLabel() {
+        self.recentListView.addSubview(recentEmptyLabel)
+        recentEmptyLabel.snp.makeConstraints { make in
+            make.top.equalTo(recentListLabel.snp.bottom).offset(67)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(13)
+        }
+    }
+    
+    private func setSaveEmptyLabel() {
+        self.saveListView.addSubview(saveEmptyLabel)
+        saveEmptyLabel.snp.makeConstraints { make in
+            make.top.equalTo(saveListLabel.snp.bottom).offset(67)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(13)
+        }
+    }
+    
+    private func setMeData() {
+        self.recentPlayListCollectionView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+        
+        /// CollectionView에 들어갈 Cell에 정보 제공
+        self.meViewModel.meItems
+            .observe(on: MainScheduler.instance)
+            .bind(to: self.recentPlayListCollectionView.rx.items(cellIdentifier: RecentCollectionViewCell.identifier, cellType: RecentCollectionViewCell.self)) { index, item, cell in
+                cell.prepare(me: item)
+            }
+            .disposed(by: disposeBag)
+        
+        /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
+        self.recentPlayListCollectionView.rx.modelSelected(Me.self)
+            .subscribe(onNext: { [weak self] recentItem in
+                guard let self = self else { return }
+                self.meViewModel.selectMeItem = recentItem
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func setMeAPI() {
+       let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+       let url = EndPoint.historyMe.path
+       
+       APIService().getWithAccessToken(of: APIResponse<[Me]>.self, url: url, AccessToken: loginToken) { response in
+          switch response.code {
+          case 200:
+              if response.data.isEmpty {
+                  self.recentPlayListCollectionView.isHidden = true
+                  self.setMeEmptyLabel()
+              } else {
+                  self.recentPlayListCollectionView.isHidden = false
+                  self.recentEmptyLabel.removeFromSuperview()
+                  let limitedData = Array(response.data.prefix(5))
+                  self.meViewModel.meItems = Observable.just(limitedData)
+                  self.setMeData()
+                  self.view.layoutIfNeeded()
+              }
+          default:
+             AlertController(message: response.msg).show()
+          }
+       }
+    }
+    
     private func setSaveData() {
         self.savePlayListCollectionView.rx.setDelegate(self)
             .disposed(by: disposeBag)
@@ -299,10 +361,18 @@ extension HomeViewController {
         APIService().getWithAccessToken(of: APIResponse<[Feed]>.self, url: url, AccessToken: loginToken) { response in
             switch response.code {
             case 200:
-                let limitedData = Array(response.data.prefix(5))
-                self.saveViewModel.saveItems = Observable.just(limitedData)
-                self.setSaveData()
-                self.view.layoutIfNeeded()
+                if response.data.isEmpty {
+                    self.savePlayListCollectionView.isHidden = true
+                    self.setSaveEmptyLabel()
+                } else {
+                    print(response.data)
+                    self.savePlayListCollectionView.isHidden = false
+                    self.saveEmptyLabel.removeFromSuperview()
+                    let limitedData = Array(response.data.prefix(5))
+                    self.saveViewModel.saveItems = Observable.just(limitedData)
+                    self.setSaveData()
+                    self.view.layoutIfNeeded()
+                }
             default:
                 AlertController(message: response.msg).show()
             }

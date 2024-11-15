@@ -437,6 +437,8 @@ class SelectPlaylistViewController: UIViewController {
                     self.noSongImageView.isHidden = false
                     self.maximumCountLabel.isHidden = true
                 } else {
+                    self.noSongImageView.isHidden = true
+                    self.maximumCountLabel.isHidden = false
                     self.viewModel.playlistItems = Observable.just(response.data)
                     self.setData()
                 }
@@ -474,6 +476,8 @@ class SelectPlaylistViewController: UIViewController {
                         self.noSongImageView.isHidden = false
                         self.maximumCountLabel.isHidden = true
                     } else {
+                        self.noSongImageView.isHidden = true
+                        self.maximumCountLabel.isHidden = false
                         self.viewModel.playlistItems = Observable.just(response.data)
                         self.setData()
                     }
@@ -499,6 +503,8 @@ class SelectPlaylistViewController: UIViewController {
                     self.noSongImageView.isHidden = false
                     self.maximumCountLabel.isHidden = true
                 } else {
+                    self.noSongImageView.isHidden = true
+                    self.maximumCountLabel.isHidden = false
                     self.meViewModel.mePlaylistItems = Observable.just(response.data)
                     self.setMeData()
                 }
@@ -521,6 +527,8 @@ class SelectPlaylistViewController: UIViewController {
                     self.noSongImageView.isHidden = false
                     self.maximumCountLabel.isHidden = true
                 } else {
+                    self.noSongImageView.isHidden = true
+                    self.maximumCountLabel.isHidden = false
                     self.saveViewModel.savePlaylistItems = Observable.just(response.data)
                     self.setSaveData()
                 }

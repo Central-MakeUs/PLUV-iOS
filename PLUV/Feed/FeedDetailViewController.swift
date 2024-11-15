@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol SaveMoveViewDelegate: AnyObject {
-   func setFeedSaveAPI()
+   func deleteFeedSaveAPI()
 }
 
 class FeedDetailViewController: UIViewController, SaveMoveViewDelegate {

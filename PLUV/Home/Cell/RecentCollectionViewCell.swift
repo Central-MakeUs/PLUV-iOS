@@ -48,8 +48,8 @@ class RecentCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func prepare(feed: Feed) {
-        let thumbNailUrl = URL(string: feed.thumbNailURL)
+    func prepare(me: Me) {
+        let thumbNailUrl = URL(string: me.imageURL)
         self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
     }
 }

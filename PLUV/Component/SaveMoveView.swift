@@ -82,6 +82,6 @@ final class SaveMoveView: UIView {
         }
         isOriginalColor.toggle()
         
-        delegate?.setFeedSaveAPI()
+        delegate?.deleteFeedSaveAPI()
     }
 }
