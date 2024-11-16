@@ -34,8 +34,8 @@ class SelectMusicViewController: UIViewController {
    
    private let selectMusicTitleView = UIView()
    private let sourceToDestinationLabel = UILabel().then {
-      $0.font = .systemFont(ofSize: 14, weight: .regular)
-      $0.textColor = .subBlue
+      $0.font = .systemFont(ofSize: 14, weight: .medium)
+      $0.textColor = .gray800
    }
    private let backButton = UIButton().then {
       $0.setImage(UIImage(named: "xbutton_icon"), for: .normal)
@@ -50,6 +50,7 @@ class SelectMusicViewController: UIViewController {
    private let playlistView = UIView()
    private let playlistThumnailImageView = UIImageView().then {
       $0.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
+       $0.layer.cornerRadius = 8
       $0.layer.borderWidth = 0.5
       $0.clipsToBounds = true
    }
@@ -97,26 +98,20 @@ class SelectMusicViewController: UIViewController {
       setUI()
       setMusicListAPI()
    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
    
    private func setUI() {
       self.view.backgroundColor = .white
       self.navigationItem.setHidesBackButton(true, animated: false)
-      self.navigationController?.setNavigationBarHidden(true, animated: false)
       
-      self.view.addSubview(scrollView)
-      scrollView.snp.makeConstraints { make in
-         make.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-      }
-      
-      self.scrollView.addSubview(contentView)
-      contentView.snp.makeConstraints { make in
-         make.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-      }
-      
-      self.contentView.addSubview(selectMusicTitleView)
+      self.view.addSubview(selectMusicTitleView)
       selectMusicTitleView.snp.makeConstraints { make in
          make.top.leading.trailing.equalToSuperview()
-         make.height.equalTo(213)
+         make.height.equalTo(221)
       }
       
       self.selectMusicTitleView.addSubview(sourceToDestinationLabel)
@@ -147,54 +142,52 @@ class SelectMusicViewController: UIViewController {
       playlistTitleLabel.snp.makeConstraints { make in
          make.top.equalTo(progressView.snp.bottom).offset(24)
          make.leading.trailing.equalToSuperview().inset(24)
-         make.bottom.equalToSuperview().inset(28)
+          make.height.equalTo(68)
       }
       
-      self.contentView.addSubview(playlistView)
+      self.view.addSubview(playlistView)
       playlistView.snp.makeConstraints { make in
          make.leading.trailing.equalToSuperview()
-         make.top.equalTo(selectMusicTitleView.snp.bottom)
-         make.height.equalTo(126)
+          make.top.equalTo(selectMusicTitleView.snp.bottom)
+         make.height.equalTo(110)
       }
       
       self.playlistView.addSubview(playlistThumnailImageView)
       playlistThumnailImageView.snp.makeConstraints { make in
          make.width.height.equalTo(86)
-         make.top.equalToSuperview()
+          make.centerY.equalToSuperview()
          make.leading.equalToSuperview().offset(24)
       }
+       
+       self.playlistView.addSubview(playlistMenuImageView)
+       playlistMenuImageView.snp.makeConstraints { make in
+           make.top.equalToSuperview().offset(14)
+           make.leading.equalTo(playlistThumnailImageView.snp.trailing).offset(12)
+          make.width.height.equalTo(20)
+       }
+       
+       self.playlistView.addSubview(playlistNameLabel)
+       playlistNameLabel.snp.makeConstraints { make in
+          make.leading.equalTo(playlistMenuImageView.snp.trailing).offset(4)
+          make.centerY.equalTo(playlistMenuImageView)
+          make.trailing.equalToSuperview().inset(24)
+       }
       
       self.playlistView.addSubview(sourcePlatformLabel)
       sourcePlatformLabel.snp.makeConstraints { make in
-         make.top.equalToSuperview().offset(3)
-         make.leading.equalTo(playlistThumnailImageView.snp.trailing).offset(12)
+         make.top.equalTo(playlistNameLabel.snp.bottom).offset(12)
+          make.leading.equalTo(playlistThumnailImageView.snp.trailing).offset(12)
          make.height.equalTo(14)
-         make.trailing.equalToSuperview().inset(24)
-      }
-      
-      self.playlistView.addSubview(playlistMenuImageView)
-      playlistMenuImageView.snp.makeConstraints { make in
-         make.top.equalTo(sourcePlatformLabel.snp.bottom).offset(10)
-         make.leading.equalTo(sourcePlatformLabel.snp.leading)
-         make.width.height.equalTo(20)
-      }
-      
-      self.playlistView.addSubview(playlistNameLabel)
-      playlistNameLabel.snp.makeConstraints { make in
-         make.leading.equalTo(playlistMenuImageView.snp.trailing).offset(4)
-         make.centerY.equalTo(playlistMenuImageView)
-         make.trailing.equalToSuperview().inset(24)
       }
       
       self.playlistView.addSubview(playlistSongCountLabel)
       playlistSongCountLabel.snp.makeConstraints { make in
-         make.leading.equalTo(sourcePlatformLabel.snp.leading)
-         make.bottom.equalTo(playlistThumnailImageView.snp.bottom).offset(-3)
+          make.top.equalTo(playlistNameLabel.snp.bottom).offset(12)
+          make.leading.equalTo(sourcePlatformLabel.snp.trailing).offset(4)
          make.height.equalTo(14)
-         make.trailing.equalToSuperview().inset(24)
       }
       
-      self.contentView.addSubview(selectSongView)
+      self.view.addSubview(selectSongView)
       selectSongView.snp.makeConstraints { make in
          make.top.equalTo(playlistView.snp.bottom)
          make.leading.trailing.equalToSuperview()
@@ -222,7 +215,7 @@ class SelectMusicViewController: UIViewController {
          make.width.height.equalTo(16)
       }
       
-      self.contentView.addSubview(selectMusicTableView)
+      self.view.addSubview(selectMusicTableView)
       selectMusicTableView.snp.makeConstraints { make in
          make.top.equalTo(selectSongView.snp.bottom)
          make.leading.trailing.equalToSuperview()
@@ -333,7 +326,7 @@ class SelectMusicViewController: UIViewController {
    
    private func goNextStep() {
       if self.searchArr.count == self.completeArr.count {
-         self.setValidationView(title: "플레이리스트의 모든 음악을 찾았어요!", image: "check_image")
+         self.setValidationView(title: "플레이리스트의 모든 음악을 찾았어요!", image: "ok_image")
          let movePlaylistVC = MovePlaylistViewController(musicArr: completeArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
          movePlaylistVC.viewModel.playlistItem = viewModel.playlistItem
          movePlaylistVC.meViewModel.meItem = meViewModel.meItem

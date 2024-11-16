@@ -25,7 +25,7 @@ class SelectPlaylistViewController: UIViewController {
     
     private let playlistTitleView = UIView()
     private let sourceToDestinationLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 14, weight: .regular)
+        $0.font = .systemFont(ofSize: 14, weight: .medium)
         $0.textColor = .gray800
     }
     private let backButton = UIButton().then {
@@ -81,10 +81,14 @@ class SelectPlaylistViewController: UIViewController {
         setCellSelected()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
     private func setUI() {
         self.view.backgroundColor = .white
         self.navigationItem.setHidesBackButton(true, animated: false)
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         self.view.addSubview(playlistTitleView)
         playlistTitleView.snp.makeConstraints { make in
@@ -121,18 +125,19 @@ class SelectPlaylistViewController: UIViewController {
         playlistTitleLabel.snp.makeConstraints { make in
             make.top.equalTo(progressView.snp.bottom).offset(24)
             make.leading.trailing.equalToSuperview().inset(24)
-            make.bottom.equalToSuperview().inset(28)
+            make.height.equalTo(34)
         }
         
         self.playlistTitleView.addSubview(maximumCountLabel)
         maximumCountLabel.snp.makeConstraints { make in
-            make.top.equalTo(playlistTitleView.snp.bottom).offset(12)
+            make.top.equalTo(playlistTitleLabel.snp.bottom).offset(6)
             make.leading.equalToSuperview().inset(24)
+            make.height.equalTo(16)
         }
         
         self.view.addSubview(playlistCollectionView)
         playlistCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(maximumCountLabel.snp.bottom).offset(12)
+            make.top.equalTo(playlistTitleView.snp.bottom).offset(12)
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(24)
         }
