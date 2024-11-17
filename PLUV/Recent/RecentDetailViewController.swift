@@ -80,7 +80,6 @@ class RecentDetailViewController: UIViewController {
         
         setUI()
         setRecentData()
-        setRecentId()
     }
     
     private func setUI() {
@@ -159,7 +158,7 @@ class RecentDetailViewController: UIViewController {
             make.top.equalTo(backgroundLabel.snp.bottom)
             make.leading.trailing.bottom.equalToSuperview()
         }
-        let childVC = RecentTabViewController()
+        let childVC = RecentTabViewController(viewModel: self.viewModel)
         addChild(childVC)
         classifyView.addSubview(childVC.view)
         childVC.view.frame = classifyView.bounds
@@ -177,11 +176,6 @@ class RecentDetailViewController: UIViewController {
             make.top.equalToSuperview().offset(10)
             make.height.equalTo(58)
         }
-    }
-    
-    private func setRecentId() {
-        let successVC = RecentSuccessViewController(viewModel: self.viewModel)
-        let failVC = RecentFailViewController(viewModel: self.viewModel)
     }
     
     private func setRecentData() {
