@@ -10,10 +10,8 @@ import RxSwift
 import RxCocoa
 
 class RecentSuccessViewController: UIViewController {
-   
-   let recentId = UserDefaults.standard.integer(forKey: "recentId")
-   
-   let successViewModel = SuccessViewModel()
+
+    private var viewModel = MeViewModel()
    
    private let recentSuccessTableViewCell = UITableView().then {
       $0.separatorStyle = .none
@@ -21,6 +19,15 @@ class RecentSuccessViewController: UIViewController {
    }
    private let disposeBag = DisposeBag()
    
+    init(viewModel: MeViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
    override func viewDidLoad() {
       super.viewDidLoad()
       
@@ -45,29 +52,23 @@ class RecentSuccessViewController: UIViewController {
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
-      self.successViewModel.successItems
+       self.viewModel.selectMeMusicItem
          .observe(on: MainScheduler.instance)
          .bind(to: self.recentSuccessTableViewCell.rx.items(cellIdentifier: RecentSuccessTableViewCell.identifier, cellType: RecentSuccessTableViewCell.self)) { index, item, cell in
             cell.prepare(music: item, index: index)
          }
          .disposed(by: disposeBag)
-      
-      /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
-      self.recentSuccessTableViewCell.rx.modelSelected(Music.self)
-         .subscribe(onNext: { [weak self] successItem in
-            self?.successViewModel.selectSuccessItem = Observable.just(successItem)
-         })
-         .disposed(by: disposeBag)
    }
    
    private func setSuccessAPI() {
+       guard let id = self.viewModel.selectMeItem?.id else { return }
       let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
-      let url = EndPoint.historySuccess("\(recentId)").path
+      let url = EndPoint.historySuccess("\(id)").path
       
       APIService().getWithAccessToken(of: APIResponse<[Music]>.self, url: url, AccessToken: loginToken) { response in
          switch response.code {
          case 200:
-            self.successViewModel.successItems = Observable.just(response.data)
+             self.viewModel.selectMeMusicItem.accept(response.data)
             self.setData()
             self.view.layoutIfNeeded()
          default:

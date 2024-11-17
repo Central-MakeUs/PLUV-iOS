@@ -65,8 +65,7 @@ class RecentViewController: UIViewController {
          .subscribe(onNext: { [weak self] recentItem in
             guard let self = self else { return }
             self.viewModel.selectMeItem = recentItem
-            UserDefaults.standard.set(recentItem.id, forKey: "recentId")
-            let recentDetailVC = RecentDetailViewController()
+             let recentDetailVC = RecentDetailViewController(viewModel: self.viewModel)
             self.navigationController?.pushViewController(recentDetailVC, animated: true)
          })
          .disposed(by: disposeBag)
