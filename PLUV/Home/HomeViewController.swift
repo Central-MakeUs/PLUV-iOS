@@ -114,13 +114,13 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         setUI()
-        setMeAPI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         /// 탭 바 표시하기
         self.tabBarController?.tabBar.isHidden = false
+        setMeAPI()
         setSaveAPI()
     }
 }
@@ -200,7 +200,7 @@ extension HomeViewController {
         self.recentListView.addSubview(recentListButton)
         recentListButton.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(24)
-            make.trailing.equalToSuperview().inset(16)
+            make.trailing.equalToSuperview().inset(18)
             make.height.equalTo(18)
         }
         recentListButton.addTarget(self, action: #selector(clickRecentListButton), for: .touchUpInside)
@@ -229,7 +229,7 @@ extension HomeViewController {
         self.saveListView.addSubview(saveListButton)
         saveListButton.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(24)
-            make.trailing.equalToSuperview().inset(16)
+            make.trailing.equalToSuperview().inset(18)
             make.height.equalTo(18)
         }
         saveListButton.addTarget(self, action: #selector(clickSaveListButton), for: .touchUpInside)
@@ -287,8 +287,11 @@ extension HomeViewController {
     }
     
     private func setMeData() {
+        recentPlayListCollectionView.delegate = nil
+        recentPlayListCollectionView.dataSource = nil
+        
         recentPlayListCollectionView.rx.setDelegate(self)
-                .disposed(by: disposeBag)
+            .disposed(by: disposeBag)
         
         /// CollectionView에 들어갈 Cell에 정보 제공
         self.meViewModel.meItems
@@ -300,27 +303,27 @@ extension HomeViewController {
     }
     
     private func setMeAPI() {
-       let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
-       let url = EndPoint.historyMe.path
-       
-       APIService().getWithAccessToken(of: APIResponse<[Me]>.self, url: url, AccessToken: loginToken) { response in
-          switch response.code {
-          case 200:
-              if response.data.isEmpty {
-                  self.recentPlayListCollectionView.isHidden = true
-                  self.setMeEmptyLabel()
-              } else {
-                  self.recentPlayListCollectionView.isHidden = false
-                  self.recentEmptyLabel.removeFromSuperview()
-                  let limitedData = Array(response.data.prefix(5))
-                  self.meViewModel.meItems = Observable.just(limitedData)
-                  self.setMeData()
-                  self.view.layoutIfNeeded()
-              }
-          default:
-             AlertController(message: response.msg).show()
-          }
-       }
+        let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+        let url = EndPoint.historyMe.path
+        
+        APIService().getWithAccessToken(of: APIResponse<[Me]>.self, url: url, AccessToken: loginToken) { response in
+            switch response.code {
+            case 200:
+                if response.data.isEmpty {
+                    self.recentPlayListCollectionView.isHidden = true
+                    self.setMeEmptyLabel()
+                } else {
+                    self.recentPlayListCollectionView.isHidden = false
+                    self.recentEmptyLabel.removeFromSuperview()
+                    let limitedData = Array(response.data.prefix(5))
+                    self.meViewModel.meItems = Observable.just(limitedData)
+                    self.setMeData()
+                    self.view.layoutIfNeeded()
+                }
+            default:
+                AlertController(message: response.msg).show()
+            }
+        }
     }
     
     private func setSaveData() {

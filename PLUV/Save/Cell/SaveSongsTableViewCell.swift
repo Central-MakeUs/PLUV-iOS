@@ -15,10 +15,12 @@ class SaveSongsTableViewCell: UITableViewCell {
       $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 14, weight: .medium)
    }
-   private let thumbnailImageView = UIImageView().then {
-      $0.layer.cornerRadius = 8
-      $0.clipsToBounds = true
-   }
+    private let thumbnailImageView = UIImageView().then {
+        $0.layer.cornerRadius = 5
+        $0.layer.borderColor = UIColor.gray300.cgColor
+        $0.layer.borderWidth = 0.5
+        $0.clipsToBounds = true
+    }
    private let nameLabel = UILabel().then {
       $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 15, weight: .medium)

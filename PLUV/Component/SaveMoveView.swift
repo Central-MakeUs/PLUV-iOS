@@ -10,7 +10,8 @@ import Then
 
 final class SaveMoveView: UIView {
     
-    weak var delegate: SaveMoveViewDelegate?
+    weak var feedDelegate: SaveMoveViewFeedDelegate?
+    weak var saveDelegate: SaveMoveViewSaveDelegate?
     
     private let saveButton = UIButton().then {
         $0.setImage(UIImage(named: "savebutton_icon"), for: .normal)
@@ -69,18 +70,19 @@ final class SaveMoveView: UIView {
     
     func shadow() {
         self.layer.shadowColor = UIColor.shadow.cgColor
-        self.layer.shadowOpacity = 0.2
-        self.layer.shadowRadius = 1.2
+        self.layer.shadowOpacity = 0.9
+        self.layer.shadowRadius = 1.0
         self.layer.shadowOffset = CGSize(width: 0, height: -2)
     }
     
     @objc func saveButtonColor() {
         if isOriginalColor {
             saveButton.setImage(UIImage(named: "savebutton_icon2"), for: .normal)
-            delegate?.setFeedSaveAPI()
+            feedDelegate?.setFeedSaveAPI()
         } else {
             saveButton.setImage(UIImage(named: "savebutton_icon"), for: .normal)
-            delegate?.deleteFeedSaveAPI()
+            feedDelegate?.deleteFeedSaveAPI()
+            saveDelegate?.deleteFeedSaveAPI()
         }
         isOriginalColor.toggle()
     }
@@ -89,5 +91,9 @@ final class SaveMoveView: UIView {
         let imageName = isSaved ? "savebutton_icon" : "savebutton_icon2"
         saveButton.setImage(UIImage(named: imageName), for: .normal)
         isOriginalColor = isSaved
+    }
+    
+    func updateSaveButton() {
+        saveButton.isEnabled = false
     }
 }

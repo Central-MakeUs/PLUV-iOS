@@ -621,8 +621,8 @@
 			children = (
 				C79AAC622CD4CE5B000B5FAD /* Cell */,
 				C75CD8962CCABDBF00B2291D /* SaveViewController.swift */,
-				C75CD89C2CCAC95400B2291D /* SaveDetailViewController.swift */,
 				C7BF67AB2CDB8175003C9EE2 /* SaveViewModel.swift */,
+				C75CD89C2CCAC95400B2291D /* SaveDetailViewController.swift */,
 				C7BF67AD2CDB90CA003C9EE2 /* SaveDetailViewModel.swift */,
 			);
 			path = Save;

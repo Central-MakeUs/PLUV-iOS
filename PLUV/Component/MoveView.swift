@@ -58,8 +58,8 @@ final class MoveView: UIView {
     
     func shadow() {
         self.layer.shadowColor = UIColor.shadow.cgColor
-        self.layer.shadowOpacity = 0.2
-        self.layer.shadowRadius = 1.2
+        self.layer.shadowOpacity = 0.9
+        self.layer.shadowRadius = 1.0
         self.layer.shadowOffset = CGSize(width: 0, height: -2)
     }
     
