@@ -63,8 +63,8 @@ class SaveDetailViewController: UIViewController {
       super.viewDidLoad()
       
       setUI()
-//      setSaveData()
-//      setSaveMusicAPI()
+      setSaveData()
+      setSaveMusicAPI()
    }
    
    private func setUI() {
@@ -87,17 +87,17 @@ class SaveDetailViewController: UIViewController {
          make.height.equalTo(1100)
       }
       
-      self.contentView.addSubview(navigationbarView)
+      navigationbarView.delegate = self
+      self.view.addSubview(navigationbarView)
       navigationbarView.snp.makeConstraints { make in
          make.top.equalToSuperview().inset(47)
          make.leading.trailing.equalToSuperview()
          make.height.equalTo(46)
       }
-      navigationbarView.setBackButtonTarget(target: self)
-      
+
       self.contentView.addSubview(thumbnailImageView)
       thumbnailImageView.snp.makeConstraints { make in
-         make.top.equalTo(navigationbarView.snp.bottom)
+         make.top.equalToSuperview().offset(93)
          make.leading.trailing.equalToSuperview()
          make.height.equalTo(390)
       }

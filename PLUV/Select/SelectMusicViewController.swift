@@ -13,11 +13,21 @@ import MusicKit
 
 class SelectMusicViewController: UIViewController {
    
-   let viewModel = SelectMusicViewModel()
-   let loadingView = LoadingView(loadingState: .LoadMusic)
+   var completeArr: [String] = []
+   var successArr: [SearchMusic] = []
+   var successSimilarArr: [SearchMusic] = []
+   var failArr: [SearchMusic] = []
+   var searchArr: [Search] = []
    
-   private var sourcePlatform: PlatformRepresentable?
-   private var destinationPlatform: MusicPlatform = .Spotify
+   var viewModel = SelectMusicViewModel()
+   var meViewModel = SelectMeViewModel()
+   var saveViewModel = SelectSaveViewModel()
+   
+   let loadingView = LoadingView(loadingState: .LoadMusic)
+   let searchLoadingView = LoadingView(loadingState: .SearchMusic)
+   
+   var sourcePlatform: PlatformRepresentable?
+   var destinationPlatform: MusicPlatform = .Spotify
    
    private let scrollView = UIScrollView()
    private let contentView = UIView()
@@ -81,17 +91,6 @@ class SelectMusicViewController: UIViewController {
    private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
    
-   init(playlistItem: Playlist, source: PlatformRepresentable, destination: MusicPlatform) {
-      super.init(nibName: nil, bundle: nil)
-      self.viewModel.playlistItem = playlistItem
-      self.sourcePlatform = source
-      self.destinationPlatform = destination
-   }
-   
-   required init?(coder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
-   }
-   
    override func viewDidLoad() {
       super.viewDidLoad()
       
@@ -102,6 +101,7 @@ class SelectMusicViewController: UIViewController {
    private func setUI() {
       self.view.backgroundColor = .white
       self.navigationItem.setHidesBackButton(true, animated: false)
+      self.navigationController?.setNavigationBarHidden(true, animated: false)
       
       self.view.addSubview(scrollView)
       scrollView.snp.makeConstraints { make in
@@ -237,7 +237,6 @@ class SelectMusicViewController: UIViewController {
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(101)
       }
-      moveView.setBackButtonTarget(target: self)
       
       self.view.addSubview(loadingView)
       loadingView.snp.makeConstraints { make in
@@ -253,12 +252,16 @@ class SelectMusicViewController: UIViewController {
    }
    
    @objc private func clickXButton() {
-      if let navigationController = self.navigationController {
-         let viewControllers = navigationController.viewControllers
-         if viewControllers.count > 5 {
-            let previousViewController = viewControllers[viewControllers.count - 6]
-            navigationController.popToViewController(previousViewController, animated: true)
-         }
+      let moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 6)
+      
+      self.view.addSubview(moveStopView)
+      moveStopView.alpha = 0
+      moveStopView.snp.makeConstraints { make in
+         make.edges.equalToSuperview()
+      }
+      
+      UIView.animate(withDuration: 0.3) {
+         moveStopView.alpha = 1
       }
    }
    
@@ -269,51 +272,142 @@ class SelectMusicViewController: UIViewController {
    }
    
    @objc private func clickSelectAllButton() {
-      /// 모든 셀을 선택할지 해제할지 결정
-      let allSelected = viewModel.selectedMusic.value.count == viewModel.musicItem.value.count
-      
-      if allSelected {
-         /// 모두 선택 해제
-         viewModel.selectedMusic.accept([])
+      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic || musicPlatform == .Spotify {
+         /// 모든 셀을 선택할지 해제할지 결정
+         let allSelected = viewModel.selectedMusic.value.count == viewModel.musicItem.value.count
+         
+         if allSelected {
+            /// 모두 선택 해제
+            viewModel.selectedMusic.accept([])
+         } else {
+            /// 모두 선택
+            viewModel.selectedMusic.accept(viewModel.musicItem.value)
+         }
+         self.selectMusicTableView.reloadData()
+      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+         let allSelected = meViewModel.selectedMusic.value.count == meViewModel.musicItem.value.count
+         
+         if allSelected {
+            /// 모두 선택 해제
+            meViewModel.selectedMusic.accept([])
+         } else {
+            /// 모두 선택
+            meViewModel.selectedMusic.accept(meViewModel.musicItem.value)
+         }
+         self.selectMusicTableView.reloadData()
       } else {
-         /// 모두 선택
-         viewModel.selectedMusic.accept(viewModel.musicItem.value)
+         let allSelected = saveViewModel.selectedMusic.value.count == saveViewModel.musicItem.value.count
+         
+         if allSelected {
+            /// 모두 선택 해제
+            saveViewModel.selectedMusic.accept([])
+         } else {
+            /// 모두 선택
+            saveViewModel.selectedMusic.accept(saveViewModel.musicItem.value)
+         }
+         self.selectMusicTableView.reloadData()
       }
-      
-      self.selectMusicTableView.reloadData()
    }
    
    private func bindtrasferButton() {
       moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
       
-      /// selectedMusic의 변화를 관찰하여 trasferButton의 활성화 상태를 업데이트
-      self.viewModel.selectedMusic
-         .map { !$0.isEmpty } /// 선택된 음악이 있으면 true, 없으면 false
-         .bind(to: moveView.trasferButton.rx.isEnabled)
-         .disposed(by: disposeBag)
+      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic || musicPlatform == .Spotify {
+         /// selectedMusic의 변화를 관찰하여 trasferButton의 활성화 상태를 업데이트
+         self.viewModel.selectedMusic
+            .map { !$0.isEmpty } /// 선택된 음악이 있으면 true, 없으면 false
+            .bind(to: moveView.trasferButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+         self.meViewModel.selectedMusic
+            .map { !$0.isEmpty } /// 선택된 음악이 있으면 true, 없으면 false
+            .bind(to: moveView.trasferButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+      } else {
+         self.saveViewModel.selectedMusic
+            .map { !$0.isEmpty } /// 선택된 음악이 있으면 true, 없으면 false
+            .bind(to: moveView.trasferButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+      }
+   }
+   
+   private func goNextStep() {
+      if self.searchArr.count == self.completeArr.count {
+         self.setValidationView(title: "플레이리스트의 모든 음악을 찾았어요!", image: "check_image")
+         let movePlaylistVC = MovePlaylistViewController(musicArr: completeArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
+         movePlaylistVC.viewModel.playlistItem = viewModel.playlistItem
+         movePlaylistVC.meViewModel.meItem = meViewModel.meItem
+         movePlaylistVC.saveViewModel.saveItem = saveViewModel.saveItem
+         self.navigationController?.pushViewController(movePlaylistVC, animated: true)
+      } else {
+         self.setValidationView(title: "앗, 찾을 수 없는 곡이 몇 개 있네요!", image: "alert_image")
+         let validationSimilarVC = ValidationSimilarViewController(completeArr: completeArr, successArr: successArr, successSimilarArr: successSimilarArr, failArr: failArr)
+         validationSimilarVC.viewModel.playlistItem = viewModel.playlistItem
+         validationSimilarVC.meViewModel.meItem = meViewModel.meItem
+         validationSimilarVC.saveViewModel.saveItem = saveViewModel.saveItem
+         self.navigationController?.pushViewController(validationSimilarVC, animated: true)
+      }
    }
    
    @objc private func clickTransferButton() {
-      self.viewModel.selectedMusic
-         .map { musicArray in
-            let movePlaylistVC = MovePlaylistViewController(playlistItem: self.viewModel.playlistItem, musicItems: musicArray, source: self.sourcePlatform!, destination: self.destinationPlatform)
-            self.navigationController?.pushViewController(movePlaylistVC, animated: true)
-         }
-         .subscribe { musicArray in
-            print(musicArray)
-         }
-         .disposed(by: disposeBag)
+      if destinationPlatform == .Spotify {
+         self.viewModel.selectedMusic
+            .map { musicArray in
+               Task {
+                  await self.searchAppleToSpotifyAPI(musics: musicArray)
+                  self.goNextStep()
+               }
+            }
+            .subscribe { musicArray in
+               print(musicArray)
+            }
+            .disposed(by: disposeBag)
+      } else {
+         self.viewModel.selectedMusic
+            .map { musicArray in
+               Task {
+                  await self.searchSpotifyToAppleAPI(musics: musicArray)
+                  self.goNextStep()
+               }
+            }
+            .subscribe { musicArray in
+               print(musicArray)
+            }
+            .disposed(by: disposeBag)
+      }
    }
    
    private func setPlaylistData() {
-      let thumbnailURL = URL(string: self.viewModel.playlistItem.thumbnailURL)
-      playlistThumnailImageView.kf.setImage(with: thumbnailURL)
-      sourceToDestinationLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
-      sourcePlatformLabel.text = sourcePlatform!.name
-      playlistNameLabel.text = self.viewModel.playlistItem.name
-      self.viewModel.musicItemCount { count in
-         self.playlistSongCountLabel.text = "총 \(count)곡"
-         self.songCountLabel.text = "\(count)곡"
+      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic || musicPlatform == .Spotify {
+         let thumbnailURL = URL(string: self.viewModel.playlistItem.thumbnailURL)
+         playlistThumnailImageView.kf.setImage(with: thumbnailURL)
+         sourceToDestinationLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
+         sourcePlatformLabel.text = sourcePlatform!.name
+         playlistNameLabel.text = self.viewModel.playlistItem.name
+         self.viewModel.musicItemCount { count in
+            self.playlistSongCountLabel.text = "총 \(count)곡"
+            self.songCountLabel.text = "\(count)곡"
+         }
+      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+         let thumbnailURL = URL(string: self.meViewModel.meItem.imageURL)
+         playlistThumnailImageView.kf.setImage(with: thumbnailURL)
+         sourceToDestinationLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
+         sourcePlatformLabel.text = sourcePlatform!.name
+         playlistNameLabel.text = self.meViewModel.meItem.title
+         self.meViewModel.musicItemCount { count in
+            self.playlistSongCountLabel.text = "총 \(count)곡"
+            self.songCountLabel.text = "\(count)곡"
+         }
+      } else {
+         let thumbnailURL = URL(string: self.saveViewModel.saveItem.thumbNailURL)
+         playlistThumnailImageView.kf.setImage(with: thumbnailURL)
+         sourceToDestinationLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
+         sourcePlatformLabel.text = sourcePlatform!.name
+         playlistNameLabel.text = self.saveViewModel.saveItem.title
+         self.saveViewModel.musicItemCount { count in
+            self.playlistSongCountLabel.text = "총 \(count)곡"
+            self.songCountLabel.text = "\(count)곡"
+         }
       }
    }
    
@@ -359,6 +453,90 @@ class SelectMusicViewController: UIViewController {
          .disposed(by: disposeBag)
    }
    
+   private func setMeData() {
+      self.selectMusicTableView.rx.setDelegate(self)
+         .disposed(by: disposeBag)
+      
+      /// 아이템 선택 시 스타일 제거
+      self.selectMusicTableView.rx.itemSelected
+         .subscribe(onNext: { [weak self] indexPath in
+            self?.selectMusicTableView.deselectRow(at: indexPath, animated: true)
+         })
+         .disposed(by: disposeBag)
+      
+      /// 모든 cell 선택된 상태로 세팅
+      self.meViewModel.selectedMusic.accept(meViewModel.musicItem.value)
+      
+      /// TableView에 들어갈 Cell에 정보 제공
+      self.meViewModel.musicItem
+         .observe(on: MainScheduler.instance)
+         .bind(to: self.selectMusicTableView.rx.items(cellIdentifier: SelectMusicTableViewCell.identifier, cellType: SelectMusicTableViewCell.self)) { row, music, cell in
+            cell.prepare(music: music)
+            
+            /// 현재 음악이 선택된 상태인지 확인하고 UI 업데이트
+            let isSelected = self.meViewModel.selectedMusic.value.contains(where: { $0.title == music.title && $0.artistNames == music.artistNames })
+            cell.updateSelectionUI(isSelected: isSelected)
+         }
+         .disposed(by: disposeBag)
+      
+      /// 셀 선택 처리
+      self.selectMusicTableView.rx.modelSelected(Music.self)
+         .subscribe(onNext: { [weak self] music in
+            self?.meViewModel.musicSelect(music: music)
+            self?.selectMusicTableView.reloadData()
+         })
+         .disposed(by: disposeBag)
+      
+      /// 선택한 음악의 변화를 관찰하고 이에 따라 UI를 업데이트
+      self.meViewModel.selectedMusic
+         .subscribe(onNext: { [weak self] selectedMusic in
+            self?.selectMusicTableView.reloadData()
+         })
+         .disposed(by: disposeBag)
+   }
+   
+   private func setSaveData() {
+      self.selectMusicTableView.rx.setDelegate(self)
+         .disposed(by: disposeBag)
+      
+      /// 아이템 선택 시 스타일 제거
+      self.selectMusicTableView.rx.itemSelected
+         .subscribe(onNext: { [weak self] indexPath in
+            self?.selectMusicTableView.deselectRow(at: indexPath, animated: true)
+         })
+         .disposed(by: disposeBag)
+      
+      /// 모든 cell 선택된 상태로 세팅
+      self.saveViewModel.selectedMusic.accept(saveViewModel.musicItem.value)
+      
+      /// TableView에 들어갈 Cell에 정보 제공
+      self.saveViewModel.musicItem
+         .observe(on: MainScheduler.instance)
+         .bind(to: self.selectMusicTableView.rx.items(cellIdentifier: SelectMusicTableViewCell.identifier, cellType: SelectMusicTableViewCell.self)) { row, music, cell in
+            cell.prepare(music: music)
+            
+            /// 현재 음악이 선택된 상태인지 확인하고 UI 업데이트
+            let isSelected = self.saveViewModel.selectedMusic.value.contains(where: { $0.title == music.title && $0.artistNames == music.artistNames })
+            cell.updateSelectionUI(isSelected: isSelected)
+         }
+         .disposed(by: disposeBag)
+      
+      /// 셀 선택 처리
+      self.selectMusicTableView.rx.modelSelected(Music.self)
+         .subscribe(onNext: { [weak self] music in
+            self?.saveViewModel.musicSelect(music: music)
+            self?.selectMusicTableView.reloadData()
+         })
+         .disposed(by: disposeBag)
+      
+      /// 선택한 음악의 변화를 관찰하고 이에 따라 UI를 업데이트
+      self.saveViewModel.selectedMusic
+         .subscribe(onNext: { [weak self] selectedMusic in
+            self?.selectMusicTableView.reloadData()
+         })
+         .disposed(by: disposeBag)
+   }
+   
    private func setMusicListAPI() {
       if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic {
          Task {
@@ -366,6 +544,10 @@ class SelectMusicViewController: UIViewController {
          }
       } else if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .Spotify {
          setSpotifyMusicListAPI()
+      } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+         setMeMusicListAPI()
+      } else {
+         setSaveMusicListAPI()
       }
    }
    
@@ -409,6 +591,162 @@ class SelectMusicViewController: UIViewController {
          default:
             AlertController(message: response.msg).show()
          }
+      }
+   }
+   
+   private func setMeMusicListAPI() {
+      let recentId = meViewModel.meItem.id
+      let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+      let url = EndPoint.historySuccess("\(recentId)").path
+      
+      APIService().getWithAccessToken(of: APIResponse<[Music]>.self, url: url, AccessToken: loginToken) { response in
+         switch response.code {
+         case 200:
+            self.meViewModel.musicItem.accept(response.data)
+            self.setMeData()
+            self.setPlaylistData()
+            self.loadingView.removeFromSuperview()
+            self.view.layoutIfNeeded()
+         default:
+            AlertController(message: response.msg).show()
+         }
+      }
+   }
+   
+   private func setSaveMusicListAPI() {
+      let saveId = saveViewModel.saveItem.id
+      let url = EndPoint.feedIdMusic("\(saveId)").path
+      
+      APIService().get(of: APIResponse<[Music]>.self, url: url) { response in
+         switch response.code {
+         case 200:
+            self.saveViewModel.musicItem.accept(response.data)
+            self.setSaveData()
+            self.setPlaylistData()
+            self.loadingView.removeFromSuperview()
+            self.view.layoutIfNeeded()
+         default:
+            AlertController(message: response.msg).show()
+         }
+      }
+   }
+   
+   private func setSearchView() {
+      let searchLoadingView = LoadingView(loadingState: .SearchMusic)
+      
+      self.view.addSubview(searchLoadingView)
+      loadingView.snp.makeConstraints { make in
+         make.edges.equalToSuperview()
+      }
+   }
+   
+   private func setValidationView(title: String, image: String) {
+      let validationView = ValidationView(title: title, image: image)
+      
+      self.view.addSubview(validationView)
+      loadingView.snp.makeConstraints { make in
+         make.edges.equalToSuperview()
+      }
+      
+      DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+         validationView.removeFromSuperview()
+      }
+   }
+   
+   private func searchAppleToSpotifyAPI(musics: [Music]) async {
+      self.setSearchView()
+      do {
+         let jsonData = try JSONEncoder().encode(musics)
+         let jsonString = String(data: jsonData, encoding: .utf8) ?? ""
+         let musicParams = jsonString.replacingOccurrences(of: "\\", with: "").replacingOccurrences(of: "artistNames", with: "artistName")
+         
+         if let parameterJsonData = musicParams.data(using: .utf8) {
+            do {
+               if let parameterJsonArray = try JSONSerialization.jsonObject(with: parameterJsonData, options: []) as? [[String: Any]] {
+                  
+                  let url = EndPoint.musicSpotifySearch.path
+                  let params = ["destinationAccessToken" : TokenManager.shared.spotifyAccessToken,
+                                "musics" : parameterJsonArray] as [String : Any]
+                  
+                  APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
+                     switch response.code {
+                     case 200:
+                        self.searchArr = response.data
+                        for i in 0..<self.searchArr.count {
+                           if self.searchArr[i].isEqual == true && self.searchArr[i].isFound == true {
+                              self.completeArr.append(self.searchArr[i].destinationMusics.first!.id!)
+                           } else if self.searchArr[i].isEqual == false && self.searchArr[i].isFound == true {
+                              self.successArr.append(self.searchArr[i].sourceMusic)
+                              for j in 0..<self.searchArr[i].destinationMusics.count {
+                                 self.successSimilarArr.append(self.searchArr[i].destinationMusics[j])
+                              }
+                           } else {
+                              self.failArr.append(self.searchArr[i].sourceMusic)
+                           }
+                        }
+                        self.searchLoadingView.removeFromSuperview()
+                        print(response.data, "애플에 있는 것 스포티파이에서 검색")
+                     default:
+                        AlertController(message: response.msg).show()
+                     }
+                  }
+               }
+            } catch {
+               print("JSON 변환 실패: \(error.localizedDescription)")
+            }
+         }
+      } catch {
+         print(error)
+      }
+   }
+   
+   private func searchSpotifyToAppleAPI(musics: [Music]) async {
+      self.setSearchView()
+      do {
+         let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
+         let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
+         
+         let jsonData = try JSONEncoder().encode(musics)
+         let jsonString = String(data: jsonData, encoding: .utf8) ?? ""
+         let musicParams = jsonString.replacingOccurrences(of: "\\", with: "").replacingOccurrences(of: "artistNames", with: "artistName")
+         
+         if let parameterJsonData = musicParams.data(using: .utf8) {
+            do {
+               if let parameterJsonArray = try JSONSerialization.jsonObject(with: parameterJsonData, options: []) as? [[String: Any]] {
+                  
+                  let url = EndPoint.musicAppleSearch.path
+                  let params = ["destinationAccessToken" : userToken,
+                                "musics" : parameterJsonArray] as [String : Any]
+                  print(params, "파람 확인")
+                  APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
+                     switch response.code {
+                     case 200:
+                        self.searchArr = response.data
+                        for i in 0..<self.searchArr.count {
+                           if self.searchArr[i].isEqual == true && self.searchArr[i].isFound == true {
+                              self.completeArr.append(self.searchArr[i].destinationMusics.first!.id!)
+                           } else if self.searchArr[i].isEqual == false && self.searchArr[i].isFound == true {
+                              self.successArr.append(self.searchArr[i].sourceMusic)
+                              for j in 0..<self.searchArr[i].destinationMusics.count {
+                                 self.successSimilarArr.append(self.searchArr[i].destinationMusics[j])
+                              }
+                           } else {
+                              self.failArr.append(self.searchArr[i].sourceMusic)
+                           }
+                        }
+                        self.searchLoadingView.removeFromSuperview()
+                        print(response.data, "스포티파이에 있는 것 애플에서 검색")
+                     default:
+                        AlertController(message: response.msg).show()
+                     }
+                  }
+               }
+            } catch {
+               print("JSON 변환 실패: \(error.localizedDescription)")
+            }
+         }
+      } catch {
+         print(error)
       }
    }
 }

@@ -15,14 +15,17 @@ class SimilarSongsTableViewCell: UITableViewCell {
       $0.backgroundColor = .gray200
    }
    private let thumbnailImageView = UIImageView().then {
+      $0.image = UIImage(named: "applemusic_icon")
       $0.layer.cornerRadius = 8
       $0.clipsToBounds = true
    }
    private let songTitleLabel = UILabel().then {
+      $0.text = "원곡"
       $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 16, weight: .medium)
    }
    private let singerLabel = UILabel().then {
+      $0.text = "원곡"
       $0.textColor = .gray600
       $0.font = .systemFont(ofSize: 14, weight: .regular)
    }
@@ -31,15 +34,12 @@ class SimilarSongsTableViewCell: UITableViewCell {
    }
    
    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-       super.init(style: style, reuseIdentifier: reuseIdentifier)
-   }
-   
-   required init?(coder: NSCoder) {
-       fatalError("init(coder:) has not been implemented")
-   }
-   
-   override func layoutSubviews() {
+      super.init(style: style, reuseIdentifier: reuseIdentifier)
       setUI()
+   }
+
+   required init?(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
    }
    
    private func setUI() {
@@ -55,7 +55,7 @@ class SimilarSongsTableViewCell: UITableViewCell {
       thumbnailImageView.snp.makeConstraints { make in
          make.leading.equalTo(barView.snp.trailing).offset(8)
          make.centerY.equalToSuperview()
-         make.width.height.equalTo(50)
+         make.width.height.equalTo(38)
       }
       
       self.contentView.addSubview(songTitleLabel)
@@ -74,7 +74,7 @@ class SimilarSongsTableViewCell: UITableViewCell {
       
       self.contentView.addSubview(checkIcon)
       checkIcon.snp.makeConstraints { make in
-         make.trailing.equalToSuperview().offset(24)
+         make.trailing.equalToSuperview().inset(24)
          make.centerY.equalToSuperview()
          make.height.width.equalTo(16)
       }

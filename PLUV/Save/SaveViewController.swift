@@ -33,13 +33,13 @@ class SaveViewController: UIViewController {
       self.navigationItem.setHidesBackButton(true, animated: false)
       self.navigationController?.setNavigationBarHidden(true, animated: false)
       
+      navigationbarView.delegate = self
       self.view.addSubview(navigationbarView)
       navigationbarView.snp.makeConstraints { make in
          make.top.equalToSuperview().inset(47)
          make.leading.trailing.equalToSuperview()
          make.height.equalTo(46)
       }
-      navigationbarView.setBackButtonTarget(target: self)
       
       self.view.addSubview(saveDetailTableViewCell)
       saveDetailTableViewCell.snp.makeConstraints { make in
@@ -62,11 +62,12 @@ class SaveViewController: UIViewController {
       
       /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
       self.saveDetailTableViewCell.rx.modelSelected(Feed.self)
-         .subscribe(onNext: { [weak self] feedItem in
-            self?.viewModel.selectSaveItem = Observable.just(feedItem)
+         .subscribe(onNext: { [weak self] saveItem in
+            guard let self = self else { return }
+            self.viewModel.selectSaveItem = saveItem
             let saveDetailVC = SaveDetailViewController()
-            saveDetailVC.saveId = feedItem.id
-            self?.navigationController?.pushViewController(saveDetailVC, animated: true)
+            saveDetailVC.saveId = self.viewModel.selectSaveItem!.id
+            self.navigationController?.pushViewController(saveDetailVC, animated: true)
          })
          .disposed(by: disposeBag)
    }
@@ -79,6 +80,7 @@ class SaveViewController: UIViewController {
          switch response.code {
          case 200:
             self.viewModel.saveItems = Observable.just(response.data)
+            print(self.viewModel.saveItems)
             self.setData()
             self.view.layoutIfNeeded()
          default:

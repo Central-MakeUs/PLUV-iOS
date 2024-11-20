@@ -51,7 +51,6 @@ class FeedViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
     private func setUI() {
@@ -98,6 +97,7 @@ class FeedViewController: UIViewController {
                 guard let self = self else { return }
                 self.viewModel.selectFeedItem = feedItem
                 let feedDetailVC = FeedDetailViewController(viewModel: self.viewModel)
+               feedDetailVC.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(feedDetailVC, animated: true)
             })
             .disposed(by: disposeBag)
