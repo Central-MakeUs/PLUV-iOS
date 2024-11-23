@@ -13,6 +13,7 @@ import Alamofire
 
 protocol SaveMoveViewSaveDelegate: AnyObject {
     func deleteFeedSaveAPI()
+    func transferFeedSave()
 }
 
 class SaveDetailViewController: UIViewController, SaveMoveViewSaveDelegate {
@@ -234,6 +235,13 @@ class SaveDetailViewController: UIViewController, SaveMoveViewSaveDelegate {
              AlertController(message: response.msg).show()
           }
        }
+    }
+    
+    func transferFeedSave() {
+        let transferDestinationVC = TransferDestinationViewController()
+        transferDestinationVC.fromPlatform = LoadPluv.FromSave
+        transferDestinationVC.saveViewModel.saveItem = viewModel.selectSaveItem!
+        self.navigationController?.pushViewController(transferDestinationVC, animated: true)
     }
 }
 

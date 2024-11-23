@@ -212,10 +212,10 @@ class MovePlaylistViewController: UIViewController {
    }
    
    private func setPlaylistData() {
-      let thumbnailURL = URL(string: self.viewModel.playlistItem.thumbnailURL)
+       let thumbnailURL = URL(string: self.viewModel.playlistItem?.thumbnailURL ?? "")
       sourceImageView.kf.setImage(with: thumbnailURL)
       destinationImageView.image = UIImage(named: destinationPlatform.iconSelect)
-      playlistTitleLabel.text = self.viewModel.playlistItem.name
+      playlistTitleLabel.text = self.viewModel.playlistItem?.name
       platformLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
    }
    
@@ -366,12 +366,12 @@ class MovePlaylistViewController: UIViewController {
       
       let url = EndPoint.musicSpotifyAdd.path
       let params = [
-         "playListName": self.viewModel.playlistItem.name,
+         "playListName": self.viewModel.playlistItem?.name ?? "",
          "destinationAccessToken": TokenManager.shared.spotifyAccessToken,
          "musicIds": musicIdsArr,
          "transferFailMusics": [
          ],
-         "thumbNailUrl": self.viewModel.playlistItem.thumbnailURL,
+         "thumbNailUrl": self.viewModel.playlistItem?.thumbnailURL ?? "",
          "source": "apple"
       ] as [String : Any]
       
@@ -399,12 +399,12 @@ class MovePlaylistViewController: UIViewController {
          
          let url = EndPoint.musicAppleAdd.path
          let params = [
-            "playListName": self.viewModel.playlistItem.name,
+            "playListName": self.viewModel.playlistItem?.name ?? "",
             "destinationAccessToken": musicUserToken,
             "musicIds": musicIdsArr,
             "transferFailMusics": [
             ],
-            "thumbNailUrl": self.viewModel.playlistItem.thumbnailURL,
+            "thumbNailUrl": self.viewModel.playlistItem?.thumbnailURL ?? "",
             "source": "spotify"
          ] as [String : Any]
          

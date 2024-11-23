@@ -342,61 +342,75 @@ class SelectMusicViewController: UIViewController {
       }
    }
    
-   @objc private func clickTransferButton() {
-      if destinationPlatform == .Spotify {
-         self.viewModel.selectedMusic
+    @objc private func clickTransferButton() {
+        guard let sourcePlatform = sourcePlatform else { return }
+        
+        let selectedMusicObservable: BehaviorRelay<[Music]>?
+        let transferAPI: ([Music]) async -> Void
+        
+        switch (sourcePlatform, destinationPlatform) {
+        case (let platform as MusicPlatform, .Spotify) where platform == .AppleMusic:
+            selectedMusicObservable = viewModel.selectedMusic
+            transferAPI = searchToSpotifyAPI
+        case (let platform as LoadPluv, .Spotify) where platform == .FromRecent:
+            selectedMusicObservable = meViewModel.selectedMusic
+            transferAPI = searchToSpotifyAPI
+        case (let platform as LoadPluv, .Spotify) where platform == .FromSave:
+            selectedMusicObservable = saveViewModel.selectedMusic
+            transferAPI = searchToSpotifyAPI
+        case (let platform as MusicPlatform, .AppleMusic) where platform == .Spotify:
+            selectedMusicObservable = viewModel.selectedMusic
+            transferAPI = searchToAppleAPI
+        case (let platform as LoadPluv, .AppleMusic) where platform == .FromRecent:
+            selectedMusicObservable = meViewModel.selectedMusic
+            transferAPI = searchToAppleAPI
+        case (let platform as LoadPluv, .AppleMusic) where platform == .FromSave:
+            selectedMusicObservable = saveViewModel.selectedMusic
+            transferAPI = searchToAppleAPI
+        default:
+            return
+        }
+        
+        selectedMusicObservable?
             .map { musicArray in
-               Task {
-                  await self.searchAppleToSpotifyAPI(musics: musicArray)
-                  self.goNextStep()
-               }
+                Task {
+                    await transferAPI(musicArray)
+                    self.goNextStep()
+                }
             }
             .subscribe { musicArray in
-               print(musicArray)
+                print(musicArray)
             }
             .disposed(by: disposeBag)
-      } else {
-         self.viewModel.selectedMusic
-            .map { musicArray in
-               Task {
-                  await self.searchSpotifyToAppleAPI(musics: musicArray)
-                  self.goNextStep()
-               }
-            }
-            .subscribe { musicArray in
-               print(musicArray)
-            }
-            .disposed(by: disposeBag)
-      }
-   }
+    }
    
    private func setPlaylistData() {
       if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic || musicPlatform == .Spotify {
-         let thumbnailURL = URL(string: self.viewModel.playlistItem.thumbnailURL)
+          let thumbnailURL = URL(string: self.viewModel.playlistItem?.thumbnailURL ?? "")
          playlistThumnailImageView.kf.setImage(with: thumbnailURL)
          sourceToDestinationLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
          sourcePlatformLabel.text = sourcePlatform!.name
-         playlistNameLabel.text = self.viewModel.playlistItem.name
+          playlistNameLabel.text = self.viewModel.playlistItem?.name
          self.viewModel.musicItemCount { count in
             self.playlistSongCountLabel.text = "총 \(count)곡"
             self.songCountLabel.text = "\(count)곡"
          }
       } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
-         let thumbnailURL = URL(string: self.meViewModel.meItem.imageURL)
+          let thumbnailURL = URL(string: self.meViewModel.meItem?.imageURL ?? "")
          playlistThumnailImageView.kf.setImage(with: thumbnailURL)
          sourceToDestinationLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
          sourcePlatformLabel.text = sourcePlatform!.name
-         playlistNameLabel.text = self.meViewModel.meItem.title
+          playlistNameLabel.text = self.meViewModel.meItem?.title
          self.meViewModel.musicItemCount { count in
             self.playlistSongCountLabel.text = "총 \(count)곡"
             self.songCountLabel.text = "\(count)곡"
          }
       } else {
-         let thumbnailURL = URL(string: self.saveViewModel.saveItem.thumbNailURL)
+          let thumbnailURL = URL(string: self.saveViewModel.saveItem?.thumbNailURL ?? "")
          playlistThumnailImageView.kf.setImage(with: thumbnailURL)
          sourceToDestinationLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
          sourcePlatformLabel.text = sourcePlatform!.name
-         playlistNameLabel.text = self.saveViewModel.saveItem.title
+          playlistNameLabel.text = self.saveViewModel.saveItem?.title
          self.saveViewModel.musicItemCount { count in
             self.playlistSongCountLabel.text = "총 \(count)곡"
             self.songCountLabel.text = "\(count)곡"
@@ -549,7 +563,7 @@ class SelectMusicViewController: UIViewController {
          let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
          let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
          
-         let url = EndPoint.playlistAppleMusicRead(self.viewModel.playlistItem.id).path
+          let url = EndPoint.playlistAppleMusicRead(self.viewModel.playlistItem?.id ?? "").path
          let params = ["musicUserToken" : userToken]
          
          APIService().post(of: APIResponse<[Music]>.self, url: url, parameters: params) { response in
@@ -570,7 +584,7 @@ class SelectMusicViewController: UIViewController {
    }
    
    private func setSpotifyMusicListAPI() {
-      let url = EndPoint.playlistMusicSpotifyRead(self.viewModel.playlistItem.id).path
+      let url = EndPoint.playlistMusicSpotifyRead(self.viewModel.playlistItem?.id ?? "").path
       let params = ["accessToken" : TokenManager.shared.spotifyAccessToken]
       
       APIService().post(of: APIResponse<[Music]>.self, url: url, parameters: params) { response in
@@ -588,7 +602,7 @@ class SelectMusicViewController: UIViewController {
    }
    
    private func setMeMusicListAPI() {
-      let recentId = meViewModel.meItem.id
+      let recentId = meViewModel.meItem?.id ?? 0
       let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
       let url = EndPoint.historySuccess("\(recentId)").path
       
@@ -607,7 +621,7 @@ class SelectMusicViewController: UIViewController {
    }
    
    private func setSaveMusicListAPI() {
-      let saveId = saveViewModel.saveItem.id
+      let saveId = saveViewModel.saveItem?.id ?? 0
       let url = EndPoint.feedIdMusic("\(saveId)").path
       
       APIService().get(of: APIResponse<[Music]>.self, url: url) { response in
@@ -646,7 +660,7 @@ class SelectMusicViewController: UIViewController {
       }
    }
    
-   private func searchAppleToSpotifyAPI(musics: [Music]) async {
+   private func searchToSpotifyAPI(musics: [Music]) async {
       self.setSearchView()
       do {
          let jsonData = try JSONEncoder().encode(musics)
@@ -693,7 +707,7 @@ class SelectMusicViewController: UIViewController {
       }
    }
    
-   private func searchSpotifyToAppleAPI(musics: [Music]) async {
+   private func searchToAppleAPI(musics: [Music]) async {
       self.setSearchView()
       do {
          let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)

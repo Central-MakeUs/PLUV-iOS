@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 
 class SelectMeViewModel {
-   var meItem: Me = Me(id: 0, transferredAt: "", transferredSongCount: nil, title: "", imageURL: "")
+   var meItem: Me?
    var musicItem = BehaviorRelay<[Music]>(value: [])
    let selectedMusic = BehaviorRelay<[Music]>(value: [])
    let disposeBag = DisposeBag()

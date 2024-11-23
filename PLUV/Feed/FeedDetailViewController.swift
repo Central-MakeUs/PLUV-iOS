@@ -13,6 +13,7 @@ import RxCocoa
 protocol SaveMoveViewFeedDelegate: AnyObject {
     func setFeedSaveAPI()
     func deleteFeedSaveAPI()
+    func transferFeed()
 }
 
 class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
@@ -293,11 +294,17 @@ class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
             })
             .disposed(by: disposeBag)
     }
+    
+    func transferFeed() {
+        let transferDestinationVC = TransferDestinationViewController()
+        transferDestinationVC.fromPlatform = LoadPluv.FromSave
+        transferDestinationVC.saveViewModel.saveItem = viewModel.selectFeedItem
+        self.navigationController?.pushViewController(transferDestinationVC, animated: true)
+    }
 }
 
 
 extension FeedDetailViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 66
     }

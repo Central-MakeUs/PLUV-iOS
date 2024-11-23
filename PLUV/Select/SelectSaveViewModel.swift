@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 
 class SelectSaveViewModel {
-   var saveItem: Feed = Feed(id: 0, title: "", thumbNailURL: "", artistNames: "", creatorName: "", transferredAt: "", totalSongCount: nil)
+   var saveItem: Feed?
    var musicItem = BehaviorRelay<[Music]>(value: [])
    let selectedMusic = BehaviorRelay<[Music]>(value: [])
    let disposeBag = DisposeBag()

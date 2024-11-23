@@ -15,6 +15,8 @@ class TransferCheckViewController: UIViewController {
    
    var sourcePlatform: PlatformRepresentable?
    var destinationPlatform: PlatformRepresentable?
+    
+    var saveViewModel = SelectSaveViewModel()
    
    private let checkTitleView = UIView()
    private let backButton = UIButton().then {
@@ -214,9 +216,17 @@ class TransferCheckViewController: UIViewController {
       } else if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .Spotify {
          connectSpotifySession()
       }
-      
-       let selectPlaylistVC = SelectPlaylistViewController(source: sourcePlatform ?? MusicPlatform.AppleMusic, destination: destinationPlatform as! MusicPlatform)
-      self.navigationController?.pushViewController(selectPlaylistVC, animated: true)
+       
+       if saveViewModel.saveItem != nil {
+           let selectMusicVC = SelectMusicViewController()
+           selectMusicVC.saveViewModel.saveItem = saveViewModel.saveItem
+           selectMusicVC.sourcePlatform = sourcePlatform
+           selectMusicVC.destinationPlatform = destinationPlatform as! MusicPlatform
+           self.navigationController?.pushViewController(selectMusicVC, animated: true)
+       } else {
+           let selectPlaylistVC = SelectPlaylistViewController(source: sourcePlatform ?? MusicPlatform.AppleMusic, destination: destinationPlatform as! MusicPlatform)
+          self.navigationController?.pushViewController(selectPlaylistVC, animated: true)
+       }
    }
 }
 

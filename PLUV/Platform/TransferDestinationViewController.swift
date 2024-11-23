@@ -22,6 +22,9 @@ class TransferDestinationViewController: UIViewController {
             updatePlatformView()
         }
     }
+    
+    var saveViewModel = SelectSaveViewModel()
+    
     private var destinationList = Observable.just(MusicPlatform.allCases)
     
     private let destinationTitleView = UIView()
@@ -165,6 +168,9 @@ extension TransferDestinationViewController {
                     transferCheckVC.sourcePlatform = updatedFromPlatform
                 }
                 transferCheckVC.destinationPlatform = platform
+                if self?.saveViewModel.saveItem != nil {
+                    transferCheckVC.saveViewModel.saveItem = self?.saveViewModel.saveItem
+                }
                 self?.navigationController?.pushViewController(transferCheckVC, animated: true)
             })
             .disposed(by: disposeBag)

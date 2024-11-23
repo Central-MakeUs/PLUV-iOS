@@ -64,6 +64,7 @@ final class SaveMoveView: UIView {
             make.trailing.equalToSuperview().inset(24)
             make.height.equalTo(58)
         }
+        trasferButton.addTarget(self, action: #selector(transferButtonTapped), for: .touchUpInside)
         
         shadow()
     }
@@ -85,6 +86,11 @@ final class SaveMoveView: UIView {
             saveDelegate?.deleteFeedSaveAPI()
         }
         isOriginalColor.toggle()
+    }
+    
+    @objc func transferButtonTapped() {
+        feedDelegate?.transferFeed()
+        saveDelegate?.transferFeedSave()
     }
     
     func updateSaveButtonImage(isSaved: Bool) {

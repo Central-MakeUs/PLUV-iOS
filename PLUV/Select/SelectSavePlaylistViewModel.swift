@@ -13,5 +13,5 @@ class SelectSavePlaylistViewModel {
    // 선택된 셀의 인덱스 패스를 저장하는 BehaviorRelay
    let selectedIndexPath = BehaviorRelay<IndexPath?>(value: nil)
    var savePlaylistItems: Observable<[Feed]> = Observable.just([])
-   var savePlaylistItem: Feed = Feed(id: 0, title: "", thumbNailURL: "", artistNames: "", creatorName: "", transferredAt: "", totalSongCount: nil)
+   var savePlaylistItem: Feed?
 }

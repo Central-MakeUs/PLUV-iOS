@@ -10,6 +10,6 @@ import RxSwift
 import RxCocoa
 
 class MoveSaveViewModel {
-   var saveItem: Feed = Feed(id: 0, title: "", thumbNailURL: "", artistNames: "", creatorName: "", transferredAt: "", totalSongCount: nil)
+   var saveItem: Feed?
    var musicItems: [Music] = []
 }

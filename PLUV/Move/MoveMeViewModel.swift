@@ -10,6 +10,6 @@ import RxSwift
 import RxCocoa
 
 class MoveMeViewModel {
-   var meItem: Me = Me(id: 0, transferredAt: "", transferredSongCount: nil, title: "", imageURL: "")
+   var meItem: Me?
    var musicItems: [Music] = []
 }
