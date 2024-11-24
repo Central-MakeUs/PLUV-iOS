@@ -62,7 +62,7 @@ class MovePlaylistViewController: UIViewController {
       $0.font = .systemFont(ofSize: 18)
    }
    private var platformLabel = UILabel().then {
-      $0.textColor = .subBlue
+      $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 14)
       $0.textAlignment = .center
    }
@@ -90,7 +90,9 @@ class MovePlaylistViewController: UIViewController {
       
       setUI()
       setPlaylistData()
-      searchAPI()
+       Task {
+          await self.addSpotifyToApple(musicIdsArr: completeArr)
+       }
       
       circleLoadingIndicator.isAnimating = true
       
@@ -238,125 +240,6 @@ class MovePlaylistViewController: UIViewController {
       }
    }
    
-   private func searchAPI() {
-      if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic && destinationPlatform == .Spotify {
-         /// 권한이 부여된 경우에만 넘겨야함!!!
-         Task {
-            await self.searchAppleToSpotifyAPI(musics: self.viewModel.musicItems)
-         }
-      } else if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .Spotify && destinationPlatform == .AppleMusic {
-         MPMediaLibrary.requestAuthorization { status in
-            switch status {
-            case .authorized:
-               /// 권한이 부여된 경우
-               print("Apple Music authorization granted")
-               Task {
-                  await self.searchSpotifyToAppleAPI(musics: self.viewModel.musicItems)
-               }
-            default:
-               DispatchQueue.main.async {
-                  AlertController(message: "미디어 권한을 허용해야 사용할 수 있어요") {
-                     UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-                  }.show()
-               }
-            }
-         }
-      }
-   }
-   
-   /// 애플에 있는 것 스포티파이에서 검색
-   private func searchAppleToSpotifyAPI(musics: [Music]) async {
-      do {
-         let jsonData = try JSONEncoder().encode(musics)
-         let jsonString = String(data: jsonData, encoding: .utf8) ?? ""
-         let musicParams = jsonString.replacingOccurrences(of: "\\", with: "").replacingOccurrences(of: "artistNames", with: "artistName")
-         
-         if let parameterJsonData = musicParams.data(using: .utf8) {
-            do {
-               if let parameterJsonArray = try JSONSerialization.jsonObject(with: parameterJsonData, options: []) as? [[String: Any]] {
-                  
-                  let url = EndPoint.musicSpotifySearch.path
-                  let params = ["destinationAccessToken" : TokenManager.shared.spotifyAccessToken,
-                                "musics" : parameterJsonArray] as [String : Any]
-                  
-                  APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
-                     switch response.code {
-                     case 200:
-                        var idArr: [String] = []
-                        let searchArr: [Search] = response.data
-                        for search in searchArr {
-                           if search.isEqual == true {
-                              idArr.append(search.destinationMusics.first!.id!)
-                           } else {
-                              idArr.append(search.destinationMusics.first!.id!)
-                           }
-                        }
-                        print(response.data, "애플에 있는 것 스포티파이에서 검색")
-                        self.addAppleToSpotify(musicIdsArr: idArr)
-                     default:
-                        AlertController(message: response.msg).show()
-                     }
-                  }
-               }
-            } catch {
-               print("JSON 변환 실패: \(error.localizedDescription)")
-            }
-         }
-      } catch {
-         print(error)
-      }
-   }
-   
-   /// 스포티파이에 있는 것 애플에서 검색
-   private func searchSpotifyToAppleAPI(musics: [Music]) async {
-      do {
-         let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
-         let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
-         
-         let jsonData = try JSONEncoder().encode(musics)
-         let jsonString = String(data: jsonData, encoding: .utf8) ?? ""
-         let musicParams = jsonString.replacingOccurrences(of: "\\", with: "").replacingOccurrences(of: "artistNames", with: "artistName")
-         
-         if let parameterJsonData = musicParams.data(using: .utf8) {
-            do {
-               if let parameterJsonArray = try JSONSerialization.jsonObject(with: parameterJsonData, options: []) as? [[String: Any]] {
-                  
-                  let url = EndPoint.musicAppleSearch.path
-                  let params = ["destinationAccessToken" : userToken,
-                                "musics" : parameterJsonArray] as [String : Any]
-                  print(params, "파람 확인")
-                  APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
-                     switch response.code {
-                     case 200:
-                        var idArr: [String] = []
-                        let searchArr: [Search] = response.data
-                        for search in searchArr {
-                           if search.isEqual == true {
-                              idArr.append(search.destinationMusics.first!.id!)
-                           } else {
-                              if let id = search.destinationMusics.first?.id {
-                                 idArr.append(id)
-                              }
-                           }
-                        }
-                        print(response.data, "스포티파이에 있는 것 애플에서 검색")
-                        Task {
-                           await self.addSpotifyToApple(musicIdsArr: idArr)
-                        }
-                     default:
-                        AlertController(message: response.msg).show()
-                     }
-                  }
-               }
-            } catch {
-               print("JSON 변환 실패: \(error.localizedDescription)")
-            }
-         }
-      } catch {
-         print(error)
-      }
-   }
-   
    ///  애플에 있는 것 스포티파이에 등록
    private func addAppleToSpotify(musicIdsArr: [String]) {
       let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
@@ -399,12 +282,12 @@ class MovePlaylistViewController: UIViewController {
          
          let url = EndPoint.musicAppleAdd.path
          let params = [
-            "playListName": self.viewModel.playlistItem?.name ?? "",
+            "playListName": self.saveViewModel.saveItem?.title ?? "",
             "destinationAccessToken": musicUserToken,
             "musicIds": musicIdsArr,
             "transferFailMusics": [
             ],
-            "thumbNailUrl": self.viewModel.playlistItem?.thumbnailURL ?? "",
+            "thumbNailUrl": self.saveViewModel.saveItem?.thumbNailURL ?? "",
             "source": "spotify"
          ] as [String : Any]
          

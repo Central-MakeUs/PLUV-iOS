@@ -18,7 +18,6 @@ final class FeedDetailTableViewCell: UITableViewCell {
         $0.font = .systemFont(ofSize: 15)
     }
     private let thumbnailImageView = UIImageView().then {
-        $0.contentMode = .scaleAspectFit
         $0.layer.cornerRadius = 5
         $0.layer.borderColor = UIColor.gray300.cgColor
         $0.layer.borderWidth = 0.5
@@ -29,7 +28,7 @@ final class FeedDetailTableViewCell: UITableViewCell {
         $0.font = .systemFont(ofSize: 15) /// g, y, p 같은 문자 이슈로 1point 줄임
     }
     private let singerLabel = UILabel().then {
-        $0.textColor = .gray500
+        $0.textColor = .gray600
         $0.font = .systemFont(ofSize: 13) /// g, y, p 같은 문자 이슈로 1point 줄임
     }
 
@@ -50,7 +49,7 @@ final class FeedDetailTableViewCell: UITableViewCell {
        numberLabel.snp.makeConstraints { make in
           make.leading.equalToSuperview().offset(20)
           make.centerY.equalToSuperview()
-          make.width.equalTo(16)
+          make.width.equalTo(20)
           make.height.equalTo(14)
        }
        
@@ -65,6 +64,7 @@ final class FeedDetailTableViewCell: UITableViewCell {
        self.contentView.addSubview(songTitleLabel)
        songTitleLabel.snp.makeConstraints { make in
           make.top.equalToSuperview().offset(15)
+           make.trailing.equalToSuperview().inset(24)
           make.leading.equalTo(thumbnailImageView.snp.trailing).offset(12)
           make.height.equalTo(16)
        }

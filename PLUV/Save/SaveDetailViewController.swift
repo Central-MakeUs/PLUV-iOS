@@ -12,6 +12,7 @@ import RxCocoa
 import Alamofire
 
 protocol SaveMoveViewSaveDelegate: AnyObject {
+    func setFeedSaveAPI()
     func deleteFeedSaveAPI()
     func transferFeedSave()
 }
@@ -221,6 +222,21 @@ class SaveDetailViewController: UIViewController, SaveMoveViewSaveDelegate {
         }
     }
     
+    func setFeedSaveAPI() {
+        guard let id = self.viewModel.selectSaveItem?.id else { return }
+        let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+        let url = EndPoint.feedIdSave(String(id)).path
+        
+        APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: nil, AccessToken: loginToken) { response in
+            switch response.code {
+            case 200:
+                print("피드 저장이 정상적으로 처리되었습니다.")
+            default:
+                AlertController(message: response.msg).show()
+            }
+        }
+    }
+    
     func deleteFeedSaveAPI() {
        guard let id = self.viewModel.selectSaveItem?.id else { return }
        let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
@@ -230,7 +246,6 @@ class SaveDetailViewController: UIViewController, SaveMoveViewSaveDelegate {
           switch response.code {
           case 200:
              print("피드 삭제가 정상적으로 처리되었습니다.")
-              self.saveMoveView.updateSaveButton()
           default:
              AlertController(message: response.msg).show()
           }

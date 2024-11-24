@@ -77,10 +77,10 @@ class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
         setSaveAPI()
     }
     
-    //   override func viewDidLayoutSubviews() {
-    //      super.viewDidLayoutSubviews()
-    //      setTableViewHeight() /// 레이아웃이 갱신될 때마다 테이블 뷰 높이 갱신
-    //   }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setTableViewHeight()
+    }
     
     private func setUI() {
         self.view.backgroundColor = .white
@@ -173,11 +173,13 @@ class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
     }
     
     private func setTableViewHeight() {
+        feedDetailTableView.layoutIfNeeded()
+        
         let contentHeight = feedDetailTableView.contentSize.height
-        feedDetailTableViewHeightConstraint?.update(offset: contentHeight + 300)
+        feedDetailTableViewHeightConstraint?.update(offset: contentHeight + 100)
         
         /// 이미지 높이 + 테이블 뷰 높이를 합산하여 스크롤뷰의 contentSize 설정
-        let totalHeight = feedDetailImageView.frame.height + feedDetailTitleView.frame.height + 10 + contentHeight + 101
+        let totalHeight = navigationbarView.frame.height + feedDetailImageView.frame.height + feedDetailTitleView.frame.height + contentHeight
         scrollView.contentSize = CGSize(width: view.frame.width, height: totalHeight)
         scrollView.layoutIfNeeded()
     }
@@ -206,6 +208,7 @@ class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
             case 200:
                 self.viewModel.selectFeedMusicItem.accept(response.data)
                 self.setData()
+                self.view.layoutIfNeeded()
             default:
                 AlertController(message: response.msg).show()
             }
@@ -223,13 +226,6 @@ class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
                 cell.prepare(music: music, index: index)
             }
             .disposed(by: disposeBag)
-        
-        /// 데이터 로드 후 레이아웃 강제 업데이트
-        DispatchQueue.main.async {
-            self.feedDetailTableView.reloadData()
-            self.feedDetailTableView.layoutIfNeeded()
-            self.setTableViewHeight()
-        }
     }
     
     func setFeedSaveAPI() {

@@ -47,7 +47,7 @@ class SaveSongsTableViewCell: UITableViewCell {
       indexLabel.snp.makeConstraints { make in
          make.leading.equalToSuperview().offset(20)
          make.centerY.equalToSuperview()
-         make.width.equalTo(16)
+         make.width.equalTo(20)
          make.height.equalTo(14)
       }
       
@@ -62,6 +62,7 @@ class SaveSongsTableViewCell: UITableViewCell {
       self.contentView.addSubview(nameLabel)
       nameLabel.snp.makeConstraints { make in
          make.top.equalToSuperview().offset(15)
+          make.trailing.equalToSuperview().inset(24)
          make.leading.equalTo(thumbnailImageView.snp.trailing).offset(12)
          make.height.equalTo(16)
       }

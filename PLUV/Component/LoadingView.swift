@@ -18,6 +18,7 @@ final class LoadingView: UIView {
         label.numberOfLines = 2
         label.textAlignment = .center
         label.textColor = .gray800
+        label.font = .systemFont(ofSize: 20, weight: .medium)
     }
     let loadingContainerView = UIView()
     let loadingBar = UIView()

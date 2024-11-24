@@ -16,10 +16,12 @@ final class ValidationView: UIView {
    var noSongImageView = UIImageView().then {
       $0.contentMode = .scaleAspectFill
    }
-   var titleLabel = UILabel().then {
-      $0.textColor = .gray800
-      $0.font = .systemFont(ofSize: 20, weight: .medium)
-   }
+    var titleLabel = UILabel().then {
+        $0.numberOfLines = 2
+        $0.textAlignment = .center
+        $0.textColor = .gray800
+        $0.font = .systemFont(ofSize: 20, weight: .medium)
+    }
    
    init(title: String, image: String) {
       super.init(frame: .zero)

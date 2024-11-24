@@ -80,6 +80,7 @@ final class SaveMoveView: UIView {
         if isOriginalColor {
             saveButton.setImage(UIImage(named: "savebutton_icon2"), for: .normal)
             feedDelegate?.setFeedSaveAPI()
+            saveDelegate?.setFeedSaveAPI()
         } else {
             saveButton.setImage(UIImage(named: "savebutton_icon"), for: .normal)
             feedDelegate?.deleteFeedSaveAPI()
@@ -97,9 +98,5 @@ final class SaveMoveView: UIView {
         let imageName = isSaved ? "savebutton_icon" : "savebutton_icon2"
         saveButton.setImage(UIImage(named: imageName), for: .normal)
         isOriginalColor = isSaved
-    }
-    
-    func updateSaveButton() {
-        saveButton.isEnabled = false
     }
 }

@@ -112,6 +112,7 @@
 		C7EB31622CD4ED5700DA439A /* ValidationNotFoundTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EB31612CD4ED5700DA439A /* ValidationNotFoundTableViewCell.swift */; };
 		C7EEA4F22CC3A59F00FBAA4D /* RecentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EEA4F12CC3A59F00FBAA4D /* RecentCollectionViewCell.swift */; };
 		C7EEA4F42CC3A5AE00FBAA4D /* SaveCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EEA4F32CC3A5AE00FBAA4D /* SaveCollectionViewCell.swift */; };
+		C7F7AD5D2CF345170082FDB5 /* SelectMusicProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F7AD5C2CF345170082FDB5 /* SelectMusicProtocol.swift */; };
 		C7FA72812CDF1B3A00EB3D91 /* SelectMeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7FA72802CDF1B3A00EB3D91 /* SelectMeViewModel.swift */; };
 		C7FA72832CDF1B4600EB3D91 /* SelectSaveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7FA72822CDF1B4600EB3D91 /* SelectSaveViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -259,6 +260,7 @@
 		C7EB31612CD4ED5700DA439A /* ValidationNotFoundTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationNotFoundTableViewCell.swift; sourceTree = "<group>"; };
 		C7EEA4F12CC3A59F00FBAA4D /* RecentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentCollectionViewCell.swift; sourceTree = "<group>"; };
 		C7EEA4F32CC3A5AE00FBAA4D /* SaveCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveCollectionViewCell.swift; sourceTree = "<group>"; };
+		C7F7AD5C2CF345170082FDB5 /* SelectMusicProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMusicProtocol.swift; sourceTree = "<group>"; };
 		C7FA72802CDF1B3A00EB3D91 /* SelectMeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMeViewModel.swift; sourceTree = "<group>"; };
 		C7FA72822CDF1B4600EB3D91 /* SelectSaveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSaveViewModel.swift; sourceTree = "<group>"; };
 		CDAD2C02EE2D55B201611407 /* Pods_PLUVTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PLUVTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -327,6 +329,7 @@
 				C78221A52CE3B42900568DFF /* SelectMePlaylistViewModel.swift */,
 				C78221A72CE3B43900568DFF /* SelectSavePlaylistViewModel.swift */,
 				6889F5152C6CE56F001F5FC2 /* SelectMusicViewController.swift */,
+				C7F7AD5C2CF345170082FDB5 /* SelectMusicProtocol.swift */,
 				6889F51D2C6D52B7001F5FC2 /* SelectMusicViewModel.swift */,
 				C7FA72802CDF1B3A00EB3D91 /* SelectMeViewModel.swift */,
 				C7FA72822CDF1B4600EB3D91 /* SelectSaveViewModel.swift */,
@@ -943,6 +946,7 @@
 				68E312252CBC024D00243658 /* FeedDetailTableViewCell.swift in Sources */,
 				68DC4C772C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift in Sources */,
 				68F6FAB22C4A9CCA001128FF /* WhiteButton.swift in Sources */,
+				C7F7AD5D2CF345170082FDB5 /* SelectMusicProtocol.swift in Sources */,
 				C7C806FE2CCCD7F600245FEA /* RecentTabViewController.swift in Sources */,
 				68830FAF2C8264CA00995785 /* FeedViewModel.swift in Sources */,
 				68EE372D2CB0749E0077632B /* FeedInfo.swift in Sources */,
