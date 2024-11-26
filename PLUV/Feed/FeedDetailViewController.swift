@@ -88,6 +88,7 @@ class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.isScrollEnabled = false
         
         self.view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -173,15 +174,14 @@ class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
     }
     
     private func setTableViewHeight() {
-        feedDetailTableView.layoutIfNeeded()
-        
-        let contentHeight = feedDetailTableView.contentSize.height
-        feedDetailTableViewHeightConstraint?.update(offset: contentHeight + 100)
+        let contentHeight = feedDetailTableView.contentSize.height + 110
+        feedDetailTableViewHeightConstraint?.update(offset: contentHeight)
         
         /// 이미지 높이 + 테이블 뷰 높이를 합산하여 스크롤뷰의 contentSize 설정
         let totalHeight = navigationbarView.frame.height + feedDetailImageView.frame.height + feedDetailTitleView.frame.height + contentHeight
         scrollView.contentSize = CGSize(width: view.frame.width, height: totalHeight)
         scrollView.layoutIfNeeded()
+        scrollView.isScrollEnabled = true
     }
     
     private func setPlaylistData() {
@@ -208,7 +208,6 @@ class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
             case 200:
                 self.viewModel.selectFeedMusicItem.accept(response.data)
                 self.setData()
-                self.view.layoutIfNeeded()
             default:
                 AlertController(message: response.msg).show()
             }
@@ -226,6 +225,9 @@ class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
                 cell.prepare(music: music, index: index)
             }
             .disposed(by: disposeBag)
+        
+        self.feedDetailTableView.reloadData()
+        self.feedDetailTableView.layoutIfNeeded()
     }
     
     func setFeedSaveAPI() {
