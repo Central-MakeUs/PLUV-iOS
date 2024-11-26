@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
-import Alamofire
 
 protocol SaveMoveViewSaveDelegate: AnyObject {
     func setFeedSaveAPI()
@@ -26,41 +25,37 @@ class SaveDetailViewController: UIViewController, SaveMoveViewSaveDelegate {
    private let contentView = UIView()
    
    private let navigationbarView = NavigationBarView(title: "")
-   private let thumbnailImageView = UIImageView().then {
-      $0.clipsToBounds = true
-   }
+    
+   private let thumbnailImageView = UIImageView()
+    private let saveDetailTitleView = UIView()
    private let menuImageView = UIImageView().then {
       $0.image = UIImage(named: "menu_image")
    }
    private let playlistTitleLabel = UILabel().then {
-      $0.text = "여유로운 오후의 취향 저격 팝"
       $0.textColor = .gray800
-      $0.font = .systemFont(ofSize: 18, weight: .semibold)
+      $0.font = .systemFont(ofSize: 22, weight: .semibold)
    }
    private let totalCountLabel = UILabel().then {
-      $0.text = "총 10곡"
       $0.textColor = .gray600
       $0.font = .systemFont(ofSize: 14, weight: .regular)
    }
    private let dateLabel = UILabel().then {
-      $0.text = "2023.03.01"
       $0.textColor = .gray600
       $0.font = .systemFont(ofSize: 14, weight: .regular)
    }
    private let creatorLabel = UILabel().then {
-      $0.text = "공유한 사람: 플러버"
       $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 16, weight: .medium)
    }
    private let backgroundLabel = UILabel().then {
       $0.backgroundColor = .gray200
    }
-   private let saveSongsTableViewCell = UITableView().then {
+   private let saveSongsTableView = UITableView().then {
       $0.separatorStyle = .none
       $0.register(SaveSongsTableViewCell.self, forCellReuseIdentifier: SaveSongsTableViewCell.identifier)
    }
     
-    private var feedDetailTableViewHeightConstraint: Constraint?
+    private var saveDetailTableViewHeightConstraint: Constraint?
     
    private var saveMoveView = SaveMoveView(view: UIViewController())
    
@@ -82,14 +77,19 @@ class SaveDetailViewController: UIViewController, SaveMoveViewSaveDelegate {
         setPlaylistData()
         setSaveMusicAPI()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setTableViewHeight()
+    }
    
     private func setUI() {
         self.view.backgroundColor = .white
         self.navigationItem.setHidesBackButton(true, animated: false)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
-        scrollView.contentInsetAdjustmentBehavior = .never
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.isScrollEnabled = false
         
         self.view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -98,9 +98,8 @@ class SaveDetailViewController: UIViewController, SaveMoveViewSaveDelegate {
         
         self.scrollView.addSubview(contentView)
         contentView.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView.contentLayoutGuide)
-            make.width.equalTo(scrollView.frameLayoutGuide)
-            make.height.equalTo(1100)
+            make.edges.equalToSuperview()
+            make.width.equalTo(scrollView)
         }
         
         navigationbarView.delegate = self
@@ -113,60 +112,66 @@ class SaveDetailViewController: UIViewController, SaveMoveViewSaveDelegate {
         
         self.contentView.addSubview(thumbnailImageView)
         thumbnailImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(93)
+            make.top.equalToSuperview().offset(46)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(390)
         }
         
-        self.contentView.addSubview(menuImageView)
-        menuImageView.snp.makeConstraints { make in
-            make.top.equalTo(thumbnailImageView.snp.bottom).offset(26)
-            make.leading.equalToSuperview().inset(24)
-            make.width.equalTo(20)
-            make.height.equalTo(20)
+        self.contentView.addSubview(saveDetailTitleView)
+        saveDetailTitleView.snp.makeConstraints { make in
+            make.top.equalTo(thumbnailImageView.snp.bottom)
+            make.leading.trailing.equalTo(contentView)
+            make.height.equalTo(132)
         }
         
-        self.contentView.addSubview(playlistTitleLabel)
+        self.saveDetailTitleView.addSubview(menuImageView)
+        menuImageView.snp.makeConstraints { make in
+            make.top.leading.equalToSuperview().inset(24)
+            make.width.height.equalTo(20)
+        }
+        
+        self.saveDetailTitleView.addSubview(playlistTitleLabel)
         playlistTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(thumbnailImageView.snp.bottom).offset(24)
+            make.top.equalToSuperview().inset(24)
             make.leading.equalTo(menuImageView.snp.trailing).offset(8)
             make.height.equalTo(24)
+            make.trailing.equalToSuperview().inset(24)
         }
         
-        self.contentView.addSubview(totalCountLabel)
+        self.saveDetailTitleView.addSubview(totalCountLabel)
         totalCountLabel.snp.makeConstraints { make in
-            make.top.equalTo(menuImageView.snp.bottom).offset(14)
+            make.top.equalTo(menuImageView.snp.bottom).offset(20)
             make.leading.equalToSuperview().inset(24)
             make.height.equalTo(14)
         }
         
-        self.contentView.addSubview(dateLabel)
+        self.saveDetailTitleView.addSubview(dateLabel)
         dateLabel.snp.makeConstraints { make in
-            make.top.equalTo(menuImageView.snp.bottom).offset(14)
+            make.top.equalTo(menuImageView.snp.bottom).offset(20)
             make.leading.equalTo(totalCountLabel.snp.trailing).offset(8)
             make.height.equalTo(14)
         }
         
-        self.contentView.addSubview(creatorLabel)
+        self.saveDetailTitleView.addSubview(creatorLabel)
         creatorLabel.snp.makeConstraints { make in
             make.top.equalTo(totalCountLabel.snp.bottom).offset(10)
             make.leading.equalToSuperview().inset(24)
             make.height.equalTo(16)
         }
         
-        self.contentView.addSubview(backgroundLabel)
+        self.saveDetailTitleView.addSubview(backgroundLabel)
         backgroundLabel.snp.makeConstraints { make in
-            make.top.equalTo(creatorLabel.snp.bottom).offset(34)
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.bottom.equalToSuperview()
             make.height.equalTo(1.2)
         }
         
-        self.contentView.addSubview(saveSongsTableViewCell)
-        saveSongsTableViewCell.snp.makeConstraints { make in
-            make.top.equalTo(backgroundLabel.snp.bottom).offset(10)
+        self.contentView.addSubview(saveSongsTableView)
+        saveSongsTableView.snp.makeConstraints { make in
+            make.top.equalTo(saveDetailTitleView.snp.bottom).offset(10)
             make.leading.trailing.bottom.equalToSuperview()
+            saveDetailTableViewHeightConstraint = make.height.equalTo(0).constraint
         }
-        saveSongsTableViewCell.isScrollEnabled = false
+        saveSongsTableView.isScrollEnabled = false
         
         saveMoveView = SaveMoveView(view: self)
         self.view.addSubview(saveMoveView)
@@ -176,6 +181,21 @@ class SaveDetailViewController: UIViewController, SaveMoveViewSaveDelegate {
         }
         self.saveMoveView.saveDelegate = self
         self.saveMoveView.updateSaveButtonImage(isSaved: false)
+    }
+    
+    private func setTableViewHeight() {
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
+            let contentHeight = self.saveSongsTableView.contentSize.height + 110
+            self.saveDetailTableViewHeightConstraint?.update(offset: contentHeight)
+            
+            /// 이미지 높이 + 테이블 뷰 높이를 합산하여 스크롤뷰의 contentSize 설정
+            let totalHeight = self.navigationbarView.frame.height + self.thumbnailImageView.frame.height + self.saveDetailTitleView.frame.height + contentHeight
+            self.scrollView.contentSize = CGSize(width: self.view.frame.width, height: totalHeight)
+            self.scrollView.layoutIfNeeded()
+            self.scrollView.isScrollEnabled = true
+        }
+        CATransaction.commit()
     }
     
     private func setPlaylistData() {
@@ -195,15 +215,18 @@ class SaveDetailViewController: UIViewController, SaveMoveViewSaveDelegate {
     }
    
     private func setDetailData() {
-        self.saveSongsTableViewCell.rx.setDelegate(self)
+        self.saveSongsTableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
         
         self.viewModel.selectSaveMusicItem
             .observe(on: MainScheduler.instance)
-            .bind(to: self.saveSongsTableViewCell.rx.items(cellIdentifier: SaveSongsTableViewCell.identifier, cellType: SaveSongsTableViewCell.self)) { index, item, cell in
+            .bind(to: self.saveSongsTableView.rx.items(cellIdentifier: SaveSongsTableViewCell.identifier, cellType: SaveSongsTableViewCell.self)) { index, item, cell in
                 cell.prepare(music: item, index: index)
             }
             .disposed(by: disposeBag)
+        
+        self.saveSongsTableView.reloadData()
+        self.saveSongsTableView.layoutIfNeeded()
     }
    
     private func setSaveMusicAPI() {
@@ -215,7 +238,6 @@ class SaveDetailViewController: UIViewController, SaveMoveViewSaveDelegate {
             case 200:
                 self.viewModel.selectSaveMusicItem.accept(response.data)
                 self.setDetailData()
-                self.view.layoutIfNeeded()
             default:
                 AlertController(message: response.msg).show()
             }

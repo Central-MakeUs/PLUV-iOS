@@ -32,7 +32,6 @@ class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
         $0.image = UIImage(named: "menu_image")
     }
     private let playlistTitleLabel = UILabel().then {
-        $0.numberOfLines = 0
         $0.textColor = .gray800
         $0.font = .systemFont(ofSize: 22, weight: .semibold)
     }
@@ -153,7 +152,7 @@ class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
         self.feedDetailTitleView.addSubview(separateLine)
         separateLine.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
-            make.height.equalTo(1)
+            make.height.equalTo(1.2)
         }
         
         self.contentView.addSubview(feedDetailTableView)
@@ -174,14 +173,18 @@ class FeedDetailViewController: UIViewController, SaveMoveViewFeedDelegate {
     }
     
     private func setTableViewHeight() {
-        let contentHeight = feedDetailTableView.contentSize.height + 110
-        feedDetailTableViewHeightConstraint?.update(offset: contentHeight)
-        
-        /// 이미지 높이 + 테이블 뷰 높이를 합산하여 스크롤뷰의 contentSize 설정
-        let totalHeight = navigationbarView.frame.height + feedDetailImageView.frame.height + feedDetailTitleView.frame.height + contentHeight
-        scrollView.contentSize = CGSize(width: view.frame.width, height: totalHeight)
-        scrollView.layoutIfNeeded()
-        scrollView.isScrollEnabled = true
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
+            let contentHeight = self.feedDetailTableView.contentSize.height + 80
+            self.feedDetailTableViewHeightConstraint?.update(offset: contentHeight)
+            
+            /// 이미지 높이 + 테이블 뷰 높이를 합산하여 스크롤뷰의 contentSize 설정
+            let totalHeight = self.navigationbarView.frame.height + self.feedDetailImageView.frame.height + self.feedDetailTitleView.frame.height + contentHeight
+            self.scrollView.contentSize = CGSize(width: self.view.frame.width, height: totalHeight)
+            self.scrollView.layoutIfNeeded()
+            self.scrollView.isScrollEnabled = true
+        }
+        CATransaction.commit()
     }
     
     private func setPlaylistData() {

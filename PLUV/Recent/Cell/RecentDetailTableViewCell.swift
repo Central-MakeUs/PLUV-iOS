@@ -74,6 +74,7 @@ class RecentDetailTableViewCell: UITableViewCell {
       playlistTitleLabel.snp.makeConstraints { make in
          make.top.equalToSuperview().inset(22)
          make.leading.equalTo(menuImageView.snp.trailing).offset(4)
+          make.trailing.equalToSuperview().inset(24)
          make.height.equalTo(24)
       }
       
