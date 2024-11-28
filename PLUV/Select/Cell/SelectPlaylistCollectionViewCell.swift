@@ -106,8 +106,8 @@ final class SelectPlaylistCollectionViewCell: UICollectionViewCell {
         let thumbNailUrl = URL(string: me.imageURL)
         self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
         self.playlistTitleLabel.text = me.title
-        self.songCountLabel.text = "총 \(me.transferredSongCount ?? 0)곡"
-        self.dateLabel.text = "\(me.transferredAt)"
+        self.songCountLabel.text = "총 \(me.transferredSongCount)곡"
+        self.dateLabel.text = "\(me.transferredDate)"
         
         let borderWidth: CGFloat = 2.4
         thumbnailImageView.frame = CGRectInset(self.frame, -borderWidth, -borderWidth)

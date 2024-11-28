@@ -37,6 +37,14 @@ class RecentTabViewController: TabmanViewController {
       setUI()
       setupTabMan()
    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if let recentSuccessVC = viewControllers.first as? RecentSuccessViewController {
+            recentSuccessVC.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height + 100)
+        }
+    }
    
    private func setUI() {
       self.view.backgroundColor = .white

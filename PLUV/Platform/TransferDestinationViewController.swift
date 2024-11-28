@@ -23,6 +23,7 @@ class TransferDestinationViewController: UIViewController {
         }
     }
     
+    var feedViewModel = SelectMeViewModel()
     var saveViewModel = SelectSaveViewModel()
     
     private var destinationList = Observable.just(MusicPlatform.allCases)
@@ -170,6 +171,8 @@ extension TransferDestinationViewController {
                 transferCheckVC.destinationPlatform = platform
                 if self?.saveViewModel.saveItem != nil {
                     transferCheckVC.saveViewModel.saveItem = self?.saveViewModel.saveItem
+                } else if self?.feedViewModel.meItem != nil {
+                    transferCheckVC.feedViewModel.meItem = self?.feedViewModel.meItem
                 }
                 self?.navigationController?.pushViewController(transferCheckVC, animated: true)
             })

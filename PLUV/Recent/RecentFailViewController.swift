@@ -58,19 +58,21 @@ class RecentFailViewController: UIViewController {
             cell.prepare(music: item, index: index)
          }
          .disposed(by: disposeBag)
+       
+       self.recentFailTableViewCell.reloadData()
+       self.recentFailTableViewCell.layoutIfNeeded()
    }
    
    private func setFailAPI() {
        guard let id = self.viewModel.selectMeItem?.id else { return }
       let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
-      let url = EndPoint.historyFail("\(id)").path
+      let url = EndPoint.historyFail(String(id)).path
       
       APIService().getWithAccessToken(of: APIResponse<[Music]>.self, url: url, AccessToken: loginToken) { response in
            switch response.code {
            case 200:
                self.viewModel.selectMeMusicItem.accept(response.data)
                self.setData()
-               self.view.layoutIfNeeded()
            default:
                AlertController(message: response.msg).show()
            }

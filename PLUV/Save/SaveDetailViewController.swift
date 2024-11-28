@@ -231,7 +231,7 @@ class SaveDetailViewController: UIViewController, SaveMoveViewSaveDelegate {
    
     private func setSaveMusicAPI() {
         guard let id = self.viewModel.selectSaveItem?.id else { return }
-        let url = EndPoint.feedIdMusic("\(id)").path
+        let url = EndPoint.feedIdMusic(String(id)).path
         
         APIService().get(of: APIResponse<[Music]>.self, url: url) { response in
             switch response.code {

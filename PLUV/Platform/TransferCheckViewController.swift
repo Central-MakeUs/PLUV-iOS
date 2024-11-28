@@ -16,6 +16,7 @@ class TransferCheckViewController: UIViewController {
    var sourcePlatform: PlatformRepresentable?
    var destinationPlatform: PlatformRepresentable?
     
+    var feedViewModel = SelectMeViewModel()
     var saveViewModel = SelectSaveViewModel()
    
    private let checkTitleView = UIView()
@@ -220,6 +221,12 @@ class TransferCheckViewController: UIViewController {
        if saveViewModel.saveItem != nil {
            let selectMusicVC = SelectMusicViewController()
            selectMusicVC.saveViewModel.saveItem = saveViewModel.saveItem
+           selectMusicVC.sourcePlatform = sourcePlatform
+           selectMusicVC.destinationPlatform = destinationPlatform as! MusicPlatform
+           self.navigationController?.pushViewController(selectMusicVC, animated: true)
+       } else if feedViewModel.meItem != nil {
+           let selectMusicVC = SelectMusicViewController()
+           selectMusicVC.meViewModel.meItem = feedViewModel.meItem
            selectMusicVC.sourcePlatform = sourcePlatform
            selectMusicVC.destinationPlatform = destinationPlatform as! MusicPlatform
            self.navigationController?.pushViewController(selectMusicVC, animated: true)

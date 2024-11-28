@@ -42,7 +42,7 @@ class RecentSuccessViewController: UIViewController {
       
       self.view.addSubview(recentSuccessTableViewCell)
       recentSuccessTableViewCell.snp.makeConstraints { make in
-         make.top.equalToSuperview().offset(20)
+         make.top.equalToSuperview().offset(45)
          make.leading.trailing.bottom.equalToSuperview()
       }
    }
@@ -58,19 +58,21 @@ class RecentSuccessViewController: UIViewController {
             cell.prepare(music: item, index: index)
          }
          .disposed(by: disposeBag)
+       
+       self.recentSuccessTableViewCell.reloadData()
+       self.recentSuccessTableViewCell.layoutIfNeeded()
    }
    
    private func setSuccessAPI() {
        guard let id = self.viewModel.selectMeItem?.id else { return }
       let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
-      let url = EndPoint.historySuccess("\(id)").path
+      let url = EndPoint.historySuccess(String(id)).path
       
       APIService().getWithAccessToken(of: APIResponse<[Music]>.self, url: url, AccessToken: loginToken) { response in
          switch response.code {
          case 200:
              self.viewModel.selectMeMusicItem.accept(response.data)
             self.setData()
-            self.view.layoutIfNeeded()
          default:
             AlertController(message: response.msg).show()
          }

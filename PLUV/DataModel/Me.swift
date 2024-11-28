@@ -9,13 +9,13 @@ import Foundation
 
 struct Me: Codable {
    let id: Int
-   let transferredAt: String
-   let transferredSongCount: Int?
+   let transferredDate: String
+   let transferredSongCount: Int
    let title: String
    let imageURL: String
    
    enum CodingKeys: String, CodingKey {
-      case id, transferredAt, transferredSongCount, title
-      case imageURL = "imageURL"
+      case id, transferredDate, transferredSongCount, title
+      case imageURL = "imageUrl"
    }
 }

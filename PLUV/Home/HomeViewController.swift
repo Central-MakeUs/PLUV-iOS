@@ -315,8 +315,9 @@ extension HomeViewController {
                 } else {
                     self.recentPlayListCollectionView.isHidden = false
                     self.recentEmptyLabel.removeFromSuperview()
-                    let limitedData = Array(response.data.prefix(5))
-                    self.meViewModel.meItems = Observable.just(limitedData)
+//                    let limitedData = Array(response.data.prefix(5))
+//                    self.meViewModel.meItems = Observable.just(limitedData)
+                    self.meViewModel.meItems = Observable.just(response.data)
                     self.setMeData()
                     self.view.layoutIfNeeded()
                 }

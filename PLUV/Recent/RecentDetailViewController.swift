@@ -79,7 +79,7 @@ class RecentDetailViewController: UIViewController {
         super.viewDidLoad()
         
         setUI()
-        setRecentData()
+        setPlaylistData()
     }
     
     private func setUI() {
@@ -161,7 +161,9 @@ class RecentDetailViewController: UIViewController {
         let childVC = RecentTabViewController(viewModel: self.viewModel)
         addChild(childVC)
         classifyView.addSubview(childVC.view)
-        childVC.view.frame = classifyView.bounds
+        childVC.view.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         childVC.didMove(toParent: self)
         
         self.view.addSubview(moveView)
@@ -178,32 +180,24 @@ class RecentDetailViewController: UIViewController {
         }
     }
     
-    private func setRecentData() {
-        guard let id = self.viewModel.selectMeItem?.id else { return }
-        let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
-        let url = EndPoint.historyId("\(id)").path
+    @objc func transferButtonTapped() {
+        let transferDestinationVC = TransferDestinationViewController()
+        transferDestinationVC.fromPlatform = LoadPluv.FromRecent
+        transferDestinationVC.feedViewModel.meItem = viewModel.selectMeItem
+        self.navigationController?.pushViewController(transferDestinationVC, animated: true)
+    }
+    
+    private func setPlaylistData() {
+        guard let selectMeItem = self.viewModel.selectMeItem else { return }
+        let urlString = selectMeItem.imageURL
+        let thumbnailURL = URL(string: urlString)
+        let playlistTitle = selectMeItem.title
+        let songCount = String(describing: selectMeItem.transferredSongCount)
+        let date = String(describing: selectMeItem.transferredDate)
         
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer \(loginToken)",
-        ]
-        
-        AF.request(url, method: .get, headers: headers).responseData { response in
-            switch response.result {
-            case .success(let data):
-                do {
-                    let decodedData = try JSONDecoder().decode(HistoryInfo.self, from: data)
-                    self.recentData = decodedData
-                    let thumbNailUrl = URL(string: self.recentData.imageURL)
-                    self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
-                    self.playlistTitleLabel.text = self.recentData.title
-                    self.totalCountLabel.text = "총 \(String(describing: self.recentData.totalSongCount))곡"
-                    self.dateLabel.text = self.recentData.transferredAt
-                } catch {
-                    print("error: ", error)
-                }
-            case .failure(let error):
-                print("Error: \(error)")
-            }
-        }
+        thumbnailImageView.kf.setImage(with: thumbnailURL)
+        playlistTitleLabel.text = playlistTitle
+        totalCountLabel.text = "총 \(songCount)곡"
+        dateLabel.text = "\(date)"
     }
 }

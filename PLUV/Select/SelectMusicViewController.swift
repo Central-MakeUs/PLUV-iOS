@@ -381,6 +381,7 @@ class SelectMusicViewController: UIViewController {
     }
     
     private func goNextStep() {
+        print(completeArr)
         if self.searchArr.count == self.completeArr.count {
             self.setValidationView(title: "플레이리스트의 모든 음악을 찾았어요!", image: "ok_image")
             /// 유효성 검사뷰 2초뒤 사라진 후 화면 넘어감
@@ -407,7 +408,7 @@ class SelectMusicViewController: UIViewController {
         guard let sourcePlatform = sourcePlatform else { return }
         
         let selectedMusicObservable: BehaviorRelay<[Music]>?
-        let transferAPI: ([Music]) async -> Void
+        let transferAPI: ([Music], @escaping () -> Void) async -> Void
         
         switch (sourcePlatform, destinationPlatform) {
         case (let platform as MusicPlatform, .Spotify) where platform == .AppleMusic:
@@ -441,8 +442,11 @@ class SelectMusicViewController: UIViewController {
                             /// 권한이 부여된 경우
                             print("Apple Music authorization granted")
                             Task {
-                                await transferAPI(musicArray)
-                                self.goNextStep()
+                                await transferAPI(musicArray) {
+                                    DispatchQueue.main.async {
+                                        self.goNextStep()
+                                    }
+                                }
                             }
                         default:
                             DispatchQueue.main.async {
@@ -461,8 +465,11 @@ class SelectMusicViewController: UIViewController {
             selectedMusicObservable?
                 .map { musicArray in
                     Task {
-                        await transferAPI(musicArray)
-                        self.goNextStep()
+                        await transferAPI(musicArray) {
+                            DispatchQueue.main.async {
+                                self.goNextStep()
+                            }
+                        }
                     }
                 }
                 .subscribe { musicArray in
@@ -616,7 +623,7 @@ class SelectMusicViewController: UIViewController {
         }
     }
     
-    private func searchToSpotifyAPI(musics: [Music]) async {
+    private func searchToSpotifyAPI(musics: [Music], completion: @escaping () -> Void) async {
         self.setSearchView()
         do {
             let jsonData = try JSONEncoder().encode(musics)
@@ -648,6 +655,7 @@ class SelectMusicViewController: UIViewController {
                                     }
                                 }
                                 self.searchLoadingView.removeFromSuperview()
+                                completion()
                                 print(response.data, "애플에 있는 것 스포티파이에서 검색")
                             default:
                                 AlertController(message: response.msg).show()
@@ -663,7 +671,7 @@ class SelectMusicViewController: UIViewController {
         }
     }
     
-    private func searchToAppleAPI(musics: [Music]) async {
+    private func searchToAppleAPI(musics: [Music], completion: @escaping () -> Void) async {
         self.setSearchView()
         do {
             let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
@@ -680,7 +688,6 @@ class SelectMusicViewController: UIViewController {
                         let url = EndPoint.musicAppleSearch.path
                         let params = ["destinationAccessToken" : userToken,
                                       "musics" : parameterJsonArray] as [String : Any]
-                        print(params, "파람 확인")
                         APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
                             switch response.code {
                             case 200:
@@ -698,7 +705,8 @@ class SelectMusicViewController: UIViewController {
                                     }
                                 }
                                 self.searchLoadingView.removeFromSuperview()
-                                print(response.data, "스포티파이에 있는 것 애플에서 검색")
+                                completion()
+//                                print(response.data, "스포티파이에 있는 것 애플에서 검색")
                             default:
                                 AlertController(message: response.msg).show()
                             }
