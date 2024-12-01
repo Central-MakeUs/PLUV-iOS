@@ -16,7 +16,7 @@ class TransferCheckViewController: UIViewController {
    var sourcePlatform: PlatformRepresentable?
    var destinationPlatform: PlatformRepresentable?
     
-    var feedViewModel = SelectMeViewModel()
+    var meViewModel = SelectMeViewModel()
     var saveViewModel = SelectSaveViewModel()
    
    private let checkTitleView = UIView()
@@ -198,7 +198,10 @@ class TransferCheckViewController: UIViewController {
    }
    
    @objc private func clickXButton() {
-      let moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 4)
+       var moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 4)
+       if self.saveViewModel.saveItem != nil || self.meViewModel.meItem != nil {
+           moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 2)
+       }
       
       self.view.addSubview(moveStopView)
       moveStopView.alpha = 0
@@ -224,9 +227,9 @@ class TransferCheckViewController: UIViewController {
            selectMusicVC.sourcePlatform = sourcePlatform
            selectMusicVC.destinationPlatform = destinationPlatform as! MusicPlatform
            self.navigationController?.pushViewController(selectMusicVC, animated: true)
-       } else if feedViewModel.meItem != nil {
+       } else if meViewModel.meItem != nil {
            let selectMusicVC = SelectMusicViewController()
-           selectMusicVC.meViewModel.meItem = feedViewModel.meItem
+           selectMusicVC.meViewModel.meItem = meViewModel.meItem
            selectMusicVC.sourcePlatform = sourcePlatform
            selectMusicVC.destinationPlatform = destinationPlatform as! MusicPlatform
            self.navigationController?.pushViewController(selectMusicVC, animated: true)

@@ -89,6 +89,7 @@ class RecentDetailViewController: UIViewController {
         
         scrollView.contentInsetAdjustmentBehavior = .never
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.isScrollEnabled = false
         
         self.view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -183,7 +184,7 @@ class RecentDetailViewController: UIViewController {
     @objc func transferButtonTapped() {
         let transferDestinationVC = TransferDestinationViewController()
         transferDestinationVC.fromPlatform = LoadPluv.FromRecent
-        transferDestinationVC.feedViewModel.meItem = viewModel.selectMeItem
+        transferDestinationVC.meViewModel.meItem = viewModel.selectMeItem
         self.navigationController?.pushViewController(transferDestinationVC, animated: true)
     }
     

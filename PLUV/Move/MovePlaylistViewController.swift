@@ -248,6 +248,9 @@ class MovePlaylistViewController: UIViewController {
             if viewControllers.count > 6 {
                 let previousViewController = viewControllers[viewControllers.count - 7]
                 navigationController.popToViewController(previousViewController, animated: true)
+            } else {
+                let previousViewController = viewControllers[viewControllers.count - 5]
+                navigationController.popToViewController(previousViewController, animated: true)
             }
         }
     }
@@ -260,20 +263,35 @@ class MovePlaylistViewController: UIViewController {
         print(TokenManager.shared.spotifyAccessToken, "스포티파이 토큰")
         
         let url = EndPoint.musicSpotifyAdd.path
-        let params = [
-            "playListName": self.viewModel.playlistItem?.name ?? "",
-            "destinationAccessToken": TokenManager.shared.spotifyAccessToken,
-            "musicIds": musicIdsArr,
-            "transferFailMusics": [
-            ],
-            "thumbNailUrl": self.viewModel.playlistItem?.thumbnailURL ?? "",
-            "source": "apple"
-        ] as [String : Any]
+        
+        var params: [String: Any] = [:]
+        
+        if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+            params = [
+                "playListName": self.meViewModel.meItem?.title ?? "",
+                "destinationAccessToken": TokenManager.shared.spotifyAccessToken,
+                "musicIds": musicIdsArr,
+                "transferFailMusics": [
+                ],
+                "thumbNailUrl": self.meViewModel.meItem?.imageURL ?? "",
+                "source": "apple"
+            ] as [String : Any]
+        } else {
+            params = [
+                "playListName": self.saveViewModel.saveItem?.title ?? "",
+                "destinationAccessToken": TokenManager.shared.spotifyAccessToken,
+                "musicIds": musicIdsArr,
+                "transferFailMusics": [
+                ],
+                "thumbNailUrl": self.saveViewModel.saveItem?.thumbNailURL ?? "",
+                "source": "apple"
+            ] as [String : Any]
+        }
         
         APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: loginToken) { response in
             switch response.code {
             case 201:
-                print(response.data, "addAppleToSpotify")
+                print(response.data, "addToSpotify")
                 self.circleLoadingIndicator.isAnimating = false
                 AlertController(message: "플레이리스트를 옮겼어요", completion: {
                     self.clickXButton()
@@ -321,7 +339,7 @@ class MovePlaylistViewController: UIViewController {
             APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: loginToken) { response in
                 switch response.code {
                 case 201:
-                    print(response.data, "addSpotifyToApple")
+                    print(response.data, "addToApple")
                     self.circleLoadingIndicator.isAnimating = false
                     AlertController(message: "플레이리스트를 옮겼어요", completion: {
                         self.clickXButton()

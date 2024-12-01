@@ -301,7 +301,10 @@ class SelectMusicViewController: UIViewController {
     }
     
     @objc private func clickXButton() {
-        let moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 6)
+        var moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 6)
+        if self.saveViewModel.saveItem != nil || self.meViewModel.meItem != nil {
+            moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 4)
+        }
         
         self.view.addSubview(moveStopView)
         moveStopView.alpha = 0

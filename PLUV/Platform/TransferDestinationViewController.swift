@@ -23,7 +23,7 @@ class TransferDestinationViewController: UIViewController {
         }
     }
     
-    var feedViewModel = SelectMeViewModel()
+    var meViewModel = SelectMeViewModel()
     var saveViewModel = SelectSaveViewModel()
     
     private var destinationList = Observable.just(MusicPlatform.allCases)
@@ -171,8 +171,8 @@ extension TransferDestinationViewController {
                 transferCheckVC.destinationPlatform = platform
                 if self?.saveViewModel.saveItem != nil {
                     transferCheckVC.saveViewModel.saveItem = self?.saveViewModel.saveItem
-                } else if self?.feedViewModel.meItem != nil {
-                    transferCheckVC.feedViewModel.meItem = self?.feedViewModel.meItem
+                } else if self?.meViewModel.meItem != nil {
+                    transferCheckVC.meViewModel.meItem = self?.meViewModel.meItem
                 }
                 self?.navigationController?.pushViewController(transferCheckVC, animated: true)
             })
@@ -188,7 +188,10 @@ extension TransferDestinationViewController {
     }
     
     @objc private func clickXButton() {
-        let moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 3)
+        var moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 3)
+        if self.saveViewModel.saveItem != nil || self.meViewModel.meItem != nil {
+            moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 1)
+        }
         
         self.view.addSubview(moveStopView)
         moveStopView.alpha = 0
