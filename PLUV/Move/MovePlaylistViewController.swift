@@ -11,7 +11,11 @@ import MediaPlayer
 
 class MovePlaylistViewController: UIViewController {
     
-    let viewModel = MovePlaylistViewModel()
+    var viewModel = MovePlaylistViewModel()
+    var meViewModel = MoveMeViewModel()
+    var saveViewModel = MoveSaveViewModel()
+    
+    var completeArr: [String] = []
     
     private var sourcePlatform: PlatformRepresentable?
     private var destinationPlatform: MusicPlatform = .Spotify
@@ -58,7 +62,7 @@ class MovePlaylistViewController: UIViewController {
         $0.font = .systemFont(ofSize: 18)
     }
     private var platformLabel = UILabel().then {
-        $0.textColor = .subBlue
+        $0.textColor = .gray800
         $0.font = .systemFont(ofSize: 14)
         $0.textAlignment = .center
     }
@@ -69,10 +73,10 @@ class MovePlaylistViewController: UIViewController {
     
     private let stopView = ActionBottomView(actionName: "작업 중단하기")
     
-    init(playlistItem: Playlist, musicItems: [Music], source: PlatformRepresentable, destination: MusicPlatform) {
+    init(/*playlistItem: Playlist,*/ musicArr: [String], source: PlatformRepresentable, destination: MusicPlatform) {
         super.init(nibName: nil, bundle: nil)
-        self.viewModel.playlistItem = playlistItem
-        self.viewModel.musicItems = musicItems
+        //      self.viewModel.playlistItem = playlistItem
+        self.completeArr = musicArr
         self.sourcePlatform = source
         self.destinationPlatform = destination
     }
@@ -86,7 +90,7 @@ class MovePlaylistViewController: UIViewController {
         
         setUI()
         setPlaylistData()
-        searchAPI()
+        setAddPlayList()
         
         circleLoadingIndicator.isAnimating = true
         
@@ -188,31 +192,49 @@ class MovePlaylistViewController: UIViewController {
             make.bottom.equalTo(platformLabel.snp.top).offset(-8)
         }
         /*
-        self.view.addSubview(xButton)
-        xButton.snp.makeConstraints { make in
-            make.width.height.equalTo(32)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-5)
-            make.trailing.equalToSuperview().inset(16)
-        }
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(clickXButton))
-        xButton.addGestureRecognizer(tapGesture)
-        xButton.addTarget(self, action: #selector(clickXButton), for: .touchUpInside)
-        
-        // UIBarButtonItem 생성
-        let rightBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(clickXButton))
-        // 네비게이션 바의 오른쪽 아이템에 추가
-        self.navigationItem.rightBarButtonItem = rightBarButtonItem
-        */
+         self.view.addSubview(xButton)
+         xButton.snp.makeConstraints { make in
+         make.width.height.equalTo(32)
+         make.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-5)
+         make.trailing.equalToSuperview().inset(16)
+         }
+         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(clickXButton))
+         xButton.addGestureRecognizer(tapGesture)
+         xButton.addTarget(self, action: #selector(clickXButton), for: .touchUpInside)
+         
+         // UIBarButtonItem 생성
+         let rightBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(clickXButton))
+         // 네비게이션 바의 오른쪽 아이템에 추가
+         self.navigationItem.rightBarButtonItem = rightBarButtonItem
+         */
         
         setXButton()
     }
     
+    private func setAddPlayList() {
+        if destinationPlatform == .AppleMusic {
+            Task {
+                await self.addToApple(musicIdsArr: completeArr)
+            }
+        } else {
+            addToSpotify(musicIdsArr: completeArr)
+        }
+    }
+    
     private func setPlaylistData() {
-        let thumbnailURL = URL(string: self.viewModel.playlistItem.thumbnailURL)
-        sourceImageView.kf.setImage(with: thumbnailURL)
-        destinationImageView.image = UIImage(named: destinationPlatform.iconSelect)
-        playlistTitleLabel.text = self.viewModel.playlistItem.name
-        platformLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
+        if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+            let thumbnailURL = URL(string: self.meViewModel.meItem?.imageURL ?? "")
+            sourceImageView.kf.setImage(with: thumbnailURL)
+            destinationImageView.image = UIImage(named: destinationPlatform.iconSelect)
+            playlistTitleLabel.text = self.meViewModel.meItem?.title
+            platformLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
+        } else {
+            let thumbnailURL = URL(string: self.saveViewModel.saveItem?.thumbNailURL ?? "")
+            sourceImageView.kf.setImage(with: thumbnailURL)
+            destinationImageView.image = UIImage(named: destinationPlatform.iconSelect)
+            playlistTitleLabel.text = self.saveViewModel.saveItem?.title
+            platformLabel.text = sourcePlatform!.name + " > " + destinationPlatform.name
+        }
     }
     
     private func setXButton() {
@@ -226,151 +248,50 @@ class MovePlaylistViewController: UIViewController {
             if viewControllers.count > 6 {
                 let previousViewController = viewControllers[viewControllers.count - 7]
                 navigationController.popToViewController(previousViewController, animated: true)
+            } else {
+                let previousViewController = viewControllers[viewControllers.count - 5]
+                navigationController.popToViewController(previousViewController, animated: true)
             }
-        }
-    }
-    
-    private func searchAPI() {
-        if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .AppleMusic && destinationPlatform == .Spotify {
-            /// 권한이 부여된 경우에만 넘겨야함!!!
-            Task {
-                await self.searchAppleToSpotifyAPI(musics: self.viewModel.musicItems)
-            }
-        } else if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .Spotify && destinationPlatform == .AppleMusic {
-            MPMediaLibrary.requestAuthorization { status in
-                switch status {
-                case .authorized:
-                    /// 권한이 부여된 경우
-                    print("Apple Music authorization granted")
-                    Task {
-                        await self.searchSpotifyToAppleAPI(musics: self.viewModel.musicItems)
-                    }
-                default:
-                    DispatchQueue.main.async {
-                        AlertController(message: "미디어 권한을 허용해야 사용할 수 있어요") {
-                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-                        }.show()
-                    }
-                }
-            }
-        }
-    }
-    
-    /// 애플에 있는 것 스포티파이에서 검색
-    private func searchAppleToSpotifyAPI(musics: [Music]) async {
-        do {
-            let jsonData = try JSONEncoder().encode(musics)
-            let jsonString = String(data: jsonData, encoding: .utf8) ?? ""
-            let musicParams = jsonString.replacingOccurrences(of: "\\", with: "").replacingOccurrences(of: "artistNames", with: "artistName")
-            
-            if let parameterJsonData = musicParams.data(using: .utf8) {
-                do {
-                    if let parameterJsonArray = try JSONSerialization.jsonObject(with: parameterJsonData, options: []) as? [[String: Any]] {
-                        
-                        let url = EndPoint.musicSpotifySearch.path
-                        let params = ["destinationAccessToken" : TokenManager.shared.spotifyAccessToken,
-                                      "musics" : parameterJsonArray] as [String : Any]
-                        
-                        APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
-                            switch response.code {
-                            case 200:
-                                var idArr: [String] = []
-                                let searchArr: [Search] = response.data
-                                for search in searchArr {
-                                    if search.isEqual == true {
-                                        idArr.append(search.destinationMusics.first!.id!)
-                                    } else {
-                                        idArr.append(search.destinationMusics.first!.id!)
-                                    }
-                                }
-                                print(response.data, "애플에 있는 것 스포티파이에서 검색")
-                                self.addAppleToSpotify(musicIdsArr: idArr)
-                            default:
-                                AlertController(message: response.msg).show()
-                            }
-                        }
-                    }
-                } catch {
-                    print("JSON 변환 실패: \(error.localizedDescription)")
-                }
-            }
-        } catch {
-            print(error)
-        }
-    }
-    
-    /// 스포티파이에 있는 것 애플에서 검색
-    private func searchSpotifyToAppleAPI(musics: [Music]) async {
-        do {
-            let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
-            let userToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
-            
-            let jsonData = try JSONEncoder().encode(musics)
-            let jsonString = String(data: jsonData, encoding: .utf8) ?? ""
-            let musicParams = jsonString.replacingOccurrences(of: "\\", with: "").replacingOccurrences(of: "artistNames", with: "artistName")
-            
-            if let parameterJsonData = musicParams.data(using: .utf8) {
-                do {
-                    if let parameterJsonArray = try JSONSerialization.jsonObject(with: parameterJsonData, options: []) as? [[String: Any]] {
-                        
-                        let url = EndPoint.musicAppleSearch.path
-                        let params = ["destinationAccessToken" : userToken,
-                                      "musics" : parameterJsonArray] as [String : Any]
-                        print(params, "파람 확인")
-                        APIService().post(of: APIResponse<[Search]>.self, url: url, parameters: params) { response in
-                            switch response.code {
-                            case 200:
-                                var idArr: [String] = []
-                                let searchArr: [Search] = response.data
-                                for search in searchArr {
-                                    if search.isEqual == true {
-                                        idArr.append(search.destinationMusics.first!.id!)
-                                    } else {
-                                        if let id = search.destinationMusics.first?.id {
-                                            idArr.append(id)
-                                        }
-                                    }
-                                }
-                                print(response.data, "스포티파이에 있는 것 애플에서 검색")
-                                Task {
-                                    await self.addSpotifyToApple(musicIdsArr: idArr)
-                                }
-                            default:
-                                AlertController(message: response.msg).show()
-                            }
-                        }
-                    }
-                } catch {
-                    print("JSON 변환 실패: \(error.localizedDescription)")
-                }
-            }
-        } catch {
-            print(error)
         }
     }
     
     ///  애플에 있는 것 스포티파이에 등록
-    private func addAppleToSpotify(musicIdsArr: [String]) {
+    private func addToSpotify(musicIdsArr: [String]) {
         let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
         
         print(loginToken, "UserDefaults 로그인 토큰 확인\n")
         print(TokenManager.shared.spotifyAccessToken, "스포티파이 토큰")
         
         let url = EndPoint.musicSpotifyAdd.path
-        let params = [
-                        "playListName": self.viewModel.playlistItem.name,
-                        "destinationAccessToken": TokenManager.shared.spotifyAccessToken,
-                        "musicIds": musicIdsArr,
-                        "transferFailMusics": [
-                        ],
-                        "thumbNailUrl": self.viewModel.playlistItem.thumbnailURL,
-                        "source": "apple"
-        ] as [String : Any]
+        
+        var params: [String: Any] = [:]
+        
+        if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+            params = [
+                "playListName": self.meViewModel.meItem?.title ?? "",
+                "destinationAccessToken": TokenManager.shared.spotifyAccessToken,
+                "musicIds": musicIdsArr,
+                "transferFailMusics": [
+                ],
+                "thumbNailUrl": self.meViewModel.meItem?.imageURL ?? "",
+                "source": "apple"
+            ] as [String : Any]
+        } else {
+            params = [
+                "playListName": self.saveViewModel.saveItem?.title ?? "",
+                "destinationAccessToken": TokenManager.shared.spotifyAccessToken,
+                "musicIds": musicIdsArr,
+                "transferFailMusics": [
+                ],
+                "thumbNailUrl": self.saveViewModel.saveItem?.thumbNailURL ?? "",
+                "source": "apple"
+            ] as [String : Any]
+        }
         
         APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: loginToken) { response in
             switch response.code {
             case 201:
-                print(response.data, "addAppleToSpotify")
+                print(response.data, "addToSpotify")
                 self.circleLoadingIndicator.isAnimating = false
                 AlertController(message: "플레이리스트를 옮겼어요", completion: {
                     self.clickXButton()
@@ -382,7 +303,7 @@ class MovePlaylistViewController: UIViewController {
     }
     
     /// 스포티파이에서 애플로 등록
-    private func addSpotifyToApple(musicIdsArr: [String]) async {
+    private func addToApple(musicIdsArr: [String]) async {
         do {
             let developerToken = try await DefaultMusicTokenProvider.init().developerToken(options: .ignoreCache)
             let musicUserToken = try await MusicUserTokenProvider.init().userToken(for: developerToken, options: .ignoreCache)
@@ -390,20 +311,35 @@ class MovePlaylistViewController: UIViewController {
             let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
             
             let url = EndPoint.musicAppleAdd.path
-            let params = [
-                            "playListName": self.viewModel.playlistItem.name,
-                            "destinationAccessToken": musicUserToken,
-                            "musicIds": musicIdsArr,
-                            "transferFailMusics": [
-                            ],
-                            "thumbNailUrl": self.viewModel.playlistItem.thumbnailURL,
-                            "source": "spotify"
-            ] as [String : Any]
             
+            var params: [String: Any] = [:]
+            
+            if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
+                params = [
+                    "playListName": self.meViewModel.meItem?.title ?? "",
+                    "destinationAccessToken": musicUserToken,
+                    "musicIds": musicIdsArr,
+                    "transferFailMusics": [
+                    ],
+                    "thumbNailUrl": self.meViewModel.meItem?.imageURL ?? "",
+                    "source": "spotify"
+                ] as [String : Any]
+            } else {
+                params = [
+                    "playListName": self.saveViewModel.saveItem?.title ?? "",
+                    "destinationAccessToken": musicUserToken,
+                    "musicIds": musicIdsArr,
+                    "transferFailMusics": [
+                    ],
+                    "thumbNailUrl": self.saveViewModel.saveItem?.thumbNailURL ?? "",
+                    "source": "spotify"
+                ] as [String : Any]
+            }
+                
             APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: loginToken) { response in
                 switch response.code {
                 case 201:
-                    print(response.data, "addSpotifyToApple")
+                    print(response.data, "addToApple")
                     self.circleLoadingIndicator.isAnimating = false
                     AlertController(message: "플레이리스트를 옮겼어요", completion: {
                         self.clickXButton()

@@ -13,5 +13,5 @@ class SelectPlaylistViewModel {
     // 선택된 셀의 인덱스 패스를 저장하는 BehaviorRelay
     let selectedIndexPath = BehaviorRelay<IndexPath?>(value: nil)
     var playlistItems: Observable<[Playlist]> = Observable.just([])
-    var playlistItem: Playlist = Playlist(id: "", thumbnailURL: "", songCount: nil, name: "", source: .apple)
+    var playlistItem: Playlist?
 }

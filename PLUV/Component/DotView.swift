@@ -13,12 +13,10 @@ final class DotView: UIView {
         $0.backgroundColor = .gray300
         $0.clipsToBounds = true
     }
-    
     private var secondDotView = UIView().then {
         $0.backgroundColor = .gray300
         $0.clipsToBounds = true
     }
-    
     private var thirdDotView = UIView().then {
         $0.backgroundColor = .gray300
         $0.clipsToBounds = true

@@ -33,13 +33,13 @@ class RecentViewController: UIViewController {
       self.navigationItem.setHidesBackButton(true, animated: false)
       self.navigationController?.setNavigationBarHidden(true, animated: false)
       
+      navigationbarView.delegate = self
       self.view.addSubview(navigationbarView)
       navigationbarView.snp.makeConstraints { make in
          make.top.equalToSuperview().inset(47)
          make.leading.trailing.equalToSuperview()
          make.height.equalTo(46)
       }
-      navigationbarView.setBackButtonTarget(target: self)
       
       self.view.addSubview(recentTableViewCell)
       recentTableViewCell.snp.makeConstraints { make in
@@ -53,7 +53,7 @@ class RecentViewController: UIViewController {
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
-      self.viewModel.MeItems
+      self.viewModel.meItems
          .observe(on: MainScheduler.instance)
          .bind(to: self.recentTableViewCell.rx.items(cellIdentifier: RecentDetailTableViewCell.identifier, cellType: RecentDetailTableViewCell.self)) { index, item, cell in
             cell.prepare(me: item)
@@ -63,10 +63,10 @@ class RecentViewController: UIViewController {
       /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
       self.recentTableViewCell.rx.modelSelected(Me.self)
          .subscribe(onNext: { [weak self] recentItem in
-            self?.viewModel.selectMeItem = Observable.just(recentItem)
-            UserDefaults.standard.set(recentItem.id, forKey: "recentId")
-            let recentDetailVC = RecentDetailViewController()
-            self?.navigationController?.pushViewController(recentDetailVC, animated: true)
+            guard let self = self else { return }
+            self.viewModel.selectMeItem = recentItem
+             let recentDetailVC = RecentDetailViewController(viewModel: self.viewModel)
+            self.navigationController?.pushViewController(recentDetailVC, animated: true)
          })
          .disposed(by: disposeBag)
    }
@@ -78,7 +78,7 @@ class RecentViewController: UIViewController {
       APIService().getWithAccessToken(of: APIResponse<[Me]>.self, url: url, AccessToken: loginToken) { response in
          switch response.code {
          case 200:
-            self.viewModel.MeItems = Observable.just(response.data)
+            self.viewModel.meItems = Observable.just(response.data)
             self.setData()
             self.view.layoutIfNeeded()
          default:

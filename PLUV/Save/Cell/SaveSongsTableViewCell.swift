@@ -15,10 +15,12 @@ class SaveSongsTableViewCell: UITableViewCell {
       $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 14, weight: .medium)
    }
-   private let thumbnailImageView = UIImageView().then {
-      $0.layer.cornerRadius = 8
-      $0.clipsToBounds = true
-   }
+    private let thumbnailImageView = UIImageView().then {
+        $0.layer.cornerRadius = 5
+        $0.layer.borderColor = UIColor.gray300.cgColor
+        $0.layer.borderWidth = 0.5
+        $0.clipsToBounds = true
+    }
    private let nameLabel = UILabel().then {
       $0.textColor = .gray800
       $0.font = .systemFont(ofSize: 15, weight: .medium)
@@ -45,7 +47,7 @@ class SaveSongsTableViewCell: UITableViewCell {
       indexLabel.snp.makeConstraints { make in
          make.leading.equalToSuperview().offset(20)
          make.centerY.equalToSuperview()
-         make.width.equalTo(16)
+         make.width.equalTo(20)
          make.height.equalTo(14)
       }
       
@@ -60,6 +62,7 @@ class SaveSongsTableViewCell: UITableViewCell {
       self.contentView.addSubview(nameLabel)
       nameLabel.snp.makeConstraints { make in
          make.top.equalToSuperview().offset(15)
+          make.trailing.equalToSuperview().inset(24)
          make.leading.equalTo(thumbnailImageView.snp.trailing).offset(12)
          make.height.equalTo(16)
       }

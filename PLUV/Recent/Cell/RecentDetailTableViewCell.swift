@@ -74,6 +74,7 @@ class RecentDetailTableViewCell: UITableViewCell {
       playlistTitleLabel.snp.makeConstraints { make in
          make.top.equalToSuperview().inset(22)
          make.leading.equalTo(menuImageView.snp.trailing).offset(4)
+          make.trailing.equalToSuperview().inset(24)
          make.height.equalTo(24)
       }
       
@@ -96,7 +97,7 @@ class RecentDetailTableViewCell: UITableViewCell {
       let thumbNailUrl = URL(string: me.imageURL)
       self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
       self.playlistTitleLabel.text = me.title
-      self.totalCountLabel.text = "총 \(me.transferredSongCount ?? 0)곡"
-      self.dateLabel.text = me.transferredAt
+      self.totalCountLabel.text = "총 \(me.transferredSongCount)곡"
+       self.dateLabel.text = me.transferredDate
    }
 }

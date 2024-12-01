@@ -12,6 +12,18 @@ import SnapKit
 
 class ValidationSimilarViewController: UIViewController {
    
+   var viewModel = MovePlaylistViewModel()
+   var meViewModel = MoveMeViewModel()
+   var saveViewModel = MoveSaveViewModel()
+   
+   var completeArr: [String] = []
+   var successArr: [SearchMusic] = []
+   var successSimilarArr: [SearchMusic] = []
+   var failArr: [SearchMusic] = []
+   
+   var sourcePlatform: PlatformRepresentable?
+   var destinationPlatform: MusicPlatform = .Spotify
+   
    private let scrollView = UIScrollView()
    private let contentView = UIView()
    
@@ -53,10 +65,21 @@ class ValidationSimilarViewController: UIViewController {
    private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
    
+   init(completeArr: [String], successArr: [SearchMusic], successSimilarArr: [SearchMusic], failArr: [SearchMusic]) {
+      super.init(nibName: nil, bundle: nil)
+   }
+   
+   required init?(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+   }
+   
    override func viewDidLoad() {
       super.viewDidLoad()
       
       setUI()
+      
+      similarMusicTableView.delegate = self
+      similarMusicTableView.dataSource = self
    }
    
    private func setUI() {
@@ -146,7 +169,7 @@ class ValidationSimilarViewController: UIViewController {
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(102)
       }
-      moveView.setBackButtonTarget(target: self)
+      moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
    }
    
    @objc private func clickXButton() {
@@ -158,12 +181,40 @@ class ValidationSimilarViewController: UIViewController {
          }
       }
    }
+   
+   @objc private func clickTransferButton() {
+      let validationNotFoundVC = ValidationNotFoundViewController()
+      validationNotFoundVC.failArr = failArr
+      self.navigationController?.pushViewController(validationNotFoundVC, animated: true)
+   }
 }
 
-extension ValidationSimilarViewController: UITableViewDelegate {
+extension ValidationSimilarViewController: UITableViewDelegate, UITableViewDataSource {
    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return 3
+      return 9
    }
+   
+   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+          switch indexPath.row % 3 { // 셀을 3개의 유형으로 나눠서 사용
+          case 0:
+              guard let cell = tableView.dequeueReusableCell(withIdentifier: ValidationSimilarTableViewCell.identifier, for: indexPath) as? ValidationSimilarTableViewCell else {
+                  return UITableViewCell()
+              }
+              return cell
+              
+          case 1:
+              guard let cell = tableView.dequeueReusableCell(withIdentifier: SimilarSongsTableViewCell.identifier, for: indexPath) as? SimilarSongsTableViewCell else {
+                  return UITableViewCell()
+              }
+              return cell
+              
+          default:
+              guard let cell = tableView.dequeueReusableCell(withIdentifier: MoreButtonTableViewCell.identifier, for: indexPath) as? MoreButtonTableViewCell else {
+                  return UITableViewCell()
+              }
+              return cell
+          }
+      }
    
    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
       switch indexPath.row % 3 {

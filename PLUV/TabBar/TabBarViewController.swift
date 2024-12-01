@@ -53,18 +53,18 @@ class TabBarViewController: UITabBarController {
         myPageVC.tabBarItem.image = resizedMyPageImage
         myPageVC.tabBarItem.selectedImage = resizedMyPageImage
         
-        homeVC.tabBarItem.setTitleTextAttributes([.foregroundColor: UIColor.gray300], for: .normal)
-        homeVC.tabBarItem.setTitleTextAttributes([.foregroundColor: UIColor.gray800], for: .selected)
+        homeVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.gray300], for: .normal)
+        homeVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.black], for: .selected)
         homeVC.tabBarItem.image = resizedHomeImage.withTintColor(.gray300, renderingMode: .alwaysOriginal)
         homeVC.tabBarItem.selectedImage = resizedHomeImage.withTintColor(.gray800, renderingMode: .alwaysOriginal)
         
-        feedVC.tabBarItem.setTitleTextAttributes([.foregroundColor: UIColor.gray300], for: .normal)
-        feedVC.tabBarItem.setTitleTextAttributes([.foregroundColor: UIColor.gray800], for: .selected)
+        feedVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.gray300], for: .normal)
+        feedVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.black], for: .selected)
         feedVC.tabBarItem.image = resizedFeedImage.withTintColor(.gray300, renderingMode: .alwaysOriginal)
         feedVC.tabBarItem.selectedImage = resizedFeedImage.withTintColor(.gray800, renderingMode: .alwaysOriginal)
         
-        myPageVC.tabBarItem.setTitleTextAttributes([.foregroundColor: UIColor.gray300], for: .normal)
-        myPageVC.tabBarItem.setTitleTextAttributes([.foregroundColor: UIColor.gray800], for: .selected)
+        myPageVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.gray300], for: .normal)
+        myPageVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.black], for: .selected)
         myPageVC.tabBarItem.image = resizedMyPageImage.withTintColor(.gray300, renderingMode: .alwaysOriginal)
         myPageVC.tabBarItem.selectedImage = resizedMyPageImage.withTintColor(.gray800, renderingMode: .alwaysOriginal)
         
