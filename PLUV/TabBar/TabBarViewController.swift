@@ -13,6 +13,8 @@ class TabBarViewController: UITabBarController {
     let feedVC = FeedViewController()
     let myPageVC = MyPageViewController()
     
+    let customTabBar = CustomTabBar()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -21,6 +23,11 @@ class TabBarViewController: UITabBarController {
     
     func setup() {
         self.navigationItem.setHidesBackButton(true, animated: false)
+        self.setValue(customTabBar, forKey: "tabBar")
+        
+        tabBar.backgroundColor = .white
+        UITabBar.clearShadow()
+        tabBar.layer.applyShadow(color: .gray, alpha: 0.3, x: 0, y: 0, blur: 12)
         
         homeVC.title = "홈"
         feedVC.title = "피드"
@@ -54,29 +61,29 @@ class TabBarViewController: UITabBarController {
         myPageVC.tabBarItem.selectedImage = resizedMyPageImage
         
         homeVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.gray300], for: .normal)
-        homeVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.black], for: .selected)
+        homeVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.gray800], for: .selected)
         homeVC.tabBarItem.image = resizedHomeImage.withTintColor(.gray300, renderingMode: .alwaysOriginal)
         homeVC.tabBarItem.selectedImage = resizedHomeImage.withTintColor(.gray800, renderingMode: .alwaysOriginal)
         
         feedVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.gray300], for: .normal)
-        feedVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.black], for: .selected)
+        feedVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.gray800], for: .selected)
         feedVC.tabBarItem.image = resizedFeedImage.withTintColor(.gray300, renderingMode: .alwaysOriginal)
         feedVC.tabBarItem.selectedImage = resizedFeedImage.withTintColor(.gray800, renderingMode: .alwaysOriginal)
         
         myPageVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.gray300], for: .normal)
-        myPageVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.black], for: .selected)
+        myPageVC.tabBarItem.setTitleTextAttributes([.font: UIFont.systemFont(ofSize: 12, weight: .medium), .foregroundColor: UIColor.gray800], for: .selected)
         myPageVC.tabBarItem.image = resizedMyPageImage.withTintColor(.gray300, renderingMode: .alwaysOriginal)
         myPageVC.tabBarItem.selectedImage = resizedMyPageImage.withTintColor(.gray800, renderingMode: .alwaysOriginal)
         
         /// 타이틀과 아이콘 사이 거리 조정
-        homeVC.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 13)
-        feedVC.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 13)
-        myPageVC.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 13)
+        homeVC.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 8)
+        feedVC.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 8)
+        myPageVC.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 8)
         
         /// tabbar 상단과 이미지 사이 위치 조정
-        homeVC.tabBarItem.imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
-        feedVC.tabBarItem.imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
-        myPageVC.tabBarItem.imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
+        homeVC.tabBarItem.imageInsets = UIEdgeInsets(top: 5, left: 0, bottom: -10, right: 0)
+        feedVC.tabBarItem.imageInsets = UIEdgeInsets(top: 5, left: 0, bottom: -10, right: 0)
+        myPageVC.tabBarItem.imageInsets = UIEdgeInsets(top: 5, left: 0, bottom: -10, right: 0)
         
         let navigationHome = UINavigationController(rootViewController: homeVC)
         let navigationFeed = UINavigationController(rootViewController: feedVC)
@@ -99,3 +106,12 @@ class TabBarViewController: UITabBarController {
     }
 }
 
+class CustomTabBar: UITabBar {
+    private var customHeight: CGFloat = 90 // 원하는 높이 설정
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        var sizeThatFits = super.sizeThatFits(size)
+        sizeThatFits.height = customHeight
+        return sizeThatFits
+    }
+}

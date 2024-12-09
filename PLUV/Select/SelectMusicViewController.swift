@@ -15,9 +15,9 @@ import MusicKit
 class SelectMusicViewController: UIViewController {
     
     var completeArr: [String] = []
-    var successArr: [SearchMusic] = []
-    var successSimilarArr: [SearchMusic] = []
-    var failArr: [SearchMusic] = []
+    var successArr = BehaviorRelay<[SearchMusic]>(value: [])
+    var successSimilarArr = BehaviorRelay<[SearchMusic]>(value: [])
+    var failArr = BehaviorRelay<[SearchMusic]>(value: [])
     var searchArr: [Search] = []
     
     var viewModel = SelectMusicViewModel()
@@ -398,7 +398,7 @@ class SelectMusicViewController: UIViewController {
         } else {
             self.setValidationView(title: "앗, 찾을 수 없는 곡이 몇 개 있네요!", image: "alert_image")
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                let validationSimilarVC = ValidationSimilarViewController(completeArr: self.completeArr, successArr: self.successArr, successSimilarArr: self.successSimilarArr, failArr: self.failArr)
+                let validationSimilarVC = ValidationSimilarViewController(completeArr: self.completeArr, successArr: self.successArr, successSimilarArr: self.successSimilarArr, failArr: self.failArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
                 validationSimilarVC.viewModel.playlistItem = self.viewModel.playlistItem
                 validationSimilarVC.meViewModel.meItem = self.meViewModel.meItem
                 validationSimilarVC.saveViewModel.saveItem = self.saveViewModel.saveItem
@@ -650,9 +650,7 @@ class SelectMusicViewController: UIViewController {
                                         self.completeArr.append(self.searchArr[i].destinationMusics.first!.id!)
                                     } else if self.searchArr[i].isEqual == false && self.searchArr[i].isFound == true {
                                         self.successArr.append(self.searchArr[i].sourceMusic)
-                                        for j in 0..<self.searchArr[i].destinationMusics.count {
-                                            self.successSimilarArr.append(self.searchArr[i].destinationMusics[j])
-                                        }
+                                        self.successSimilarArr.append(contentsOf: self.searchArr[i].destinationMusics)
                                     } else {
                                         self.failArr.append(self.searchArr[i].sourceMusic)
                                     }
@@ -700,16 +698,14 @@ class SelectMusicViewController: UIViewController {
                                         self.completeArr.append(self.searchArr[i].destinationMusics.first!.id!)
                                     } else if self.searchArr[i].isEqual == false && self.searchArr[i].isFound == true {
                                         self.successArr.append(self.searchArr[i].sourceMusic)
-                                        for j in 0..<self.searchArr[i].destinationMusics.count {
-                                            self.successSimilarArr.append(self.searchArr[i].destinationMusics[j])
-                                        }
+                                        self.successSimilarArr.append(contentsOf: self.searchArr[i].destinationMusics)
                                     } else {
                                         self.failArr.append(self.searchArr[i].sourceMusic)
                                     }
                                 }
                                 self.searchLoadingView.removeFromSuperview()
                                 completion()
-//                                print(response.data, "스포티파이에 있는 것 애플에서 검색")
+                                print(response.data, "스포티파이에 있는 것 애플에서 검색")
                             default:
                                 AlertController(message: response.msg).show()
                             }

@@ -13,7 +13,8 @@ import SnapKit
 class ValidationNotFoundViewController: UIViewController {
    
    var completeArr: [String] = []
-   var failArr: [SearchMusic] = []
+    var successSimilarArr = BehaviorRelay<[SearchMusic]>(value: [])
+   var failArr = BehaviorRelay<[SearchMusic]>(value: [])
    
    var sourcePlatform: PlatformRepresentable?
    var destinationPlatform: MusicPlatform = .Spotify
@@ -51,6 +52,19 @@ class ValidationNotFoundViewController: UIViewController {
    private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
    
+    init(completeArr: [String], successSimilarArr: BehaviorRelay<[SearchMusic]>, failArr: BehaviorRelay<[SearchMusic]>, source: PlatformRepresentable, destination: MusicPlatform) {
+       super.init(nibName: nil, bundle: nil)
+        self.completeArr = completeArr
+        self.successSimilarArr = successSimilarArr
+        self.failArr = failArr
+        self.sourcePlatform = source
+        self.destinationPlatform = destination
+    }
+    
+    required init?(coder: NSCoder) {
+       fatalError("init(coder:) has not been implemented")
+    }
+    
    override func viewDidLoad() {
       super.viewDidLoad()
       
@@ -132,6 +146,19 @@ class ValidationNotFoundViewController: UIViewController {
       }
       moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
    }
+    
+    private func setFailData() {
+        notFoundMusicTableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+        
+        /// CollectionView에 들어갈 Cell에 정보 제공
+        self.failArr
+            .observe(on: MainScheduler.instance)
+            .bind(to: self.notFoundMusicTableView.rx.items(cellIdentifier: ValidationNotFoundTableViewCell.identifier, cellType: ValidationNotFoundTableViewCell.self)) { index, item, cell in
+                cell.prepare(music: item)
+            }
+            .disposed(by: disposeBag)
+    }
    
    @objc private func clickXButton() {
       if let navigationController = self.navigationController {

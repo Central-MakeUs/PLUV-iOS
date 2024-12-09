@@ -89,7 +89,7 @@ class RecentTabViewController: TabmanViewController {
       bar.layout.contentMode = .fit
       
       // 밑줄 쳐지는 부분
-      bar.indicator.weight = .custom(value: 3)
+      bar.indicator.weight = .custom(value: 2)
       bar.indicator.tintColor = UIColor(red: 0.619, green: 0.135, blue: 1, alpha: 1)
       addBar(bar, dataSource: self, at: .custom(view: tabView, layout: nil))
    }

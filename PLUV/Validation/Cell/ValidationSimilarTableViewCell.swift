@@ -47,13 +47,16 @@ class ValidationSimilarTableViewCell: UITableViewCell {
    
    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
       super.init(style: style, reuseIdentifier: reuseIdentifier)
-      setUI()
    }
 
    required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
    }
    
+    override func layoutSubviews() {
+        setUI()
+    }
+    
    private func setUI() {
       self.contentView.addSubview(thumbnailImageView)
       thumbnailImageView.snp.makeConstraints { make in
@@ -91,4 +94,11 @@ class ValidationSimilarTableViewCell: UITableViewCell {
          make.height.equalTo(14)
       }
    }
+    
+    func prepare(music: SearchMusic) {
+        let thumbNailUrl = URL(string: music.imageURL)
+        self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
+        self.songTitleLabel.text = music.title
+        self.singerLabel.text = music.artistName
+    }
 }

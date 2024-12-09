@@ -17,9 +17,10 @@ class ValidationSimilarViewController: UIViewController {
    var saveViewModel = MoveSaveViewModel()
    
    var completeArr: [String] = []
-   var successArr: [SearchMusic] = []
-   var successSimilarArr: [SearchMusic] = []
-   var failArr: [SearchMusic] = []
+    var successArr = BehaviorRelay<[SearchMusic]>(value: [])
+    var successSimilarArr = BehaviorRelay<[SearchMusic]>(value: [])
+    var selectedSuccessSimilarArr = BehaviorRelay<[SearchMusic]>(value: [])
+    var failArr = BehaviorRelay<[SearchMusic]>(value: [])
    
    var sourcePlatform: PlatformRepresentable?
    var destinationPlatform: MusicPlatform = .Spotify
@@ -65,8 +66,14 @@ class ValidationSimilarViewController: UIViewController {
    private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
    
-   init(completeArr: [String], successArr: [SearchMusic], successSimilarArr: [SearchMusic], failArr: [SearchMusic]) {
+   init(completeArr: [String], successArr: BehaviorRelay<[SearchMusic]>, successSimilarArr: BehaviorRelay<[SearchMusic]>, failArr: BehaviorRelay<[SearchMusic]>, source: PlatformRepresentable, destination: MusicPlatform) {
       super.init(nibName: nil, bundle: nil)
+       self.completeArr = completeArr
+       self.successArr = successArr
+       self.successSimilarArr = successSimilarArr
+       self.failArr = failArr
+       self.sourcePlatform = source
+       self.destinationPlatform = destination
    }
    
    required init?(coder: NSCoder) {
@@ -77,15 +84,16 @@ class ValidationSimilarViewController: UIViewController {
       super.viewDidLoad()
       
       setUI()
-      
-      similarMusicTableView.delegate = self
-      similarMusicTableView.dataSource = self
    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
    
    private func setUI() {
       self.view.backgroundColor = .white
       self.navigationItem.setHidesBackButton(true, animated: false)
-      self.navigationController?.setNavigationBarHidden(true, animated: false)
       
       scrollView.contentInsetAdjustmentBehavior = .never
       scrollView.showsVerticalScrollIndicator = false
@@ -171,6 +179,62 @@ class ValidationSimilarViewController: UIViewController {
       }
       moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
    }
+    
+    func musicSelect(music: SearchMusic) {
+        var currentSelect = selectedSuccessSimilarArr.value
+
+        if let index = currentSelect.firstIndex(where: { $0.title == music.title && $0.artistName == music.artistName }) {
+            currentSelect.remove(at: index)
+        } else {
+            currentSelect.append(music)
+        }
+
+        selectedSuccessSimilarArr.accept(currentSelect)
+    }
+    
+    private func setSimilarData() {
+        similarMusicTableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+        
+        /// CollectionView에 들어갈 Cell에 정보 제공
+        self.successArr
+            .observe(on: MainScheduler.instance)
+            .bind(to: self.similarMusicTableView.rx.items(cellIdentifier: ValidationSimilarTableViewCell.identifier, cellType: ValidationSimilarTableViewCell.self)) { row, item, cell in
+                cell.prepare(music: item)
+            }
+            .disposed(by: disposeBag)
+        
+        self.similarMusicTableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                self?.similarMusicTableView.deselectRow(at: indexPath, animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        self.successSimilarArr
+            .observe(on: MainScheduler.instance)
+            .bind(to: self.similarMusicTableView.rx.items(cellIdentifier: SimilarSongsTableViewCell.identifier, cellType: SimilarSongsTableViewCell.self)) { row, item, cell in
+                cell.prepare(music: item)
+                
+                /// 현재 음악이 선택된 상태인지 확인하고 UI 업데이트
+                let isSelected = self.selectedSuccessSimilarArr.value.contains(where: { $0.title == item.title && $0.artistName == item.artistName })
+                cell.updateSelectionUI(isSelected: isSelected)
+            }
+            .disposed(by: disposeBag)
+        
+        self.similarMusicTableView.rx.modelSelected(SearchMusic.self)
+            .subscribe(onNext: { [weak self] music in
+                self?.musicSelect(music: music)
+                self?.similarMusicTableView.reloadData()
+            })
+                   .disposed(by: disposeBag)
+               
+        /// 선택한 음악의 변화를 관찰하고 이에 따라 UI를 업데이트
+        self.selectedSuccessSimilarArr
+            .subscribe(onNext: { [weak self] selectedMusic in
+                self?.similarMusicTableView.reloadData()
+            })
+                   .disposed(by: disposeBag)
+    }
    
    @objc private func clickXButton() {
       if let navigationController = self.navigationController {
@@ -183,8 +247,7 @@ class ValidationSimilarViewController: UIViewController {
    }
    
    @objc private func clickTransferButton() {
-      let validationNotFoundVC = ValidationNotFoundViewController()
-      validationNotFoundVC.failArr = failArr
+       let validationNotFoundVC = ValidationNotFoundViewController(completeArr: completeArr, successSimilarArr: successSimilarArr, failArr: failArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
       self.navigationController?.pushViewController(validationNotFoundVC, animated: true)
    }
 }

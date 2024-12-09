@@ -35,12 +35,15 @@ class SimilarSongsTableViewCell: UITableViewCell {
    
    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
       super.init(style: style, reuseIdentifier: reuseIdentifier)
-      setUI()
    }
 
    required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
    }
+    
+    override func layoutSubviews() {
+        setUI()
+    }
    
    private func setUI() {
       self.contentView.addSubview(barView)
@@ -79,4 +82,23 @@ class SimilarSongsTableViewCell: UITableViewCell {
          make.height.width.equalTo(16)
       }
    }
+    
+    func prepare(music: SearchMusic) {
+        let thumbNailUrl = URL(string: music.imageURL)
+        self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
+        self.songTitleLabel.text = music.title
+        self.singerLabel.text = music.artistName
+    }
+    
+    func updateSelectionUI(isSelected: Bool) {
+        if isSelected {
+            self.contentView.backgroundColor = .selectPurple
+            self.checkIcon.image = UIImage(named: "check_image")
+            self.barView.backgroundColor = .mainPurple
+        } else {
+            self.contentView.backgroundColor = .white
+            self.checkIcon.image = nil
+            self.barView.backgroundColor = .gray200
+        }
+    }
 }

@@ -86,6 +86,11 @@
 		C75A069C2CD9EE1C00F6ED2E /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75A069B2CD9EE1C00F6ED2E /* NavigationBarView.swift */; };
 		C75CD8972CCABDBF00B2291D /* SaveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75CD8962CCABDBF00B2291D /* SaveViewController.swift */; };
 		C75CD89D2CCAC95400B2291D /* SaveDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75CD89C2CCAC95400B2291D /* SaveDetailViewController.swift */; };
+		C762C64D2D06A45600CA5128 /* TabBarShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C762C64C2D06A45600CA5128 /* TabBarShadow.swift */; };
+		C762C64F2D06C0DF00CA5128 /* ValidationMusicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C762C64E2D06C0DF00CA5128 /* ValidationMusicViewModel.swift */; };
+		C762C6512D06C0EC00CA5128 /* ValidationMeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C762C6502D06C0EC00CA5128 /* ValidationMeViewModel.swift */; };
+		C762C6532D06C0F600CA5128 /* ValidationSaveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C762C6522D06C0F600CA5128 /* ValidationSaveViewModel.swift */; };
+		C762C6552D06ED9000CA5128 /* BehaviorRelay+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C762C6542D06ED9000CA5128 /* BehaviorRelay+Extension.swift */; };
 		C7809C132CCE3EEE00A50EB1 /* SaveMoveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7809C122CCE3EEE00A50EB1 /* SaveMoveView.swift */; };
 		C78221A62CE3B42900568DFF /* SelectMePlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78221A52CE3B42900568DFF /* SelectMePlaylistViewModel.swift */; };
 		C78221A82CE3B43900568DFF /* SelectSavePlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78221A72CE3B43900568DFF /* SelectSavePlaylistViewModel.swift */; };
@@ -105,8 +110,6 @@
 		C7BEDFE62CC6C744001F678E /* MeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BEDFE52CC6C744001F678E /* MeViewModel.swift */; };
 		C7BF67A42CDB3B28003C9EE2 /* SimilarSongsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BF67A32CDB3B28003C9EE2 /* SimilarSongsTableViewCell.swift */; };
 		C7BF67A62CDB3B3D003C9EE2 /* MoreButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BF67A52CDB3B3D003C9EE2 /* MoreButtonTableViewCell.swift */; };
-		C7BF67A82CDB8109003C9EE2 /* SimilarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BF67A72CDB8109003C9EE2 /* SimilarViewModel.swift */; };
-		C7BF67AA2CDB8114003C9EE2 /* NotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BF67A92CDB8114003C9EE2 /* NotViewModel.swift */; };
 		C7BF67AC2CDB8175003C9EE2 /* SaveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BF67AB2CDB8175003C9EE2 /* SaveViewModel.swift */; };
 		C7C806FE2CCCD7F600245FEA /* RecentTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C806FD2CCCD7F600245FEA /* RecentTabViewController.swift */; };
 		C7EB31622CD4ED5700DA439A /* ValidationNotFoundTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EB31612CD4ED5700DA439A /* ValidationNotFoundTableViewCell.swift */; };
@@ -234,6 +237,11 @@
 		C75A069B2CD9EE1C00F6ED2E /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
 		C75CD8962CCABDBF00B2291D /* SaveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveViewController.swift; sourceTree = "<group>"; };
 		C75CD89C2CCAC95400B2291D /* SaveDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDetailViewController.swift; sourceTree = "<group>"; };
+		C762C64C2D06A45600CA5128 /* TabBarShadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarShadow.swift; sourceTree = "<group>"; };
+		C762C64E2D06C0DF00CA5128 /* ValidationMusicViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationMusicViewModel.swift; sourceTree = "<group>"; };
+		C762C6502D06C0EC00CA5128 /* ValidationMeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationMeViewModel.swift; sourceTree = "<group>"; };
+		C762C6522D06C0F600CA5128 /* ValidationSaveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationSaveViewModel.swift; sourceTree = "<group>"; };
+		C762C6542D06ED9000CA5128 /* BehaviorRelay+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BehaviorRelay+Extension.swift"; sourceTree = "<group>"; };
 		C7809C122CCE3EEE00A50EB1 /* SaveMoveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveMoveView.swift; sourceTree = "<group>"; };
 		C78221A52CE3B42900568DFF /* SelectMePlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMePlaylistViewModel.swift; sourceTree = "<group>"; };
 		C78221A72CE3B43900568DFF /* SelectSavePlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSavePlaylistViewModel.swift; sourceTree = "<group>"; };
@@ -253,8 +261,6 @@
 		C7BEDFE52CC6C744001F678E /* MeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeViewModel.swift; sourceTree = "<group>"; };
 		C7BF67A32CDB3B28003C9EE2 /* SimilarSongsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarSongsTableViewCell.swift; sourceTree = "<group>"; };
 		C7BF67A52CDB3B3D003C9EE2 /* MoreButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreButtonTableViewCell.swift; sourceTree = "<group>"; };
-		C7BF67A72CDB8109003C9EE2 /* SimilarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimilarViewModel.swift; sourceTree = "<group>"; };
-		C7BF67A92CDB8114003C9EE2 /* NotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotViewModel.swift; sourceTree = "<group>"; };
 		C7BF67AB2CDB8175003C9EE2 /* SaveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveViewModel.swift; sourceTree = "<group>"; };
 		C7C806FD2CCCD7F600245FEA /* RecentTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTabViewController.swift; sourceTree = "<group>"; };
 		C7EB31612CD4ED5700DA439A /* ValidationNotFoundTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationNotFoundTableViewCell.swift; sourceTree = "<group>"; };
@@ -413,8 +419,9 @@
 				C79AAC5F2CD4CE45000B5FAD /* Cell */,
 				68DB037A2C7CF3C900FBD014 /* ValidationSimilarViewController.swift */,
 				68DB037C2C7CF3DF00FBD014 /* ValidationNotFoundViewController.swift */,
-				C7BF67A72CDB8109003C9EE2 /* SimilarViewModel.swift */,
-				C7BF67A92CDB8114003C9EE2 /* NotViewModel.swift */,
+				C762C64E2D06C0DF00CA5128 /* ValidationMusicViewModel.swift */,
+				C762C6502D06C0EC00CA5128 /* ValidationMeViewModel.swift */,
+				C762C6522D06C0F600CA5128 /* ValidationSaveViewModel.swift */,
 			);
 			path = Validation;
 			sourceTree = "<group>";
@@ -434,6 +441,7 @@
 			isa = PBXGroup;
 			children = (
 				68DB03802C80F18D00FBD014 /* TabBarViewController.swift */,
+				C762C64C2D06A45600CA5128 /* TabBarShadow.swift */,
 			);
 			path = TabBar;
 			sourceTree = "<group>";
@@ -587,6 +595,7 @@
 				68DB038D2C812D0200FBD014 /* UIImage+Extension.swift */,
 				68F6FCFB2C5A92F2001128FF /* UIButton+Extension.swift */,
 				68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */,
+				C762C6542D06ED9000CA5128 /* BehaviorRelay+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -935,13 +944,14 @@
 				68830FB32C8265F600995785 /* FeedCollectionViewCell.swift in Sources */,
 				68F6FAB82C4A9F27001128FF /* BlackButton.swift in Sources */,
 				68830FAD2C81F57900995785 /* FeedViewController.swift in Sources */,
+				C762C6532D06C0F600CA5128 /* ValidationSaveViewModel.swift in Sources */,
 				C7FA72812CDF1B3A00EB3D91 /* SelectMeViewModel.swift in Sources */,
-				C7BF67AA2CDB8114003C9EE2 /* NotViewModel.swift in Sources */,
 				C70642222CDC8F5000DFD771 /* RecentFailTableViewCell.swift in Sources */,
 				68F6FCFC2C5A92F2001128FF /* UIButton+Extension.swift in Sources */,
 				68DB03902C813EA600FBD014 /* DeleteAccountViewController.swift in Sources */,
 				68DB03832C80F1AB00FBD014 /* MyPageViewController.swift in Sources */,
 				C70642202CDC8F4600DFD771 /* RecentSuccessTableViewCell.swift in Sources */,
+				C762C64F2D06C0DF00CA5128 /* ValidationMusicViewModel.swift in Sources */,
 				688EFDB72C42886E0067D053 /* TransferTableViewCell.swift in Sources */,
 				68E312252CBC024D00243658 /* FeedDetailTableViewCell.swift in Sources */,
 				68DC4C772C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift in Sources */,
@@ -978,11 +988,13 @@
 				6889F5352C724B58001F5FC2 /* ProgressShapeLayer.swift in Sources */,
 				C7AC68BA2CD6101000F7190E /* SaveDetailTableViewCell.swift in Sources */,
 				6889F51C2C6D4A91001F5FC2 /* APIResponse.swift in Sources */,
+				C762C6512D06C0EC00CA5128 /* ValidationMeViewModel.swift in Sources */,
 				68DB038A2C81170D00FBD014 /* MyPageItem.swift in Sources */,
 				68DC8A9B2C3C535300A03042 /* HomeViewController.swift in Sources */,
 				6889F5212C6E6E78001F5FC2 /* LoginViewController.swift in Sources */,
 				C706421E2CDC85D300DFD771 /* History.swift in Sources */,
 				68830FB12C82657F00995785 /* Feed.swift in Sources */,
+				C762C64D2D06A45600CA5128 /* TabBarShadow.swift in Sources */,
 				6889F5252C6E9A4F001F5FC2 /* MusicKitManager.swift in Sources */,
 				68DC8A972C3C535300A03042 /* AppDelegate.swift in Sources */,
 				68F6FAB02C4A8ECF001128FF /* MoveView.swift in Sources */,
@@ -1006,10 +1018,10 @@
 				68DC4C852C6B70F3006D8E97 /* Playlist.swift in Sources */,
 				6889F5332C724B58001F5FC2 /* ProgressView.swift in Sources */,
 				68DB03882C8115D200FBD014 /* MyPageTableViewCell.swift in Sources */,
-				C7BF67A82CDB8109003C9EE2 /* SimilarViewModel.swift in Sources */,
 				6889F5362C724B58001F5FC2 /* StrokeColorAnimation.swift in Sources */,
 				C7AD30C02CC6787100D8007D /* RecentViewController.swift in Sources */,
 				C7EEA4F22CC3A59F00FBAA4D /* RecentCollectionViewCell.swift in Sources */,
+				C762C6552D06ED9000CA5128 /* BehaviorRelay+Extension.swift in Sources */,
 				C7852EC82CDFC744007A5D1C /* MoveMeViewModel.swift in Sources */,
 				C720AC662CD7313A007071BD /* PurpleProgressView.swift in Sources */,
 				68DC4C822C6B70C2006D8E97 /* APIService.swift in Sources */,

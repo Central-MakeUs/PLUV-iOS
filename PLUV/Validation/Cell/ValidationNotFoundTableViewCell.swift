@@ -58,4 +58,11 @@ class ValidationNotFoundTableViewCell: UITableViewCell {
          make.height.equalTo(14)
       }
    }
+    
+    func prepare(music: SearchMusic) {
+        let thumbNailUrl = URL(string: music.imageURL)
+        self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
+        self.songTitleLabel.text = music.title
+        self.singerLabel.text = music.artistName
+    }
 }
