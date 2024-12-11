@@ -15,8 +15,7 @@ import MusicKit
 class SelectMusicViewController: UIViewController {
     
     var completeArr: [String] = []
-    var successArr = BehaviorRelay<[SearchMusic]>(value: [])
-    var successSimilarArr = BehaviorRelay<[SearchMusic]>(value: [])
+    var newViewModel = NewViewModel()
     var failArr = BehaviorRelay<[SearchMusic]>(value: [])
     var searchArr: [Search] = []
     
@@ -83,6 +82,9 @@ class SelectMusicViewController: UIViewController {
     }
     private let checkImageView = UIImageView().then {
         $0.image = UIImage(named: "check_image")
+    }
+    private let backgroundLabel = UILabel().then {
+        $0.backgroundColor = .gray200
     }
     
     private let selectMusicTableView = UITableView().then {
@@ -216,6 +218,12 @@ class SelectMusicViewController: UIViewController {
             make.width.height.equalTo(16)
         }
         
+        self.selectSongView.addSubview(backgroundLabel)
+        backgroundLabel.snp.makeConstraints { make in
+            make.trailing.leading.bottom.equalToSuperview()
+            make.height.equalTo(1.2)
+        }
+        
         self.view.addSubview(selectMusicTableView)
         selectMusicTableView.snp.makeConstraints { make in
             make.top.equalTo(selectSongView.snp.bottom)
@@ -245,8 +253,6 @@ class SelectMusicViewController: UIViewController {
     }
     
     private func setSearchView() {
-        let searchLoadingView = LoadingView(loadingState: .SearchMusic)
-        
         self.view.addSubview(searchLoadingView)
         searchLoadingView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -261,7 +267,7 @@ class SelectMusicViewController: UIViewController {
             make.edges.equalToSuperview()
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
             validationView.removeFromSuperview()
         }
     }
@@ -384,21 +390,25 @@ class SelectMusicViewController: UIViewController {
     }
     
     private func goNextStep() {
-        print(completeArr)
         if self.searchArr.count == self.completeArr.count {
             self.setValidationView(title: "플레이리스트의 모든 음악을 찾았어요!", image: "ok_image")
             /// 유효성 검사뷰 2초뒤 사라진 후 화면 넘어감
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                let movePlaylistVC = MovePlaylistViewController(musicArr: self.completeArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
-                movePlaylistVC.viewModel.playlistItem = self.viewModel.playlistItem
-                movePlaylistVC.meViewModel.meItem = self.meViewModel.meItem
-                movePlaylistVC.saveViewModel.saveItem = self.saveViewModel.saveItem
-                self.navigationController?.pushViewController(movePlaylistVC, animated: true)
+//                let movePlaylistVC = MovePlaylistViewController(musicArr: self.completeArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
+//                movePlaylistVC.viewModel.playlistItem = self.viewModel.playlistItem
+//                movePlaylistVC.meViewModel.meItem = self.meViewModel.meItem
+//                movePlaylistVC.saveViewModel.saveItem = self.saveViewModel.saveItem
+//                self.navigationController?.pushViewController(movePlaylistVC, animated: true)
+                let validationSimilarVC = ValidationSimilarViewController(completeArr: self.completeArr, successSimilarArr: self.newViewModel, failArr: self.failArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
+                validationSimilarVC.viewModel.playlistItem = self.viewModel.playlistItem
+                validationSimilarVC.meViewModel.meItem = self.meViewModel.meItem
+                validationSimilarVC.saveViewModel.saveItem = self.saveViewModel.saveItem
+                self.navigationController?.pushViewController(validationSimilarVC, animated: true)
             }
         } else {
             self.setValidationView(title: "앗, 찾을 수 없는 곡이 몇 개 있네요!", image: "alert_image")
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                let validationSimilarVC = ValidationSimilarViewController(completeArr: self.completeArr, successArr: self.successArr, successSimilarArr: self.successSimilarArr, failArr: self.failArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
+                let validationSimilarVC = ValidationSimilarViewController(completeArr: self.completeArr, successSimilarArr: self.newViewModel, failArr: self.failArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
                 validationSimilarVC.viewModel.playlistItem = self.viewModel.playlistItem
                 validationSimilarVC.meViewModel.meItem = self.meViewModel.meItem
                 validationSimilarVC.saveViewModel.saveItem = self.saveViewModel.saveItem
@@ -649,8 +659,8 @@ class SelectMusicViewController: UIViewController {
                                     if self.searchArr[i].isEqual == true && self.searchArr[i].isFound == true {
                                         self.completeArr.append(self.searchArr[i].destinationMusics.first!.id!)
                                     } else if self.searchArr[i].isEqual == false && self.searchArr[i].isFound == true {
-                                        self.successArr.append(self.searchArr[i].sourceMusic)
-                                        self.successSimilarArr.append(contentsOf: self.searchArr[i].destinationMusics)
+                                        self.newViewModel.successArr.append(self.searchArr[i].sourceMusic)
+                                        self.newViewModel.musicItem.append(self.searchArr[i].destinationMusics[0])
                                     } else {
                                         self.failArr.append(self.searchArr[i].sourceMusic)
                                     }
@@ -696,9 +706,11 @@ class SelectMusicViewController: UIViewController {
                                 for i in 0..<self.searchArr.count {
                                     if self.searchArr[i].isEqual == true && self.searchArr[i].isFound == true {
                                         self.completeArr.append(self.searchArr[i].destinationMusics.first!.id!)
+                                        self.newViewModel.successArr.append(self.searchArr[i].sourceMusic)
+                                        self.newViewModel.musicItem.append(self.searchArr[i].destinationMusics[0])
                                     } else if self.searchArr[i].isEqual == false && self.searchArr[i].isFound == true {
-                                        self.successArr.append(self.searchArr[i].sourceMusic)
-                                        self.successSimilarArr.append(contentsOf: self.searchArr[i].destinationMusics)
+//                                        self.newViewModel.successArr.append(self.searchArr[i].sourceMusic)
+//                                        self.newViewModel.musicItem.append(self.searchArr[i].destinationMusics[0])
                                     } else {
                                         self.failArr.append(self.searchArr[i].sourceMusic)
                                     }

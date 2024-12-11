@@ -9,6 +9,8 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
+import RxRelay
+import RxDataSources
 
 class ValidationSimilarViewController: UIViewController {
    
@@ -17,9 +19,7 @@ class ValidationSimilarViewController: UIViewController {
    var saveViewModel = MoveSaveViewModel()
    
    var completeArr: [String] = []
-    var successArr = BehaviorRelay<[SearchMusic]>(value: [])
-    var successSimilarArr = BehaviorRelay<[SearchMusic]>(value: [])
-    var selectedSuccessSimilarArr = BehaviorRelay<[SearchMusic]>(value: [])
+    var newViewModel = NewViewModel()
     var failArr = BehaviorRelay<[SearchMusic]>(value: [])
    
    var sourcePlatform: PlatformRepresentable?
@@ -54,23 +54,20 @@ class ValidationSimilarViewController: UIViewController {
       $0.textColor = .gray700
       $0.font = .systemFont(ofSize: 14)
    }
-   private let similarMusicTableView = UITableView().then {
-      $0.separatorStyle = .none
-      $0.register(ValidationSimilarTableViewCell.self, forCellReuseIdentifier: ValidationSimilarTableViewCell.identifier)
-      $0.register(SimilarSongsTableViewCell.self, forCellReuseIdentifier: SimilarSongsTableViewCell.identifier)
-      $0.register(MoreButtonTableViewCell.self, forCellReuseIdentifier: MoreButtonTableViewCell.identifier)
-      $0.backgroundColor = .gray200
-      $0.contentInset = UIEdgeInsets(top: 1.2, left: 0, bottom: 0, right: 0)
-      $0.sectionFooterHeight = 1.2
-   }
+    private let similarMusicTableView = UITableView().then {
+        $0.separatorStyle = .none
+        $0.register(ValidationSimilarTableViewCell.self, forCellReuseIdentifier: ValidationSimilarTableViewCell.identifier)
+        $0.register(SimilarSongsTableViewCell.self, forCellReuseIdentifier: SimilarSongsTableViewCell.identifier)
+        $0.backgroundColor = .clear
+        $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
    private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
    
-   init(completeArr: [String], successArr: BehaviorRelay<[SearchMusic]>, successSimilarArr: BehaviorRelay<[SearchMusic]>, failArr: BehaviorRelay<[SearchMusic]>, source: PlatformRepresentable, destination: MusicPlatform) {
+   init(completeArr: [String], successSimilarArr: NewViewModel, failArr: BehaviorRelay<[SearchMusic]>, source: PlatformRepresentable, destination: MusicPlatform) {
       super.init(nibName: nil, bundle: nil)
        self.completeArr = completeArr
-       self.successArr = successArr
-       self.successSimilarArr = successSimilarArr
+       self.newViewModel = successSimilarArr
        self.failArr = failArr
        self.sourcePlatform = source
        self.destinationPlatform = destination
@@ -84,6 +81,9 @@ class ValidationSimilarViewController: UIViewController {
       super.viewDidLoad()
       
       setUI()
+       setSimilarData()
+       bindTableViewSelection() // 셀 선택 이벤트 바인딩
+       observeSelectionChanges()
    }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -164,6 +164,7 @@ class ValidationSimilarViewController: UIViewController {
          make.leading.equalToSuperview().offset(24)
          make.height.equalTo(38)
       }
+       songCountLabel.text = "\(newViewModel.successArr.value.count)곡"
       
       self.similarSongView.addSubview(similarMusicTableView)
       similarMusicTableView.snp.makeConstraints { make in
@@ -180,62 +181,87 @@ class ValidationSimilarViewController: UIViewController {
       moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
    }
     
-    func musicSelect(music: SearchMusic) {
-        var currentSelect = selectedSuccessSimilarArr.value
-
-        if let index = currentSelect.firstIndex(where: { $0.title == music.title && $0.artistName == music.artistName }) {
-            currentSelect.remove(at: index)
-        } else {
-            currentSelect.append(music)
-        }
-
-        selectedSuccessSimilarArr.accept(currentSelect)
+    private func setSimilarData() {
+        let dataSource = RxTableViewSectionedReloadDataSource<MusicSection>(
+            configureCell: { [weak self] _, tableView, indexPath, item in
+                guard let self = self else { return UITableViewCell() }
+                
+                switch item {
+                case .success(let music):
+                    let cell = tableView.dequeueReusableCell(
+                        withIdentifier: ValidationSimilarTableViewCell.identifier,
+                        for: indexPath
+                    ) as! ValidationSimilarTableViewCell
+                    cell.prepare(music: music)
+                    return cell
+                    
+                case .music(let music):
+                    let cell = tableView.dequeueReusableCell(
+                        withIdentifier: SimilarSongsTableViewCell.identifier,
+                        for: indexPath
+                    ) as! SimilarSongsTableViewCell
+                    cell.prepare(music: music)
+                    
+                    let isSelected = self.newViewModel.selectedMusic.value.contains(music)
+                    cell.updateSelectionUI(isSelected: isSelected)
+                    return cell
+                }
+            },
+            titleForHeaderInSection: { _, _ in
+                return nil // 섹션 헤더 텍스트를 제거
+            }
+        )
+        
+        // 테이블 뷰에 바인딩
+        newViewModel.sections
+            .observe(on: MainScheduler.instance)
+            .bind(to: self.similarMusicTableView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
+        
+        similarMusicTableView.rx.setDelegate(self)
+                .disposed(by: disposeBag)
     }
     
-    private func setSimilarData() {
-        similarMusicTableView.rx.setDelegate(self)
-            .disposed(by: disposeBag)
-        
-        /// CollectionView에 들어갈 Cell에 정보 제공
-        self.successArr
-            .observe(on: MainScheduler.instance)
-            .bind(to: self.similarMusicTableView.rx.items(cellIdentifier: ValidationSimilarTableViewCell.identifier, cellType: ValidationSimilarTableViewCell.self)) { row, item, cell in
-                cell.prepare(music: item)
-            }
-            .disposed(by: disposeBag)
-        
-        self.similarMusicTableView.rx.itemSelected
-            .subscribe(onNext: { [weak self] indexPath in
-                self?.similarMusicTableView.deselectRow(at: indexPath, animated: true)
-            })
-            .disposed(by: disposeBag)
-
-        self.successSimilarArr
-            .observe(on: MainScheduler.instance)
-            .bind(to: self.similarMusicTableView.rx.items(cellIdentifier: SimilarSongsTableViewCell.identifier, cellType: SimilarSongsTableViewCell.self)) { row, item, cell in
-                cell.prepare(music: item)
+    private func bindTableViewSelection() {
+        similarMusicTableView.rx.modelSelected(MusicSectionItem.self)
+            .subscribe(onNext: { [weak self] item in
+                guard let self = self else { return }
                 
-                /// 현재 음악이 선택된 상태인지 확인하고 UI 업데이트
-                let isSelected = self.selectedSuccessSimilarArr.value.contains(where: { $0.title == item.title && $0.artistName == item.artistName })
-                cell.updateSelectionUI(isSelected: isSelected)
-            }
+                switch item {
+                case .success(let music), .music(let music):
+                    var selectedMusics = self.newViewModel.selectedMusic.value
+                    var selectedMusicIds = self.newViewModel.completeArr
+                    
+                    if let index = selectedMusics.firstIndex(of: music) {
+                        // 이미 선택된 음악이라면, 선택 해제
+                        selectedMusics.remove(at: index)
+                        selectedMusicIds.remove(at: index)
+                    } else {
+                        // 새로운 음악 선택
+                        selectedMusics.append(music)
+                        selectedMusicIds.append(music.id ?? "")
+                    }
+                    
+                    self.newViewModel.selectedMusic.accept(selectedMusics) // 선택된 음악 배열 업데이트
+                    self.newViewModel.completeArr = selectedMusicIds
+                    
+                    print("현재 선택된 음악 목록: \(selectedMusicIds)")
+                }
+            })
             .disposed(by: disposeBag)
-        
-        self.similarMusicTableView.rx.modelSelected(SearchMusic.self)
-            .subscribe(onNext: { [weak self] music in
-                self?.musicSelect(music: music)
-                self?.similarMusicTableView.reloadData()
-            })
-                   .disposed(by: disposeBag)
-               
-        /// 선택한 음악의 변화를 관찰하고 이에 따라 UI를 업데이트
-        self.selectedSuccessSimilarArr
-            .subscribe(onNext: { [weak self] selectedMusic in
-                self?.similarMusicTableView.reloadData()
-            })
-                   .disposed(by: disposeBag)
     }
-   
+    
+    private func observeSelectionChanges() {
+        newViewModel.selectedMusic
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] selectedMusic in
+                guard let self = self else { return }
+                
+                self.similarMusicTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+    }
+    
    @objc private func clickXButton() {
       if let navigationController = self.navigationController {
          let viewControllers = navigationController.viewControllers
@@ -247,18 +273,14 @@ class ValidationSimilarViewController: UIViewController {
    }
    
    @objc private func clickTransferButton() {
-       let validationNotFoundVC = ValidationNotFoundViewController(completeArr: completeArr, successSimilarArr: successSimilarArr, failArr: failArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
+       let validationNotFoundVC = ValidationNotFoundViewController(completeArr: completeArr + newViewModel.completeArr, failArr: failArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
       self.navigationController?.pushViewController(validationNotFoundVC, animated: true)
    }
 }
 
-extension ValidationSimilarViewController: UITableViewDelegate, UITableViewDataSource {
-   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return 9
-   }
-   
+extension ValidationSimilarViewController: UITableViewDelegate {
    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-          switch indexPath.row % 3 { // 셀을 3개의 유형으로 나눠서 사용
+          switch indexPath.row % 2 { // 셀을 3개의 유형으로 나눠서 사용
           case 0:
               guard let cell = tableView.dequeueReusableCell(withIdentifier: ValidationSimilarTableViewCell.identifier, for: indexPath) as? ValidationSimilarTableViewCell else {
                   return UITableViewCell()
@@ -272,21 +294,44 @@ extension ValidationSimilarViewController: UITableViewDelegate, UITableViewDataS
               return cell
               
           default:
-              guard let cell = tableView.dequeueReusableCell(withIdentifier: MoreButtonTableViewCell.identifier, for: indexPath) as? MoreButtonTableViewCell else {
+              guard let cell = tableView.dequeueReusableCell(withIdentifier: ValidationSimilarTableViewCell.identifier, for: indexPath) as? ValidationSimilarTableViewCell else {
                   return UITableViewCell()
               }
               return cell
           }
       }
    
-   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-      switch indexPath.row % 3 {
-      case 0:
-         return 66
-      case 1:
-         return 58
-      default:
-         return 66
-      }
-   }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        // 섹션에서 셀 구분 (indexPath.row가 각 셀을 구별)
+        var height: CGFloat = 0
+        
+        // Observable을 구독하여 데이터를 가져옵니다.
+        newViewModel.sections
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { sections in
+                // indexPath.section이 유효한지 확인
+                if let section = sections[safe: indexPath.section] {
+                    let item = section.items[safe: indexPath.row]
+                    
+                    // 섹션 아이템에 따라 높이를 설정
+                    switch item {
+                    case .success:
+                        height = 66 // success 아이템에 해당하는 셀의 높이
+                    case .music:
+                        height = 58 // music 아이템에 해당하는 셀의 높이
+                    case .none:
+                        height = 100
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        return height
+    }
+}
+
+extension Array {
+    subscript(safe index: Int) -> Element? {
+        return index >= 0 && index < count ? self[index] : nil
+    }
 }

@@ -13,7 +13,7 @@ class ValidationSimilarTableViewCell: UITableViewCell {
    
    private let thumbnailImageView = UIImageView().then {
       $0.image = UIImage(named: "applemusic_icon")
-      $0.layer.cornerRadius = 8
+      $0.layer.cornerRadius = 5
       $0.clipsToBounds = true
    }
    private let originalSongView = UIView().then {
@@ -84,6 +84,7 @@ class ValidationSimilarTableViewCell: UITableViewCell {
       songTitleLabel.snp.makeConstraints { make in
          make.top.equalToSuperview().offset(15)
          make.leading.equalTo(thumbnailImageView.snp.trailing).offset(12)
+          make.trailing.equalToSuperview().inset(36)
          make.height.equalTo(16)
       }
       

@@ -14,7 +14,7 @@ struct Search: Codable {
     let destinationMusics: [SearchMusic]
 }
 
-struct SearchMusic: Codable {
+struct SearchMusic: Codable, Equatable {
     let id: String?
     let title: String
     let artistName: String
@@ -23,5 +23,12 @@ struct SearchMusic: Codable {
     enum CodingKeys: String, CodingKey {
         case id, title, artistName
         case imageURL = "imageUrl"
+    }
+    
+    static func == (lhs: SearchMusic, rhs: SearchMusic) -> Bool {
+        return lhs.id == rhs.id &&
+        lhs.title == rhs.title &&
+        lhs.artistName == rhs.artistName &&
+        lhs.imageURL == rhs.imageURL
     }
 }

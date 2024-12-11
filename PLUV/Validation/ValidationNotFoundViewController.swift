@@ -13,7 +13,6 @@ import SnapKit
 class ValidationNotFoundViewController: UIViewController {
    
    var completeArr: [String] = []
-    var successSimilarArr = BehaviorRelay<[SearchMusic]>(value: [])
    var failArr = BehaviorRelay<[SearchMusic]>(value: [])
    
    var sourcePlatform: PlatformRepresentable?
@@ -52,10 +51,9 @@ class ValidationNotFoundViewController: UIViewController {
    private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
    
-    init(completeArr: [String], successSimilarArr: BehaviorRelay<[SearchMusic]>, failArr: BehaviorRelay<[SearchMusic]>, source: PlatformRepresentable, destination: MusicPlatform) {
+    init(completeArr: [String], failArr: BehaviorRelay<[SearchMusic]>, source: PlatformRepresentable, destination: MusicPlatform) {
        super.init(nibName: nil, bundle: nil)
         self.completeArr = completeArr
-        self.successSimilarArr = successSimilarArr
         self.failArr = failArr
         self.sourcePlatform = source
         self.destinationPlatform = destination

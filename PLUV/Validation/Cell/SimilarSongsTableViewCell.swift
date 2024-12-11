@@ -8,6 +8,7 @@
 import UIKit
 
 class SimilarSongsTableViewCell: UITableViewCell {
+    var music: SearchMusic?
    
    static let identifier = String(describing: SimilarSongsTableViewCell.self)
 
@@ -16,7 +17,7 @@ class SimilarSongsTableViewCell: UITableViewCell {
    }
    private let thumbnailImageView = UIImageView().then {
       $0.image = UIImage(named: "applemusic_icon")
-      $0.layer.cornerRadius = 8
+      $0.layer.cornerRadius = 5
       $0.clipsToBounds = true
    }
    private let songTitleLabel = UILabel().then {
@@ -30,7 +31,7 @@ class SimilarSongsTableViewCell: UITableViewCell {
       $0.font = .systemFont(ofSize: 14, weight: .regular)
    }
    private let checkIcon = UIImageView().then {
-      $0.image = UIImage(named: "check_image")
+      $0.image = nil
    }
    
    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -43,6 +44,12 @@ class SimilarSongsTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         setUI()
+    }
+    
+    func configure(with music: SearchMusic) {
+        self.music = music
+        setUI()
+        prepare(music: music)
     }
    
    private func setUI() {
@@ -63,8 +70,9 @@ class SimilarSongsTableViewCell: UITableViewCell {
       
       self.contentView.addSubview(songTitleLabel)
       songTitleLabel.snp.makeConstraints { make in
-         make.top.equalToSuperview().offset(15)
+         make.top.equalToSuperview().offset(12)
          make.leading.equalTo(thumbnailImageView.snp.trailing).offset(12)
+          make.trailing.equalToSuperview().inset(36)
          make.height.equalTo(16)
       }
       
