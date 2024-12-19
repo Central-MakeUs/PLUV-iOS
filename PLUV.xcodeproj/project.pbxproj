@@ -84,6 +84,7 @@
 		C70642222CDC8F5000DFD771 /* RecentFailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70642212CDC8F5000DFD771 /* RecentFailTableViewCell.swift */; };
 		C720AC662CD7313A007071BD /* PurpleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C720AC652CD7313A007071BD /* PurpleProgressView.swift */; };
 		C72798FA2CE0729E00BEB357 /* MoveStopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72798F92CE0729E00BEB357 /* MoveStopView.swift */; };
+		C7548F282D147C4700BA687A /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7548F272D147C4700BA687A /* UITextField+Extension.swift */; };
 		C75A069C2CD9EE1C00F6ED2E /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75A069B2CD9EE1C00F6ED2E /* NavigationBarView.swift */; };
 		C75CD8972CCABDBF00B2291D /* SaveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75CD8962CCABDBF00B2291D /* SaveViewController.swift */; };
 		C75CD89D2CCAC95400B2291D /* SaveDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75CD89C2CCAC95400B2291D /* SaveDetailViewController.swift */; };
@@ -234,6 +235,7 @@
 		C70642212CDC8F5000DFD771 /* RecentFailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentFailTableViewCell.swift; sourceTree = "<group>"; };
 		C720AC652CD7313A007071BD /* PurpleProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurpleProgressView.swift; sourceTree = "<group>"; };
 		C72798F92CE0729E00BEB357 /* MoveStopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveStopView.swift; sourceTree = "<group>"; };
+		C7548F272D147C4700BA687A /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
 		C75A069B2CD9EE1C00F6ED2E /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
 		C75CD8962CCABDBF00B2291D /* SaveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveViewController.swift; sourceTree = "<group>"; };
 		C75CD89C2CCAC95400B2291D /* SaveDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDetailViewController.swift; sourceTree = "<group>"; };
@@ -426,8 +428,8 @@
 		68DB037E2C80F08F00FBD014 /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
+				C7548F262D146C9500BA687A /* Cell */,
 				68DB03822C80F1AA00FBD014 /* MyPageViewController.swift */,
-				68DB03872C8115D200FBD014 /* MyPageTableViewCell.swift */,
 				68DB038B2C8122C200FBD014 /* MemberInfoViewController.swift */,
 				68DB038F2C813EA600FBD014 /* DeleteAccountViewController.swift */,
 			);
@@ -591,6 +593,7 @@
 				68F6FABA2C50D288001128FF /* UIColor+Extension.swift */,
 				68DB038D2C812D0200FBD014 /* UIImage+Extension.swift */,
 				68F6FCFB2C5A92F2001128FF /* UIButton+Extension.swift */,
+				C7548F272D147C4700BA687A /* UITextField+Extension.swift */,
 				68DC4C782C6B6F48006D8E97 /* UIViewController+Extension.swift */,
 				C762C6542D06ED9000CA5128 /* BehaviorRelay+Extension.swift */,
 			);
@@ -617,6 +620,14 @@
 				4F7F4BCA539804B1532B17B5 /* Pods-PLUVTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		C7548F262D146C9500BA687A /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				68DB03872C8115D200FBD014 /* MyPageTableViewCell.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		C75CD8952CCABD1A00B2291D /* Save */ = {
@@ -951,6 +962,7 @@
 				68E312252CBC024D00243658 /* FeedDetailTableViewCell.swift in Sources */,
 				68DC4C772C6B6E9E006D8E97 /* SelectPlaylistCollectionViewCell.swift in Sources */,
 				68F6FAB22C4A9CCA001128FF /* WhiteButton.swift in Sources */,
+				C7548F282D147C4700BA687A /* UITextField+Extension.swift in Sources */,
 				C7F7AD5D2CF345170082FDB5 /* SelectMusicProtocol.swift in Sources */,
 				C7C806FE2CCCD7F600245FEA /* RecentTabViewController.swift in Sources */,
 				68830FAF2C8264CA00995785 /* FeedViewModel.swift in Sources */,

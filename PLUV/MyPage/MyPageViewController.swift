@@ -58,12 +58,8 @@ class MyPageViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     private func setUI() {
@@ -156,6 +152,7 @@ class MyPageViewController: UIViewController {
     
     @objc private func clickMyPageInfoButton() {
         let memberInfoViewController = MemberInfoViewController()
+        memberInfoViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(memberInfoViewController, animated: true)
     }
 }
