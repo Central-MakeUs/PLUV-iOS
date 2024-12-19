@@ -14,6 +14,9 @@ final class MyPageTableViewCell: UITableViewCell {
         $0.textColor = .gray800
         $0.font = .systemFont(ofSize: 18, weight: .medium)
     }
+    private let separatorView = UIView().then {
+        $0.backgroundColor = .gray200 // 구분선 색상 설정
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -33,6 +36,12 @@ final class MyPageTableViewCell: UITableViewCell {
         titleLabel.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview().inset(20)
             make.leading.trailing.equalToSuperview().inset(24)
+        }
+        
+        self.contentView.addSubview(separatorView)
+        separatorView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(1.2)
         }
     }
     

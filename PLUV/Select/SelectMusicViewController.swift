@@ -394,16 +394,11 @@ class SelectMusicViewController: UIViewController {
             self.setValidationView(title: "플레이리스트의 모든 음악을 찾았어요!", image: "ok_image")
             /// 유효성 검사뷰 2초뒤 사라진 후 화면 넘어감
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-//                let movePlaylistVC = MovePlaylistViewController(musicArr: self.completeArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
-//                movePlaylistVC.viewModel.playlistItem = self.viewModel.playlistItem
-//                movePlaylistVC.meViewModel.meItem = self.meViewModel.meItem
-//                movePlaylistVC.saveViewModel.saveItem = self.saveViewModel.saveItem
-//                self.navigationController?.pushViewController(movePlaylistVC, animated: true)
-                let validationSimilarVC = ValidationSimilarViewController(completeArr: self.completeArr, successSimilarArr: self.newViewModel, failArr: self.failArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
-                validationSimilarVC.viewModel.playlistItem = self.viewModel.playlistItem
-                validationSimilarVC.meViewModel.meItem = self.meViewModel.meItem
-                validationSimilarVC.saveViewModel.saveItem = self.saveViewModel.saveItem
-                self.navigationController?.pushViewController(validationSimilarVC, animated: true)
+                let movePlaylistVC = MovePlaylistViewController(musicArr: self.completeArr, source: self.sourcePlatform!, destination: self.destinationPlatform)
+                movePlaylistVC.viewModel.playlistItem = self.viewModel.playlistItem
+                movePlaylistVC.meViewModel.meItem = self.meViewModel.meItem
+                movePlaylistVC.saveViewModel.saveItem = self.saveViewModel.saveItem
+                self.navigationController?.pushViewController(movePlaylistVC, animated: true)
             }
         } else {
             self.setValidationView(title: "앗, 찾을 수 없는 곡이 몇 개 있네요!", image: "alert_image")

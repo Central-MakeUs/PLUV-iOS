@@ -179,6 +179,7 @@ class ValidationSimilarViewController: UIViewController {
          make.height.equalTo(102)
       }
       moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
+       self.moveView.changeName(left: "이전", right: "옮기기")
    }
     
     private func setSimilarData() {

@@ -219,6 +219,8 @@ class TransferCheckViewController: UIViewController {
          
       } else if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .Spotify {
          connectSpotifySession()
+      } else if let musicPlatform = destinationPlatform as? MusicPlatform, musicPlatform == .Spotify {
+         connectSpotifySession()
       }
        
        if saveViewModel.saveItem != nil {

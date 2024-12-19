@@ -9,10 +9,10 @@ import UIKit
 
 final class MoveView: UIView {
     
-    var lineView = UIView()
+    private var lineView = UIView()
     var backButton = WhiteButton()
     var trasferButton = BlackButton()
-    var view: UIViewController
+    private weak var view: UIViewController?
     
     init(view: UIViewController) {
         self.view = view
@@ -67,11 +67,30 @@ final class MoveView: UIView {
         self.backButton.removeTarget(self, action: #selector(clickBackButton), for: .touchUpInside)
         self.backButton.setTitle(left, for: .normal)
         self.trasferButton.setTitle(right, for: .normal)
+        self.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
     
     @objc func clickBackButton() {
         if backButton.isEnabled {
-            view.navigationController?.popViewController(animated: true)
+            view?.navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    @objc private func backButtonTapped() {
+       if let view = view {
+           clickTwiceBackButton(target: view)
+       }
+    }
+    
+    func clickTwiceBackButton(target: UIViewController) {
+        if backButton.isEnabled {
+            if let navigationController = target.navigationController {
+                let viewControllers = navigationController.viewControllers
+                if viewControllers.count >= 3 {
+                    let targetViewController = viewControllers[viewControllers.count - 3]
+                    navigationController.popToViewController(targetViewController, animated: true)
+                }
+            }
         }
     }
 }

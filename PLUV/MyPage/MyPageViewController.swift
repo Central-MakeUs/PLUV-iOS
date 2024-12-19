@@ -13,21 +13,35 @@ import RxCocoa
 class MyPageViewController: UIViewController {
     
     private let myPageItemList = Observable.just(MyPageItem.allCases)
-    private let titleView = UIView()
     private let myPageTitleLabel = UILabel().then {
         $0.text = "마이페이지"
         $0.textColor = .gray800
-        $0.font = .systemFont(ofSize: 20, weight: .semibold)
+        $0.font = .systemFont(ofSize: 20, weight: .bold)
     }
-    private let myPageInfoButton = UIButton().then {
-        $0.setImage(UIImage(named: "mypagebutton_info_image"), for: .normal)
-        $0.setImage(UIImage(named: "mypagebutton_info_image"), for: .highlighted)
+    private let myInfoView = UIView().then {
+        $0.backgroundColor = .white
+        $0.layer.cornerRadius = 12
+        $0.layer.shadowColor = UIColor.shadow.cgColor
+        $0.layer.shadowOpacity = 0.9
+        $0.layer.shadowRadius = 1.0
+        $0.layer.shadowOffset = CGSize(width: 0, height: -2)
+        $0.layer.masksToBounds = false
+    }
+    private let myInfoImageView = UIImageView().then {
+        $0.image = UIImage(named: "myinfo_image")
         $0.contentMode = .scaleAspectFit
     }
     private let nickNameLabel = UILabel().then {
         $0.text = "플러버"
         $0.textColor = .gray800
         $0.font = .systemFont(ofSize: 22, weight: .bold)
+    }
+    private let myInfoButton = UIButton().then {
+        $0.setImage(UIImage(named: "nextbutton_icon"), for: .normal)
+        $0.setTitle("회원 정보 ", for: .normal)
+        $0.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        $0.setTitleColor(.gray600, for: .normal)
+        $0.semanticContentAttribute = .forceRightToLeft
     }
     private let myPageTableView = UITableView().then {
         $0.separatorStyle = .none
@@ -56,44 +70,50 @@ class MyPageViewController: UIViewController {
         self.view.backgroundColor = .gray100
         self.navigationItem.setHidesBackButton(true, animated: false)
         
-        self.view.addSubview(titleView)
-        titleView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.trailing.equalToSuperview()
-        }
-        
-        self.titleView.addSubview(myPageTitleLabel)
+        self.view.addSubview(myPageTitleLabel)
         myPageTitleLabel.snp.makeConstraints { make in
-            make.top.leading.trailing.bottom.equalToSuperview().inset(16)
-            make.height.equalTo(28)
+            make.top.equalToSuperview().offset(57)
+            make.leading.equalToSuperview().offset(16)
         }
         
-        self.view.addSubview(myPageInfoButton)
-        myPageInfoButton.snp.makeConstraints { make in
-            make.top.equalTo(titleView.snp.bottom)
+        self.view.addSubview(myInfoView)
+        myInfoView.snp.makeConstraints { make in
+            make.top.equalTo(myPageTitleLabel.snp.bottom).offset(16)
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(106)
         }
         
-        self.myPageInfoButton.addSubview(nickNameLabel)
-        nickNameLabel.backgroundColor = .white
+        self.myInfoView.addSubview(myInfoImageView)
+        myInfoImageView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(16)
+            make.height.width.equalTo(74)
+        }
+        
+        self.myInfoView.addSubview(nickNameLabel)
         nickNameLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(106)
             make.top.equalToSuperview().offset(23)
-            make.trailing.equalToSuperview()
+            make.leading.equalTo(myInfoImageView.snp.trailing).offset(16)
             make.height.equalTo(34)
         }
         
+        self.myInfoView.addSubview(myInfoButton)
+        myInfoButton.snp.makeConstraints { make in
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(10)
+            make.leading.equalTo(myInfoImageView.snp.trailing).offset(16)
+            make.height.equalTo(16)
+            make.width.equalTo(76)
+        }
+        
         self.view.addSubview(myPageTableView)
-        myPageTableView.backgroundColor = .white
         myPageTableView.snp.makeConstraints { make in
-            make.top.equalTo(myPageInfoButton.snp.bottom).offset(20)
+            make.top.equalTo(myInfoView.snp.bottom).offset(20)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
     
     private func setData() {
-        myPageInfoButton.addTarget(self, action: #selector(clickMyPageInfoButton), for: .touchUpInside)
+        myInfoButton.addTarget(self, action: #selector(clickMyPageInfoButton), for: .touchUpInside)
         
         self.myPageTableView.rx.setDelegate(self)
             .disposed(by: self.disposeBag)
