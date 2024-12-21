@@ -8,37 +8,39 @@
 import Foundation
 
 enum EndPoint {
-   case feed
-   case feedSave
-   case feedId(String)
-   case feedIdMusic(String)
-   case feedIdSave(String)
-   
-   case historyMe
-   case historyRecent
-   case historyId(String)
-   case historyFail(String)
-   case historySuccess(String)
-   
-   case loginApple
-   case loginAppleAdd
-   
-   case memberUnregister
-   
-   case musicAppleAdd
-   case musicAppleSearch
-   case musicSpotifyAdd
-   case musicSpotifySearch
-   
-   case playlistSpotifyRead
-   case playlistMusicSpotifyRead(String)
-   
-   case playlistAppleRead
-   case playlistAppleMusicRead(String)
-   
-   case inquiry
-   case termsOfService
-   case privacyPolicy
+    case feed
+    case feedSave
+    case feedId(String)
+    case feedIdMusic(String)
+    case feedIdSave(String)
+    
+    case historyMe
+    case historyRecent
+    case historyId(String)
+    case historyFail(String)
+    case historySuccess(String)
+    
+    case loginApple
+    case loginAppleAdd
+    case loginType
+    
+    case memberNickname
+    case memberUnregister
+    
+    case musicAppleAdd
+    case musicAppleSearch
+    case musicSpotifyAdd
+    case musicSpotifySearch
+    
+    case playlistSpotifyRead
+    case playlistMusicSpotifyRead(String)
+    
+    case playlistAppleRead
+    case playlistAppleMusicRead(String)
+    
+    case inquiry
+    case termsOfService
+    case privacyPolicy
 }
 
 extension EndPoint {
@@ -77,7 +79,11 @@ extension EndPoint {
          return EndPoint.makeEndPoint("/login/apple")
       case .loginAppleAdd:
          return EndPoint.makeEndPoint("/login/apple/add")
+      case .loginType:
+         return EndPoint.makeEndPoint("/login/type")
          
+      case .memberNickname:
+         return EndPoint.makeEndPoint("/member/nickname")
       case .memberUnregister:
          return EndPoint.makeEndPoint("/member/unregister")
          

@@ -60,6 +60,7 @@ class MyPageViewController: UIViewController {
         super.viewWillAppear(animated)
         
         self.tabBarController?.tabBar.isHidden = false
+        getNicknameAPI()
     }
     
     private func setUI() {
@@ -148,6 +149,21 @@ class MyPageViewController: UIViewController {
                 return cell
             }
             .disposed(by: self.disposeBag)
+    }
+    
+    private func getNicknameAPI() {
+        let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+        let url = EndPoint.memberNickname.path
+        
+        APIService().getWithAccessToken(of: APIResponse<String>.self, url: url, AccessToken: loginToken) { response in
+            switch response.code {
+            case 200:
+                self.nickNameLabel.text = response.data
+                self.view.layoutIfNeeded()
+            default:
+                AlertController(message: response.msg).show()
+            }
+        }
     }
     
     @objc private func clickMyPageInfoButton() {

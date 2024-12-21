@@ -101,6 +101,13 @@ class MemberInfoViewController: UIViewController, UITextFieldDelegate {
         setUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        getNicknameAPI()
+        getSocialAPI()
+    }
+    
     private func setUI() {
         self.view.backgroundColor = .white
         self.navigationItem.setHidesBackButton(true, animated: false)
@@ -281,6 +288,57 @@ class MemberInfoViewController: UIViewController, UITextFieldDelegate {
             editButton.setTitleColor(.black, for: .normal)
             editButton.backgroundColor = .white
             editButton.layer.borderColor = UIColor.gray300.cgColor
+            if nickNameTextField.text != "" {
+                changeNicknameAPI()
+            }
+        }
+    }
+    
+    private func getNicknameAPI() {
+        let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+        let url = EndPoint.memberNickname.path
+        
+        APIService().getWithAccessToken(of: APIResponse<String>.self, url: url, AccessToken: loginToken) { response in
+            switch response.code {
+            case 200:
+                self.nickNameLabel.text = response.data
+                self.view.layoutIfNeeded()
+            default:
+                AlertController(message: response.msg).show()
+            }
+        }
+    }
+    
+    private func getSocialAPI() {
+        let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+        let url = EndPoint.loginType.path
+        
+        APIService().getWithAccessToken(of: APIResponse<[LoginType]>.self, url: url, AccessToken: loginToken) { response in
+            switch response.code {
+            case 200:
+                self.socialConnectLabel.text = response.data[0].type
+                self.view.layoutIfNeeded()
+            default:
+                AlertController(message: response.msg).show()
+            }
+        }
+    }
+    
+    private func changeNicknameAPI() {
+        let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
+        let url = EndPoint.memberNickname.path
+        
+        let params = [
+            "nickName": self.nickNameTextField.text!
+        ] as [String : Any]
+        
+        APIService().postWithAccessToken(of: APIResponse<String>.self, url: url, parameters: params, AccessToken: loginToken) { response in
+            switch response.code {
+            case 201:
+                print(response.msg)
+            default:
+                AlertController(message: response.msg).show()
+            }
         }
     }
     

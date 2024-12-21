@@ -102,6 +102,7 @@
 		C79E7DBC2CC85C0A00FF75F3 /* RecentDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E7DBB2CC85C0A00FF75F3 /* RecentDetailViewController.swift */; };
 		C79E7DBE2CC87B7B00FF75F3 /* RecentSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E7DBD2CC87B7B00FF75F3 /* RecentSuccessViewController.swift */; };
 		C79E7DC02CC87B8800FF75F3 /* RecentFailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E7DBF2CC87B8800FF75F3 /* RecentFailViewController.swift */; };
+		C7A06A6E2D16CC2100D41DA2 /* LoginType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A06A6D2D16CC2100D41DA2 /* LoginType.swift */; };
 		C7AC68BA2CD6101000F7190E /* SaveDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AC68B92CD6101000F7190E /* SaveDetailTableViewCell.swift */; };
 		C7AC68BC2CD6101A00F7190E /* SaveSongsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AC68BB2CD6101A00F7190E /* SaveSongsTableViewCell.swift */; };
 		C7AC68BE2CD6122300F7190E /* RecentDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AC68BD2CD6122300F7190E /* RecentDetailTableViewCell.swift */; };
@@ -253,6 +254,7 @@
 		C79E7DBB2CC85C0A00FF75F3 /* RecentDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentDetailViewController.swift; sourceTree = "<group>"; };
 		C79E7DBD2CC87B7B00FF75F3 /* RecentSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSuccessViewController.swift; sourceTree = "<group>"; };
 		C79E7DBF2CC87B8800FF75F3 /* RecentFailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentFailViewController.swift; sourceTree = "<group>"; };
+		C7A06A6D2D16CC2100D41DA2 /* LoginType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginType.swift; sourceTree = "<group>"; };
 		C7AC68B92CD6101000F7190E /* SaveDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDetailTableViewCell.swift; sourceTree = "<group>"; };
 		C7AC68BB2CD6101A00F7190E /* SaveSongsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveSongsTableViewCell.swift; sourceTree = "<group>"; };
 		C7AC68BD2CD6122300F7190E /* RecentDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentDetailTableViewCell.swift; sourceTree = "<group>"; };
@@ -484,6 +486,7 @@
 				C7AD30C32CC685AA00D8007D /* Me.swift */,
 				68EE372C2CB0749E0077632B /* FeedInfo.swift */,
 				C706421D2CDC85D300DFD771 /* History.swift */,
+				C7A06A6D2D16CC2100D41DA2 /* LoginType.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -935,6 +938,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C7809C132CCE3EEE00A50EB1 /* SaveMoveView.swift in Sources */,
+				C7A06A6E2D16CC2100D41DA2 /* LoginType.swift in Sources */,
 				6889F5342C724B58001F5FC2 /* RotationAnimation.swift in Sources */,
 				68830FAA2C81D8CF00995785 /* WebViewController.swift in Sources */,
 				C7EB31622CD4ED5700DA439A /* ValidationNotFoundTableViewCell.swift in Sources */,
