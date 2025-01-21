@@ -13,6 +13,8 @@ extension UIColor {
     static let loadingBackgroundPurple = UIColor(red: 251/256, green: 245/256, blue: 255/256, alpha: 1)
     static let loadingShadow = UIColor(white: 79/256, alpha: 0.08)
     static let subBlue = UIColor(red: 46/256, green: 129/256, blue: 255/256, alpha: 1)
+    static let blueLight = UIColor(red: 234/256, green: 243/256, blue: 252/256, alpha: 1)
+    static let blackNine = UIColor(red: 28/256, green: 27/256, blue: 31/256, alpha: 0.8)
     static let shadow = UIColor(red: 242/256, green: 242/256, blue: 242/256, alpha: 1)
     static let gray100 = UIColor(white: 247/256, alpha: 1)
     static let gray200 = UIColor(white: 242/256, alpha: 1)
