@@ -15,8 +15,9 @@ import RxCocoa
 
 class HomeViewController: UIViewController {
     
-    let meViewModel = MeViewModel()
-    let saveViewModel = SaveViewModel()
+    private let meViewModel = MeViewModel()
+    private let saveViewModel = SaveViewModel()
+    private let disposeBag = DisposeBag()
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -107,8 +108,6 @@ class HomeViewController: UIViewController {
         $0.textColor = .gray400
         $0.textAlignment = .center
     }
-    
-    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -66,6 +66,28 @@ enum LoadPluv: Int, CaseIterable, Codable, PlatformRepresentable {
     }
 }
 
+enum ScreenShot: Int, CaseIterable, Codable, PlatformRepresentable {
+    case FromScreenShot
+    
+    var name: String {
+        switch self {
+        case .FromScreenShot:
+            "스크린샷"
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .FromScreenShot:
+            "screenshot_icon"
+        }
+    }
+    
+    var iconSelect: String {
+        icon
+    }
+}
+
 /*
  enum MusicPlatform: Int, CaseIterable, Codable {
      case AppleMusic

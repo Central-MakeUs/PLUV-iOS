@@ -13,6 +13,8 @@ import RxCocoa
 
 class ScreenShotViewController: UIViewController {
     
+    let viewModel = ScreenShotPlaylistViewModel()
+    
     private let screenShotTitleView = UIView()
     private let backButton = UIButton().then {
         $0.setImage(UIImage(named: "xbutton_icon"), for: .normal)
@@ -155,6 +157,8 @@ class ScreenShotViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(24)
             make.height.equalTo(58)
         }
+        uploadButton.isEnabled = false
+        uploadButton.addTarget(self, action: #selector(screenShotMusicAPI), for: .touchUpInside)
         
         self.view.addSubview(backgroundView)
         backgroundView.snp.makeConstraints { make in
@@ -277,6 +281,33 @@ class ScreenShotViewController: UIViewController {
         imageAddButton.isEnabled = true
         imageDeleteButton.isHidden = true
         imageDeleteButton.isEnabled = false
+        uploadButton.isEnabled = false
+    }
+    
+    @objc private func screenShotMusicAPI() {
+        let transferDestinationVC = TransferDestinationViewController()
+        transferDestinationVC.screenShotPlatform = .FromScreenShot
+        self.navigationController?.pushViewController(transferDestinationVC, animated: true)
+//        let url = EndPoint.playlistOcrRead.path
+//        var params: [String: Any] = [:]
+//        
+//        if let image = screenShotImageView.image {
+//            if let base64String = convertImageToBase64(image: image, format: "png") {
+//                params = ["base64EncodedImages" : base64String] as [String : Any]
+//            } else {
+//                print("Failed to encode image to Base64")
+//            }
+//        }
+//        
+//        APIService().post(of: APIResponse<[Music]>.self, url: url, parameters: params) { response in
+//            switch response.code {
+//            case 200:
+//                self.viewModel.musicItem.accept(response.data)
+//                self.view.layoutIfNeeded()
+//            default:
+//                AlertController(message: response.msg).show()
+//            }
+//        }
     }
 }
 
@@ -317,6 +348,7 @@ extension ScreenShotViewController: UIImagePickerControllerDelegate, UINavigatio
             imageAddButton.isEnabled = false
             imageDeleteButton.isHidden = false
             imageDeleteButton.isEnabled = true
+            uploadButton.isEnabled = true
         }
         picker.dismiss(animated: true, completion: nil)
     }

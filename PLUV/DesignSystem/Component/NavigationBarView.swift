@@ -14,7 +14,7 @@ protocol NavigationBarViewDelegate: AnyObject {
 final class NavigationBarView: UIView {
    
    var backButton = UIButton().then {
-      $0.setImage(UIImage(named: "backbutton_icon"), for: .normal)
+      $0.setImage(UIImage(named: "backButton_icon"), for: .normal)
    }
    var titleLabel = UILabel().then {
       $0.textColor = .gray800

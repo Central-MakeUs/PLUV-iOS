@@ -423,12 +423,23 @@ class SelectPlaylistViewController: UIViewController {
                 }
             }
         } else if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .Spotify {
-            setSpotifyPlaylistAPI()
+            waitForTokenAndSpotifyAPI()
         } else if let musicPlatform = sourcePlatform as? LoadPluv, musicPlatform == .FromRecent {
             setMeAPI()
         } else {
             setSaveAPI()
         }
+    }
+    
+    private func waitForTokenAndSpotifyAPI() {
+        Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance) // 1초마다 실행
+            .map { _ in TokenManager.shared.spotifyAccessToken } // 현재 토큰 값 가져오기
+            .filter { !$0.isEmpty } // 비어있지 않은 값만 통과
+            .take(1) // 첫 번째 유효한 값이 나오면 자동 종료
+            .subscribe(onNext: { token in
+                self.setSpotifyPlaylistAPI() // API 실행
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setSpotifyPlaylistAPI() {

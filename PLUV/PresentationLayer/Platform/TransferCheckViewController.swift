@@ -102,7 +102,6 @@ class TransferCheckViewController: UIViewController {
         super.viewDidLoad()
         
         setUI()
-        connectSpotify()
     }
     
     private func setUI() {
@@ -225,6 +224,7 @@ class TransferCheckViewController: UIViewController {
     }
     
     @objc private func clickTransferButton() {
+        connectSpotify()
         
         if saveViewModel.saveItem != nil {
             let selectMusicVC = SelectMusicViewController()

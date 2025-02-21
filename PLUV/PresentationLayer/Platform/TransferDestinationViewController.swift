@@ -22,6 +22,11 @@ class TransferDestinationViewController: UIViewController {
             updatePlatformView()
         }
     }
+    var screenShotPlatform: ScreenShot? {
+        didSet {
+            updatePlatformView()
+        }
+    }
     
     var meViewModel = SelectMeViewModel()
     var saveViewModel = SelectSaveViewModel()
@@ -64,6 +69,8 @@ class TransferDestinationViewController: UIViewController {
         if let updatedSourcePlatform = sourcePlatform as PlatformRepresentable? {
             selectSourcePlatformView.setUI(updatedSourcePlatform)
         } else if let updatedFromPlatform = fromPlatform as PlatformRepresentable? {
+            selectSourcePlatformView.setUI(updatedFromPlatform)
+        } else if let updatedFromPlatform = screenShotPlatform as PlatformRepresentable? {
             selectSourcePlatformView.setUI(updatedFromPlatform)
         }
     }
