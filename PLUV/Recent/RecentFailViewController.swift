@@ -11,9 +11,7 @@ import RxCocoa
 
 class RecentFailViewController: UIViewController {
    
-   let recentId = UserDefaults.standard.integer(forKey: "recentId")
-   
-   let failViewModel = FailViewModel()
+    private var viewModel = MeViewModel()
    
    private let recentFailTableViewCell = UITableView().then {
       $0.separatorStyle = .none
@@ -21,6 +19,15 @@ class RecentFailViewController: UIViewController {
    }
    private let disposeBag = DisposeBag()
    
+    init(viewModel: MeViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
    override func viewDidLoad() {
       super.viewDidLoad()
       
@@ -45,29 +52,23 @@ class RecentFailViewController: UIViewController {
          .disposed(by: disposeBag)
       
       /// CollectionView에 들어갈 Cell에 정보 제공
-      self.failViewModel.failItems
+       self.viewModel.selectMeMusicItem
          .observe(on: MainScheduler.instance)
          .bind(to: self.recentFailTableViewCell.rx.items(cellIdentifier: RecentFailTableViewCell.identifier, cellType: RecentFailTableViewCell.self)) { index, item, cell in
             cell.prepare(music: item, index: index)
          }
          .disposed(by: disposeBag)
-      
-      /// 아이템 선택 시 다음으로 넘어갈 VC에 정보 제공
-      self.recentFailTableViewCell.rx.modelSelected(Music.self)
-         .subscribe(onNext: { [weak self] failItem in
-            self?.failViewModel.selectFailItem = Observable.just(failItem)
-         })
-         .disposed(by: disposeBag)
    }
    
    private func setFailAPI() {
+       guard let id = self.viewModel.selectMeItem?.id else { return }
       let loginToken = UserDefaults.standard.string(forKey: APIService.shared.loginAccessTokenKey)!
-      let url = EndPoint.historyFail("\(recentId)").path
+      let url = EndPoint.historyFail("\(id)").path
       
       APIService().getWithAccessToken(of: APIResponse<[Music]>.self, url: url, AccessToken: loginToken) { response in
            switch response.code {
            case 200:
-              self.failViewModel.failItems = Observable.just(response.data)
+               self.viewModel.selectMeMusicItem.accept(response.data)
                self.setData()
                self.view.layoutIfNeeded()
            default:

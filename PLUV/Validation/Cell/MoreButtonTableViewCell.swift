@@ -15,6 +15,7 @@ class MoreButtonTableViewCell: UITableViewCell {
       $0.backgroundColor = .clear
       $0.layer.borderColor = UIColor.gray200.cgColor
       $0.layer.borderWidth = 1.0
+      $0.layer.cornerRadius = 8
    }
    private let moreLabel = UILabel().then {
       $0.text = "항목 더보기"
@@ -26,22 +27,19 @@ class MoreButtonTableViewCell: UITableViewCell {
    }
    
    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-       super.init(style: style, reuseIdentifier: reuseIdentifier)
-   }
-   
-   required init?(coder: NSCoder) {
-       fatalError("init(coder:) has not been implemented")
-   }
-   
-   override func layoutSubviews() {
+      super.init(style: style, reuseIdentifier: reuseIdentifier)
       setUI()
+   }
+
+   required init?(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
    }
    
    private func setUI() {
       self.contentView.addSubview(barView)
       barView.snp.makeConstraints { make in
          make.top.equalToSuperview().offset(8)
-         make.leading.trailing.equalToSuperview().offset(24)
+         make.leading.trailing.equalToSuperview().inset(24)
          make.centerX.equalToSuperview()
          make.height.equalTo(38)
       }

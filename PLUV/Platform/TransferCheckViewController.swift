@@ -14,7 +14,9 @@ import SpotifyiOS
 class TransferCheckViewController: UIViewController {
    
    var sourcePlatform: PlatformRepresentable?
-   var destinationPlatform: MusicPlatform = .Spotify
+   var destinationPlatform: PlatformRepresentable?
+    
+    var saveViewModel = SelectSaveViewModel()
    
    private let checkTitleView = UIView()
    private let backButton = UIButton().then {
@@ -29,7 +31,7 @@ class TransferCheckViewController: UIViewController {
    
    private var selectSourcePlatformView: PlatformView?
    private let dotView = DotView()
-   private lazy var selectDestinationPlatformView = PlatformView(platform: destinationPlatform)
+    private var selectDestinationPlatformView: PlatformView?
    
    private var moveView = MoveView(view: UIViewController())
    private let disposeBag = DisposeBag()
@@ -114,7 +116,7 @@ class TransferCheckViewController: UIViewController {
       self.checkTitleView.addSubview(backButton)
       backButton.snp.makeConstraints { make in
          make.top.equalToSuperview().inset(53)
-         make.trailing.equalToSuperview().inset(20)
+         make.trailing.equalToSuperview().inset(16)
          make.height.equalTo(34)
          make.width.equalTo(34)
       }
@@ -135,14 +137,14 @@ class TransferCheckViewController: UIViewController {
          make.height.equalTo(68)
       }
       
-      if destinationPlatform == .Spotify {
-         checkTitleLabel.text = "\(destinationPlatform.name)로\n플레이리스트를 옮길까요?"
+      if let musicPlatform = destinationPlatform as? MusicPlatform, musicPlatform == .Spotify {
+          checkTitleLabel.text = "\(destinationPlatform!.name)로\n플레이리스트를 옮길까요?"
       } else {
-         checkTitleLabel.text = "\(destinationPlatform.name)으로\n플레이리스트를 옮길까요?"
+          checkTitleLabel.text = "\(destinationPlatform!.name)으로\n플레이리스트를 옮길까요?"
       }
       
       let fullText = checkTitleLabel.text ?? ""
-      let changeText = destinationPlatform.name
+       let changeText = destinationPlatform!.name
       let attributedString = NSMutableAttributedString(string: fullText)
       
       if let range = fullText.range(of: changeText) {
@@ -172,12 +174,17 @@ class TransferCheckViewController: UIViewController {
          make.width.equalTo(6)
       }
       
-      self.view.addSubview(selectDestinationPlatformView)
-      selectDestinationPlatformView.snp.makeConstraints { make in
-         make.top.equalTo(dotView.snp.bottom).offset(23)
-         make.centerX.equalToSuperview()
-         make.height.equalTo(109)
-      }
+       if let platform = destinationPlatform {
+           selectDestinationPlatformView = PlatformView(platform: platform)
+           if let platformView = selectDestinationPlatformView {
+               self.view.addSubview(platformView)
+               platformView.snp.makeConstraints { make in
+                   make.top.equalTo(dotView.snp.bottom).offset(23)
+                   make.centerX.equalToSuperview()
+                   make.height.equalTo(109)
+               }
+           }
+       }
       
       moveView = MoveView(view: self)
       self.view.addSubview(moveView)
@@ -185,18 +192,21 @@ class TransferCheckViewController: UIViewController {
          make.leading.trailing.bottom.equalToSuperview()
          make.height.equalTo(101)
       }
-      moveView.setBackButtonTarget(target: self)
       
       moveView.trasferButton.addTarget(self, action: #selector(clickTransferButton), for: .touchUpInside)
    }
    
    @objc private func clickXButton() {
-      if let navigationController = self.navigationController {
-         let viewControllers = navigationController.viewControllers
-         if viewControllers.count > 3 {
-            let previousViewController = viewControllers[viewControllers.count - 4]
-            navigationController.popToViewController(previousViewController, animated: true)
-         }
+      let moveStopView = MoveStopView(title: "지금 중단하면 진행 사항이 사라져요.", target: self, num: 4)
+      
+      self.view.addSubview(moveStopView)
+      moveStopView.alpha = 0
+      moveStopView.snp.makeConstraints { make in
+         make.edges.equalToSuperview()
+      }
+      
+      UIView.animate(withDuration: 0.3) {
+         moveStopView.alpha = 1
       }
    }
    
@@ -206,9 +216,17 @@ class TransferCheckViewController: UIViewController {
       } else if let musicPlatform = sourcePlatform as? MusicPlatform, musicPlatform == .Spotify {
          connectSpotifySession()
       }
-      
-      let selectPlaylistVC = SelectPlaylistViewController(source: sourcePlatform ?? MusicPlatform.AppleMusic, destination: destinationPlatform)
-      self.navigationController?.pushViewController(selectPlaylistVC, animated: true)
+       
+       if saveViewModel.saveItem != nil {
+           let selectMusicVC = SelectMusicViewController()
+           selectMusicVC.saveViewModel.saveItem = saveViewModel.saveItem
+           selectMusicVC.sourcePlatform = sourcePlatform
+           selectMusicVC.destinationPlatform = destinationPlatform as! MusicPlatform
+           self.navigationController?.pushViewController(selectMusicVC, animated: true)
+       } else {
+           let selectPlaylistVC = SelectPlaylistViewController(source: sourcePlatform ?? MusicPlatform.AppleMusic, destination: destinationPlatform as! MusicPlatform)
+          self.navigationController?.pushViewController(selectPlaylistVC, animated: true)
+       }
    }
 }
 

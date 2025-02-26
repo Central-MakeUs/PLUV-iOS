@@ -11,6 +11,8 @@ import Pageboy
 
 class RecentTabViewController: TabmanViewController {
    
+    private var viewModel = MeViewModel()
+    
    private var viewControllers: Array<UIViewController> = []
    
    private let tabView = UIView().then {
@@ -19,6 +21,15 @@ class RecentTabViewController: TabmanViewController {
    private let backgroundLabel2 = UILabel().then {
       $0.backgroundColor = .gray200
    }
+    
+    init(viewModel: MeViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
    
    override func viewDidLoad() {
       super.viewDidLoad()
@@ -46,8 +57,8 @@ class RecentTabViewController: TabmanViewController {
    }
    
    private func setupTabMan() {
-      let vc1 = RecentSuccessViewController()
-      let vc2 = RecentFailViewController()
+       let vc1 = RecentSuccessViewController(viewModel: self.viewModel)
+       let vc2 = RecentFailViewController(viewModel: self.viewModel)
       
       viewControllers.append(vc1)
       viewControllers.append(vc2)

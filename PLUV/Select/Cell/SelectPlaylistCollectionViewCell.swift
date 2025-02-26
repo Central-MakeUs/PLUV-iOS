@@ -15,7 +15,7 @@ final class SelectPlaylistCollectionViewCell: UICollectionViewCell {
     static let identifier = String(describing: SelectPlaylistCollectionViewCell.self)
     
     private let thumbnailImageView = UIImageView().then {
-        // $0.layer.cornerRadius = 8
+        $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
     }
     private let playButtonImageView = UIImageView().then {
@@ -54,12 +54,12 @@ final class SelectPlaylistCollectionViewCell: UICollectionViewCell {
         }
         
         /*
-        self.thumbnailImageView.addSubview(playButtonImageView)
-        playButtonImageView.snp.makeConstraints { make in
-            make.width.equalTo(17)
-            make.height.equalTo(19)
-            make.trailing.bottom.equalToSuperview().inset(12)
-        }
+         self.thumbnailImageView.addSubview(playButtonImageView)
+         playButtonImageView.snp.makeConstraints { make in
+         make.width.equalTo(17)
+         make.height.equalTo(19)
+         make.trailing.bottom.equalToSuperview().inset(12)
+         }
          */
         
         self.contentView.addSubview(playlistTitleLabel)
@@ -95,6 +95,32 @@ final class SelectPlaylistCollectionViewCell: UICollectionViewCell {
         self.playlistTitleLabel.text = playlist.name
         self.songCountLabel.text = "총 \(String(playlist.songCount ?? 0))곡"
         self.dateLabel.text = "2024.04.20"
+        
+        let borderWidth: CGFloat = 2.4
+        thumbnailImageView.frame = CGRectInset(self.frame, -borderWidth, -borderWidth)
+        thumbnailImageView.layer.borderColor = UIColor.mainPurple.cgColor
+        thumbnailImageView.layer.borderWidth = 0
+    }
+    
+    func mePrepare(me: Me, platform: PlatformRepresentable) {
+        let thumbNailUrl = URL(string: me.imageURL)
+        self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
+        self.playlistTitleLabel.text = me.title
+        self.songCountLabel.text = "총 \(me.transferredSongCount ?? 0)곡"
+        self.dateLabel.text = "\(me.transferredAt)"
+        
+        let borderWidth: CGFloat = 2.4
+        thumbnailImageView.frame = CGRectInset(self.frame, -borderWidth, -borderWidth)
+        thumbnailImageView.layer.borderColor = UIColor.mainPurple.cgColor
+        thumbnailImageView.layer.borderWidth = 0
+    }
+    
+    func savePrepare(feed: Feed, platform: PlatformRepresentable) {
+        let thumbNailUrl = URL(string: feed.thumbNailURL)
+        self.thumbnailImageView.kf.setImage(with: thumbNailUrl)
+        self.playlistTitleLabel.text = feed.title
+        self.songCountLabel.text = "총 \(feed.totalSongCount ?? 0)곡"
+        self.dateLabel.text = "\(feed.transferredAt)"
         
         let borderWidth: CGFloat = 2.4
         thumbnailImageView.frame = CGRectInset(self.frame, -borderWidth, -borderWidth)

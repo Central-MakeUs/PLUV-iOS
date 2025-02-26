@@ -10,6 +10,7 @@ import RxSwift
 import RxCocoa
 
 final class MeViewModel {
-    var selectMeItem: Observable<Me>?
-    var MeItems: Observable<[Me]> = Observable.just([])
+   var selectMeMusicItem = BehaviorRelay<[Music]>(value: [])
+   var selectMeItem: Me?
+   var meItems: Observable<[Me]> = Observable.just([])
 }
