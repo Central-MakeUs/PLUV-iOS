@@ -31,6 +31,7 @@ target 'PLUV' do
   pod 'SwiftyJSON'
   pod 'RxSwift'
   pod 'RxCocoa'
+  pod 'RxDataSources'
   pod 'Firebase/Analytics'
   pod 'Firebase/Crashlytics'
 end
