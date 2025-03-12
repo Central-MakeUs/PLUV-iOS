@@ -19,6 +19,9 @@ class TransferCheckViewController: UIViewController {
     
     var meViewModel = SelectMeViewModel()
     var saveViewModel = SelectSaveViewModel()
+    private let disposeBag = DisposeBag()
+    
+    private var moveView = MoveView(view: UIViewController())
     
     private let checkTitleView = UIView()
     private let backButton = UIButton().then {
@@ -30,15 +33,10 @@ class TransferCheckViewController: UIViewController {
         $0.font = .systemFont(ofSize: 24, weight: .semibold)
         $0.textColor = .gray800
     }
-    
     private var selectSourcePlatformView: PlatformView?
     private let dotView = DotView()
     private var selectDestinationPlatformView: PlatformView?
     
-    private var moveView = MoveView(view: UIViewController())
-    private let disposeBag = DisposeBag()
-    
-    /// spotify 관련 properties
     // MARK: - Spotify Authorization & Configuration
     var responseCode: String? {
         didSet {

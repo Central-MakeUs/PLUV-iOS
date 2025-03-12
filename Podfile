@@ -13,6 +13,7 @@ target 'PLUV' do
   end
 
   target 'PLUVUITests' do
+    inherit! :search_paths
     # Pods for testing
   end
 

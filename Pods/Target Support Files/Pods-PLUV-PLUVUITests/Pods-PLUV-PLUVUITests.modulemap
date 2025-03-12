@@ -1,6 +1,0 @@
-framework module Pods_PLUV_PLUVUITests {
-  umbrella header "Pods-PLUV-PLUVUITests-umbrella.h"
-
-  export *
-  module * { export * }
-}
